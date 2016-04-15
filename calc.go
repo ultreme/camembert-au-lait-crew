@@ -10,6 +10,12 @@ type Person struct {
 	Name string `json:"name"`
 }
 
+type WebAccount struct {
+	Provier string `json:"provider"`
+	Handle  string `json:"handle"`
+	URL     string `json:"url"`
+}
+
 var CALC = Crew{
 	Name:    "Camembert au lait crew",
 	Website: "http://www.camembertaulaitcrew.biz",
@@ -32,5 +38,12 @@ func init() {
 		"moul":   Moul,
 		"sassou": Sassou,
 		"mxs":    MXS,
+	}
+	Calc.Accounts = map[string]WebAccount{
+		"soundcloud": {
+			Provider: "SoundCloud",
+			Handle:   "camembert-au-lait-crew",
+			URL:      "https://soundcloud.com/camembert-au-lait-crew",
+		},
 	}
 }
