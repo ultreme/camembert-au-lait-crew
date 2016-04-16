@@ -45,5 +45,10 @@ func init() {
 			Handle:   "camembert-au-lait-crew",
 			URL:      "https://soundcloud.com/camembert-au-lait-crew",
 		},
+		"facebook": {
+			Provider: "Facebook",
+			Handle:   "camembertaulaitcrew",
+			URL:      "https://www.facebook.com/camembertaulaitcrew/",
+		},
 	}
 }
