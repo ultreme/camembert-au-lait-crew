@@ -7,6 +7,7 @@ import (
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/log"
+	"github.com/camembertaulaitcrew/moi-j-aime-generator"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
 )
@@ -67,6 +68,16 @@ func server(c *cli.Context) error {
 	r.GET("/api/crew", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"result": calccrew.CALC,
+		})
+	})
+
+	r.GET("/api/moijaime", func(c *gin.Context) {
+		phrases := []string{}
+		for i := 0; i < 20; i++ {
+			phrases = append(phrases, moijaime.Generate())
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"result": phrases,
 		})
 	})
 
