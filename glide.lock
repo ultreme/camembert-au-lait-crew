@@ -1,22 +1,24 @@
-hash: fc1fd00a809ec565a8303ca77f0007d4a5bbdc276ca0c1b0a06557f647e44174
-updated: 2016-07-15T20:53:52.180972883+02:00
+hash: 9bdc6044f2935e28c2236e72c2d80e70be795f3688537b02fc19c7df7de6d235
+updated: 2016-07-16T00:20:30.287112193+02:00
 imports:
+- name: github.com/camembertaulaitcrew/moi-j-aime-generator
+  version: 84cbc55155e324ed8f74bfa09acf93495140e08c
 - name: github.com/gin-gonic/gin
-  version: fc9a8eb89d0761941305b5ead52c67b14d44b45b
+  version: f931d1ea80ae95a6fc739213cdd9399bd2967fb6
 - name: github.com/golang/protobuf
-  version: ""
+  version: 874264fbbb43f4d91e999fecb4b40143ed611400
   subpackages:
   - proto
 - name: github.com/manucorporat/sse
   version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
 - name: github.com/urfave/cli
-  version: fc9a8eb89d0761941305b5ead52c67b14d44b45b
+  version: ec402ecec579718ec2d7a686db201bbeb6ad918a
 - name: golang.org/x/net
-  version: ""
+  version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
   - context
 - name: gopkg.in/go-playground/validator.v8
-  version: ""
+  version: 7a080ada5ba072a91fd7f677bcf4d0e1aa286d39
 - name: gopkg.in/yaml.v2
-  version: ""
+  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
 devImports: []

@@ -11,3 +11,4 @@ import:
   - context
 - package: gopkg.in/go-playground/validator.v8
 - package: gopkg.in/yaml.v2
+- package: github.com/camembertaulaitcrew/moi-j-aime-generator
