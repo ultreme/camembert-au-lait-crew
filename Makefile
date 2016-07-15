@@ -13,7 +13,7 @@ run: calc-www
 
 .PHONY: docker
 docker:
-	docker build -t ultreme/camembert-au-lait-crew .
+	docker build -t camembertaulaitcrew/camembert-au-lait-crew .
 
 
 .PHONY: test

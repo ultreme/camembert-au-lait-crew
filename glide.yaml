@@ -1,4 +1,4 @@
-package: github.com/ultreme/camembert-au-lait-crew
+package: github.com/camembertaulaitcrew/camembert-au-lait-crew
 import:
 - package: github.com/gin-gonic/gin
 - package: github.com/urfave/cli
