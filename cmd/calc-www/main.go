@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ultreme/camembert-au-lait-crew"
+	"github.com/ultreme/camembert-au-lait-crew/pkg/crew"
 	"github.com/ultreme/camembert-au-lait-crew/pkg/log"
 	"github.com/urfave/cli"
 )
@@ -62,6 +63,12 @@ func server(c *cli.Context) error {
 	r.PUT("/api/ping", pong)
 	r.PATCH("/api/ping", pong)
 	r.DELETE("/api/ping", pong)
+
+	r.GET("/api/crew", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"result": calccrew.CALC,
+		})
+	})
 
 	// FIXME: handle socket.io
 	http.Handle("/", r)

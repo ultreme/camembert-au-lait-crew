@@ -1,9 +1,10 @@
 package calccrew
 
 type Crew struct {
-	Name    string            `json:"name"`
-	Website string            `json:"url"`
-	Members map[string]Person `json:"members"`
+	Name     string                `json:"name"`
+	Website  string                `json:"url"`
+	Members  map[string]Person     `json:"members"`
+	Accounts map[string]WebAccount `json:"accounts"`
 }
 
 type Person struct {
@@ -11,9 +12,9 @@ type Person struct {
 }
 
 type WebAccount struct {
-	Provier string `json:"provider"`
-	Handle  string `json:"handle"`
-	URL     string `json:"url"`
+	Provider string `json:"provider"`
+	Handle   string `json:"handle"`
+	URL      string `json:"url"`
 }
 
 var CALC = Crew{
@@ -34,12 +35,12 @@ var MXS = Person{
 }
 
 func init() {
-	Calc.Members = map[string]Peron{
+	CALC.Members = map[string]Person{
 		"moul":   Moul,
 		"sassou": Sassou,
 		"mxs":    MXS,
 	}
-	Calc.Accounts = map[string]WebAccount{
+	CALC.Accounts = map[string]WebAccount{
 		"soundcloud": {
 			Provider: "SoundCloud",
 			Handle:   "camembert-au-lait-crew",
