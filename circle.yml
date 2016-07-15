@@ -1,0 +1,38 @@
+machine:
+  environment:
+    DOCKER_IMAGE: "camembertaulaitcrew/camembert-au-lait-crew"
+#    GCLOUD_PROJECT: "camembert-au-lait-crew"
+  services:
+    - docker
+
+dependencies:
+#  pre:
+#    # Download App Engine SDK
+#    # This is not necessary to deploy, its only necessary  to run local tests importing the App Engine SDK
+#    - curl -o $HOME/google_appengine_1.9.30.zip https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.30.zip
+#    - unzip -q -d $HOME $HOME/google_appengine_1.9.30.zip
+#    # Retrieve our secrets from the CircleCI environment
+#    - echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/client-secret.json
+#    # Make sure gcloud is up to date
+#    - gcloud --quiet components update app
+#    # authenticate gcloud
+#    - gcloud auth activate-service-account --key-file ${HOME}/client-secret.json
+#    # Replace <your-project-id>
+#    - gcloud config set project $GCLOUD_PROJECT
+  override:
+    - docker info
+    - docker build -t ${DOCKER_IMAGE} .
+
+test:
+  override:
+    - exit 0
+
+database:
+  override:
+    - exit 0
+
+#deployment:
+#  staging:
+#    branch: master
+#    commands:
+#    - gcloud docker push ${DOCKER_IMAGE}
