@@ -1,0 +1,22 @@
+hash: fc1fd00a809ec565a8303ca77f0007d4a5bbdc276ca0c1b0a06557f647e44174
+updated: 2016-07-15T20:53:52.180972883+02:00
+imports:
+- name: github.com/gin-gonic/gin
+  version: fc9a8eb89d0761941305b5ead52c67b14d44b45b
+- name: github.com/golang/protobuf
+  version: ""
+  subpackages:
+  - proto
+- name: github.com/manucorporat/sse
+  version: ee05b128a739a0fb76c7ebd3ae4810c1de808d6d
+- name: github.com/urfave/cli
+  version: fc9a8eb89d0761941305b5ead52c67b14d44b45b
+- name: golang.org/x/net
+  version: ""
+  subpackages:
+  - context
+- name: gopkg.in/go-playground/validator.v8
+  version: ""
+- name: gopkg.in/yaml.v2
+  version: ""
+devImports: []
