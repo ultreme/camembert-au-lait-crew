@@ -1,0 +1,4 @@
+calc-www:
+  labels:
+    io.rancher.container.pull_image: always
+  image: calc/camembert-au-lait-crew:latest
