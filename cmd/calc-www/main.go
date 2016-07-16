@@ -144,6 +144,27 @@ func server(c *cli.Context) error {
 			})
 		}
 	})
+	r.GET("/api/soundcloud/tracks/:id", func(c *gin.Context) {
+		trackID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": fmt.Sprintf("Invalid track id: %v", c.Param("id")),
+			})
+			return
+		}
+
+		track, err := soundcloud.Track(trackID)
+		if err != nil {
+			log.Warnf("failed to get /api/soundcloud/tracks/%d: %v", trackID, err)
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"result": track,
+			})
+		}
+	})
 	r.GET("/api/soundcloud/tracks", func(c *gin.Context) {
 		tracks, err := soundcloud.Tracks()
 		if err != nil {
