@@ -9,6 +9,7 @@ import (
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/log"
+	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/random"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
 	"github.com/camembertaulaitcrew/moi-j-aime-generator"
 	"github.com/gin-gonic/gin"
@@ -93,6 +94,12 @@ func server(c *cli.Context) error {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"result": phrases,
+		})
+	})
+
+	r.GET("/api/random/wotd", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"result": calcrand.WOTD(),
 		})
 	})
 
