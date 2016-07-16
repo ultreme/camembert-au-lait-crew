@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/crew"
@@ -119,6 +120,27 @@ func server(c *cli.Context) error {
 		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"result": playlists,
+			})
+		}
+	})
+	r.GET("/api/soundcloud/playlists/:id", func(c *gin.Context) {
+		playlistID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": fmt.Sprintf("Invalid playlist id: %v", c.Param("id")),
+			})
+			return
+		}
+
+		playlist, err := soundcloud.Playlist(playlistID)
+		if err != nil {
+			log.Warnf("failed to get /api/soundcloud/playlists/%d: %v", playlistID, err)
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"result": playlist,
 			})
 		}
 	})

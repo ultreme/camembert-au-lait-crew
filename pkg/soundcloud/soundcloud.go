@@ -34,6 +34,10 @@ func (s *CALCSoundcloud) Playlists() ([]*soundcloud.Playlist, error) {
 	return s.client.User(s.userID).Playlists(nil)
 }
 
+func (s *CALCSoundcloud) Playlist(playlistID uint64) (*soundcloud.Playlist, error) {
+	return s.client.Playlist(playlistID).Get(nil)
+}
+
 func (s *CALCSoundcloud) Tracks() ([]*soundcloud.Track, error) {
 	return s.client.User(s.userID).Tracks(nil)
 }
