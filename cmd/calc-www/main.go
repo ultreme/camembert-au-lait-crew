@@ -102,6 +102,11 @@ func server(c *cli.Context) error {
 			"result": calcrand.WOTD(),
 		})
 	})
+	r.GET("/api/random/alternate-logo", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"result": calcrand.AlternateLogo(),
+		})
+	})
 
 	soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
 	r.GET("/api/soundcloud/me", func(c *gin.Context) {
