@@ -1,0 +1,15 @@
+package instagram
+
+// Copy this to config_test.go (its ignored by git)
+// And fill in your test clientID, clientSecret, authorization token and secret
+// You can get the client information from http://developers.soundcloud.com/you/apps
+// And you'll have to authorize with that client to get a token
+// You don't NEED access tokens per se but some requests require it.
+
+var TestConfig map[string]string = map[string]string{
+  "client_id": "",
+  "client_secret": "",
+  "access_token": "",
+  "refresh_token": "",
+  "my_id": uint64(1234567), // The authenticated user's ID
+}
