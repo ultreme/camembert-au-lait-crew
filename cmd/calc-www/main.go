@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/log"
+	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
 	"github.com/camembertaulaitcrew/moi-j-aime-generator"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli"
@@ -42,6 +44,18 @@ func main() {
 					Name:  "bind-address, b",
 					Usage: "TCP port address",
 					Value: ":9000",
+				},
+				cli.StringFlag{
+					Name:   "soundcloud-client-id",
+					Value:  "<configure-me>",
+					Usage:  "SoundCloud CLIENT_ID",
+					EnvVar: "SOUNDCLOUD_CLIENT_ID",
+				},
+				cli.IntFlag{
+					Name:   "soundcloud-user-id",
+					Value:  96137699,
+					Usage:  "SoundCloud USER_ID",
+					EnvVar: "SOUNDCLOUD_USER_ID",
 				},
 			},
 		},
@@ -79,6 +93,21 @@ func server(c *cli.Context) error {
 		c.JSON(http.StatusOK, gin.H{
 			"result": phrases,
 		})
+	})
+
+	soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
+	r.GET("/api/soundcloud/me", func(c *gin.Context) {
+		me, err := soundcloud.Me()
+		if err != nil {
+			log.Warnf("failed to get /api/soundcloud/me: %v", err)
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"result": me,
+			})
+		}
 	})
 
 	// FIXME: handle socket.io
