@@ -27,6 +27,9 @@ func (s *CALCSoundcloud) EscapeString(input string) string {
 }
 
 func (s *CALCSoundcloud) Me() (*soundcloud.User, error) {
-	meApi := s.client.User(s.userID)
-	return meApi.Get(nil)
+	return s.client.User(s.userID).Get(nil)
+}
+
+func (s *CALCSoundcloud) Playlists() ([]*soundcloud.Playlist, error) {
+	return s.client.User(s.userID).Playlists(nil)
 }

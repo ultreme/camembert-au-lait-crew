@@ -109,6 +109,19 @@ func server(c *cli.Context) error {
 			})
 		}
 	})
+	r.GET("/api/soundcloud/playlists", func(c *gin.Context) {
+		playlists, err := soundcloud.Playlists()
+		if err != nil {
+			log.Warnf("failed to get /api/soundcloud/playlists: %v", err)
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"result": playlists,
+			})
+		}
+	})
 
 	// FIXME: handle socket.io
 	http.Handle("/", r)
