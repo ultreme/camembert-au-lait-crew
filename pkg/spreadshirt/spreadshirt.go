@@ -13,7 +13,16 @@ type Product struct {
 	ImageURL string `json:"image-url"`
 }
 
-var products = []Product{
+type Products []Product
+
+func (p *Products) shuffle() {
+	for i := range *p {
+		j := rand.Intn(i + 1)
+		(*p)[i], (*p)[j] = (*p)[j], (*p)[i]
+	}
+}
+
+var products = Products{
 	{
 		Title:   "Cours de sport",
 		CompoID: 124452996,
@@ -101,8 +110,8 @@ func (p *Product) getRandomImage(width, height uint64) string {
 	return fmt.Sprintf(baseURL, p.CompoID, width, height, appearanceID)
 }
 
-func GetAllProducts(width, height uint64) []Product {
-	// FIXME: shuffle
+func GetAllProducts(width, height uint64) Products {
+	products.shuffle()
 	for idx := range products {
 		products[idx].prepare(width, height)
 	}
