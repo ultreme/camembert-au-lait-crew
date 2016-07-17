@@ -11,6 +11,7 @@ import (
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/log"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/random"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
+	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
 	"github.com/camembertaulaitcrew/moi-j-aime-generator"
 	"github.com/gin-gonic/gin"
 	"github.com/ultreme/go-kryptos"
@@ -95,6 +96,18 @@ func server(c *cli.Context) error {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"result": phrases,
+		})
+	})
+
+	r.GET("/api/spreadshirt/random", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"result": calcspreadshirt.GetRandomProduct(250, 250),
+		})
+	})
+
+	r.GET("/api/spreadshirt/all", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"result": calcspreadshirt.GetAllProducts(250, 250),
 		})
 	})
 
