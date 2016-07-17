@@ -16,3 +16,4 @@ import:
   subpackages:
   - soundcloud
 - package: github.com/shazow/memoizer
+- package: github.com/ultreme/go-kryptos
