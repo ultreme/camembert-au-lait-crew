@@ -15,3 +15,4 @@ import:
 - package: github.com/yanatan16/golang-soundcloud
   subpackages:
   - soundcloud
+- package: github.com/shazow/memoizer
