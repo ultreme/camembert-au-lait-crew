@@ -28,6 +28,7 @@ type Friend struct {
 	Description string `json:"description"`
 	LogoURL     string `json:"logo-url"`
 	Links       []Link `json:"links"`
+	ImageURL    string `json:"image-url"`
 }
 
 var CALC = Crew{
@@ -69,6 +70,7 @@ func init() {
 		"sbrk": {
 			Name:        "sbrk.org",
 			Description: "gentil",
+			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/sbrk.jpg",
 			Links: []Link{
 				{
 					Name: "Sbrk",
@@ -77,6 +79,21 @@ func init() {
 				{
 					Name: "mxs",
 					URL:  "http://mxs.sbrk.org",
+				},
+			},
+		},
+		"m1ch3l": {
+			Name:        "m1ch3l",
+			Description: "m1ch3l est cool, m1ch3l aime les gommes.",
+			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/m1ch3l.jpg",
+			Links: []Link{
+				{
+					Name: "Le site de m1ch3l",
+					URL:  "http://m1ch3l.biz/",
+				},
+				{
+					Name: "Radio m1ch3l",
+					URL:  "http://radio.m1ch3l.biz",
 				},
 			},
 		},
