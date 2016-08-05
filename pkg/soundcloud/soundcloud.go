@@ -1,6 +1,7 @@
 package calcsoundcloud
 
 import (
+	"math/rand"
 	"net/url"
 	"strings"
 
@@ -58,7 +59,20 @@ func (s *CALCSoundcloud) Track(trackID uint64) (*soundcloud.Track, error) {
 	return track.(*soundcloud.Track), err
 }
 
-func (s *CALCSoundcloud) Tracks() ([]*soundcloud.Track, error) {
+func (s *CALCSoundcloud) RandomTrack() (*soundcloud.Track, error) {
+	tracks, err := s.tracks()
+	if err != nil {
+		return nil, err
+	}
+
+	return tracks[rand.Intn(len(tracks))], nil
+}
+
+func (s *CALCSoundcloud) tracks() ([]*soundcloud.Track, error) {
 	tracks, err := s.cache.Call(s.client.User(s.userID).Tracks, url.Values{})
 	return tracks.([]*soundcloud.Track), err
+}
+
+func (s *CALCSoundcloud) Tracks() ([]*soundcloud.Track, error) {
+	return s.tracks()
 }

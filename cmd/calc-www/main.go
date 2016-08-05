@@ -201,6 +201,20 @@ func server(c *cli.Context) error {
 		}
 	})
 	r.GET("/api/soundcloud/tracks/:id", func(c *gin.Context) {
+		if c.Param("id") == "random" {
+			track, err := soundcloud.RandomTrack()
+			if err != nil {
+				log.Warnf("failed to get /api/soundcloud/tracks/random: %v", err)
+				c.JSON(http.StatusNotFound, gin.H{
+					"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+				})
+			} else {
+				c.JSON(http.StatusOK, gin.H{
+					"result": track,
+				})
+			}
+			return
+		}
 		trackID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(http.StatusNotFound, gin.H{
