@@ -1,6 +1,9 @@
 package calcdashboard
 
-import "github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
+import (
+	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
+	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
+)
 
 type CALCDashboard struct {
 	soundcloud *calcsoundcloud.CALCSoundcloud
@@ -22,8 +25,8 @@ func (d *CALCDashboard) SetSoundCloud(soundcloud *calcsoundcloud.CALCSoundcloud)
 
 func (d *CALCDashboard) hackEntries(limit int) (Entries, error) {
 	entries := Entries{}
-	entries.append(NewManualEntry(typeHack, "Moi j'aime", "Générateur de phrase de moi j'aime", ""))
-	entries.append(NewManualEntry(typeHack, "Kryptos", "Messages codés de James Bond", ""))
+	entries.append(NewManualEntry(typeHack, "Moi j'aime", "hack`/moijaime", "", "Générateur de phrase de moi j'aime"))
+	entries.append(NewManualEntry(typeHack, "Kryptos", "hackz/kryptos", "", "Messages codés de James Bond"))
 	entries.shuffle()
 	if len(entries) < limit {
 		limit = len(entries)
@@ -43,10 +46,16 @@ func (d *CALCDashboard) trackEntries(limit int) (Entries, error) {
 
 func (d *CALCDashboard) merchEntries(limit int) (Entries, error) {
 	entries := Entries{}
-	entries.shuffle()
-	if len(entries) < limit {
-		limit = len(entries)
+
+	products := calcspreadshirt.GetAllProducts(250, 250)
+	if len(products) < limit {
+		limit = len(products)
 	}
+	for _, product := range products[:limit] {
+		entries.append(NewManualEntry(typeMerch, product.Title, product.URL, product.ImageURL, ""))
+	}
+
+	entries.shuffle()
 	return entries[:limit], nil
 }
 

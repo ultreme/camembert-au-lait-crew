@@ -10,6 +10,7 @@ type Entries []Entry
 
 type MinimalFields struct {
 	Title       string `json:"title"`
+	URL         string `json:"url"`
 	Description string `json:"description"`
 	ImageURL    string `json:"image-url"`
 	Kind        string `json:"kind"`
@@ -35,6 +36,7 @@ func (e *Entries) append(entry Entry) {
 
 type ManualEntry struct {
 	Title       string `json:"title"`
+	URL         string `json:"url"`
 	Description string `json:"description"`
 	ImageURL    string `json:"image-url"`
 	Kind        string `json:"kind"`
@@ -43,15 +45,17 @@ type ManualEntry struct {
 func (m *ManualEntry) GetMinimalFields() (*MinimalFields, error) {
 	return &MinimalFields{
 		Title:       m.Title,
+		URL:         m.URL,
 		Description: m.Description,
 		ImageURL:    m.ImageURL,
 		Kind:        m.Kind,
 	}, nil
 }
 
-func NewManualEntry(kind, title, description, imageURL string) *ManualEntry {
+func NewManualEntry(kind, title, URL, imageURL, description string) *ManualEntry {
 	return &ManualEntry{
 		Title:       title,
+		URL:         URL,
 		Description: description,
 		ImageURL:    imageURL,
 		Kind:        kind,
