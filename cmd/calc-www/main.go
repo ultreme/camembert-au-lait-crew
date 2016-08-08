@@ -8,6 +8,7 @@ import (
 
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/crew"
+	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/dashboard"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/log"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/random"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
@@ -83,6 +84,23 @@ func server(c *cli.Context) error {
 	r.PATCH("/api/ping", pong)
 	r.DELETE("/api/ping", pong)
 
+	soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
+	dashboard := calcdashboard.New()
+	dashboard.SetSoundCloud(&soundcloud)
+
+	r.GET("/api/dashboard/random", func(c *gin.Context) {
+		dashboard, err := dashboard.Random()
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err,
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"result": dashboard,
+			})
+		}
+	})
+
 	r.GET("/api/crew", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"result": calccrew.CALC,
@@ -152,7 +170,6 @@ func server(c *cli.Context) error {
 		})
 	})
 
-	soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
 	r.GET("/api/soundcloud/me", func(c *gin.Context) {
 		me, err := soundcloud.Me()
 		if err != nil {
