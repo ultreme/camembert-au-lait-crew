@@ -1,6 +1,9 @@
 package calcdashboard
 
 import (
+	"fmt"
+	"math/rand"
+
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
 )
@@ -25,8 +28,9 @@ func (d *CALCDashboard) SetSoundCloud(soundcloud *calcsoundcloud.CALCSoundcloud)
 
 func (d *CALCDashboard) hackEntries(limit int) (Entries, error) {
 	entries := Entries{}
-	entries.append(NewManualEntry(typeHack, "Moi j'aime", "hack`/moijaime", "", "Générateur de phrase de moi j'aime"))
-	entries.append(NewManualEntry(typeHack, "Kryptos", "hackz/kryptos", "", "Messages codés de James Bond"))
+	entries.append(NewManualEntry(typeHack, "Moi j'aime", "hackz/moijaime", "", "Générateur de phrase de moi j'aime"))
+	entries.append(NewManualEntry(typeHack, "3615cryptage", "hackz/3615cryptage", "", "Messages codés de James Bond"))
+
 	entries.shuffle()
 	if len(entries) < limit {
 		limit = len(entries)
@@ -37,11 +41,26 @@ func (d *CALCDashboard) hackEntries(limit int) (Entries, error) {
 func (d *CALCDashboard) trackEntries(limit int) (Entries, error) {
 	entries := Entries{}
 
-	entries.shuffle()
-	if len(entries) < limit {
-		limit = len(entries)
+	tracks, err := d.soundcloud.Tracks()
+	if err != nil {
+		return entries, err
 	}
-	return entries[:limit], nil
+	if len(tracks) < limit {
+		limit = len(tracks)
+	}
+
+	// shuffle tracks
+	for i := range tracks {
+		j := rand.Intn(i + 1)
+		tracks[i], tracks[j] = tracks[j], tracks[i]
+	}
+
+	for _, track := range tracks[:limit] {
+		entries.append(NewManualEntry(typeTrack, track.Title, fmt.Sprintf("track/%d", track.Id), track.ArtworkUrl, track.Description))
+	}
+
+	entries.shuffle()
+	return entries, nil
 }
 
 func (d *CALCDashboard) merchEntries(limit int) (Entries, error) {
@@ -56,7 +75,7 @@ func (d *CALCDashboard) merchEntries(limit int) (Entries, error) {
 	}
 
 	entries.shuffle()
-	return entries[:limit], nil
+	return entries, nil
 }
 
 func (d *CALCDashboard) Random() (Entries, error) {
