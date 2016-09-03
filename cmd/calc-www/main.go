@@ -10,6 +10,7 @@ import (
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/crew"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/dashboard"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/log"
+	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/numberinfo"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/random"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
@@ -73,6 +74,8 @@ func main() {
 
 func server(c *cli.Context) error {
 	r := gin.Default()
+
+	// ping
 	pong := func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"result": "pong",
@@ -88,6 +91,7 @@ func server(c *cli.Context) error {
 	dashboard := calcdashboard.New()
 	dashboard.SetSoundCloud(&soundcloud)
 
+	// dashboard
 	r.GET("/api/dashboard/random", func(c *gin.Context) {
 		dashboard, err := dashboard.Random()
 		if err != nil {
@@ -101,12 +105,30 @@ func server(c *cli.Context) error {
 		}
 	})
 
+	// crew
 	r.GET("/api/crew", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"result": calccrew.CALC,
 		})
 	})
 
+	// numberinfo
+	r.GET("/api/numberinfo/all/:number", func(c *gin.Context) {
+		number, err := strconv.ParseFloat(c.Param("number"), 64)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": fmt.Sprintf("Invalid number: %v (%v)", c.Param("number"), err),
+			})
+			return
+		}
+
+		info := calcnumberinfo.New(number).All()
+		c.JSON(http.StatusOK, gin.H{
+			"result": info,
+		})
+	})
+
+	// moijaime
 	r.GET("/api/moijaime", func(c *gin.Context) {
 		phrases := []string{}
 		for i := 0; i < 20; i++ {
@@ -117,18 +139,19 @@ func server(c *cli.Context) error {
 		})
 	})
 
+	// spreadshirt
 	r.GET("/api/spreadshirt/random", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"result": calcspreadshirt.GetRandomProduct(250, 250),
 		})
 	})
-
 	r.GET("/api/spreadshirt/all", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"result": calcspreadshirt.GetAllProducts(250, 250),
 		})
 	})
 
+	// kryptos
 	r.POST("/api/kryptos/encrypt", func(c *gin.Context) {
 		var data struct {
 			Message string
@@ -143,7 +166,6 @@ func server(c *cli.Context) error {
 			})
 		}
 	})
-
 	r.POST("/api/kryptos/decrypt", func(c *gin.Context) {
 		var data struct {
 			Message string
@@ -159,6 +181,7 @@ func server(c *cli.Context) error {
 		}
 	})
 
+	// random
 	r.GET("/api/random/wotd", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"result": calcrand.WOTD(),
@@ -170,6 +193,7 @@ func server(c *cli.Context) error {
 		})
 	})
 
+	// soundcloud
 	r.GET("/api/soundcloud/me", func(c *gin.Context) {
 		me, err := soundcloud.Me()
 		if err != nil {
