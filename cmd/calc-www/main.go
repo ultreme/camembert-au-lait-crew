@@ -16,6 +16,7 @@ import (
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
 	"github.com/camembertaulaitcrew/moi-j-aime-generator"
 	"github.com/gin-gonic/gin"
+	"github.com/tpyolang/tpyo-cli"
 	"github.com/ultreme/go-kryptos"
 	"github.com/urfave/cli"
 )
@@ -173,6 +174,23 @@ func server(c *cli.Context) error {
 		if err := c.BindJSON(&data); err == nil {
 			c.JSON(http.StatusOK, gin.H{
 				"result": kryptos.Decrypt(data.Message),
+			})
+		} else {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": fmt.Sprintf("Invalid input: %v", err),
+			})
+		}
+	})
+
+	// tpyo
+	r.POST("/api/tpyo/enocde", func(c *gin.Context) {
+		var data struct {
+			Message string
+		}
+		if err := c.BindJSON(&data); err == nil {
+			enedocr := tpyo.NewTpyo()
+			c.JSON(http.StatusOK, gin.H{
+				"result": enedocr.Enocde(data.Message),
 			})
 		} else {
 			c.JSON(http.StatusNotFound, gin.H{
