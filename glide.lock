@@ -1,12 +1,12 @@
-hash: 7aaf243533f7e4e20471ad1732128d2b83be0536ab9240c511756c18730b3182
-updated: 2016-09-03T18:58:15.518675376+02:00
+hash: a2487d08348752dc91a0df86a80c405527041d561e56cea0e43feda2a7d195f1
+updated: 2016-09-27T13:08:39.860444264+02:00
 imports:
 - name: github.com/camembertaulaitcrew/moi-j-aime-generator
   version: 3d3460be75243ad727d12644d2c381b8231955dc
 - name: github.com/gin-gonic/gin
   version: f931d1ea80ae95a6fc739213cdd9399bd2967fb6
 - name: github.com/golang/protobuf
-  version: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
+  version: 87c000235d3d852c1628dc9490cd21ab36a7d69f
   subpackages:
   - proto
 - name: github.com/manucorporat/sse
@@ -15,20 +15,22 @@ imports:
   version: 753f372df50989520206acbccb81bdd33eae1f1d
 - name: github.com/shazow/memoizer
   version: 74fc48eaeadc91587011d9cc4f29ed398d2909c5
+- name: github.com/tpyolang/tpyo-cli
+  version: 6ba04c3a8dec5695462c122162464062438a17a3
 - name: github.com/ultreme/go-kryptos
   version: 881f4774ed8188eb21c9f54f3cb1f5da2f785fbb
 - name: github.com/urfave/cli
-  version: 33bb4c121333cd8eb7d8cc8d74474f4ec156f371
+  version: d53eb991652b1d438abdd34ce4bfa3ef1539108e
 - name: github.com/yanatan16/golang-soundcloud
   version: afe0c9115e3c7a6a3c33bdce840900afd6d166ac
   subpackages:
   - soundcloud
 - name: golang.org/x/net
-  version: 1358eff22f0dd0c54fc521042cc607f6ff4b531a
+  version: f09c4662a0bd6bd8943ac7b4931e185df9471da4
   subpackages:
   - context
 - name: gopkg.in/go-playground/validator.v8
   version: 5f57d2222ad794d0dffb07e664ea05e2ee07d60c
 - name: gopkg.in/yaml.v2
-  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
+  version: 31c299268d302dd0aa9a0dcf765a3d58971ac83f
 devImports: []

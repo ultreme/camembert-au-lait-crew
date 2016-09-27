@@ -18,3 +18,4 @@ import:
 - package: github.com/shazow/memoizer
 - package: github.com/ultreme/go-kryptos
 - package: github.com/moul/numberinfo
+- package: github.com/tpyolang/tpyo-cli
