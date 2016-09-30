@@ -15,6 +15,7 @@ import (
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
 	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
 	"github.com/camembertaulaitcrew/moi-j-aime-generator"
+	"github.com/camembertaulaitcrew/recettator"
 	"github.com/gin-gonic/gin"
 	"github.com/tpyolang/tpyo-cli"
 	"github.com/ultreme/go-kryptos"
@@ -126,6 +127,30 @@ func server(c *cli.Context) error {
 		info := calcnumberinfo.New(number).All()
 		c.JSON(http.StatusOK, gin.H{
 			"result": info,
+		})
+	})
+
+	// recettator
+	r.GET("/api/recettator/json/:seed", func(c *gin.Context) {
+		seed, err := strconv.ParseInt(c.Param("seed"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": fmt.Sprintf("Invalid seed: %v (%v)", c.Param("seed"), err),
+			})
+			return
+		}
+
+		rctt := recettator.New(seed)
+		rctt.SetSettings(recettator.Settings{
+			MainIngredients:      2,
+			SecondaryIngredients: 2,
+			Steps:                5,
+		})
+
+		output := rctt.ToMap()
+
+		c.JSON(http.StatusOK, gin.H{
+			"result": output,
 		})
 	})
 
