@@ -39,6 +39,13 @@ var (
 
 var tlsConfigInsecure = &tls.Config{InsecureSkipVerify: true}
 
+type testContext struct{}
+
+func (testContext) Done() <-chan struct{}                   { return make(chan struct{}) }
+func (testContext) Err() error                              { panic("should not be called") }
+func (testContext) Deadline() (deadline time.Time, ok bool) { return time.Time{}, false }
+func (testContext) Value(key interface{}) interface{}       { return nil }
+
 func TestTransportExternal(t *testing.T) {
 	if !*extNet {
 		t.Skip("skipping external network test")
@@ -52,6 +59,16 @@ func TestTransportExternal(t *testing.T) {
 	res.Write(os.Stdout)
 }
 
+type fakeTLSConn struct {
+	net.Conn
+}
+
+func (c *fakeTLSConn) ConnectionState() tls.ConnectionState {
+	return tls.ConnectionState{
+		Version: tls.VersionTLS12,
+	}
+}
+
 func startH2cServer(t *testing.T) net.Listener {
 	h2Server := &Server{}
 	l := newLocalListener(t)
@@ -61,8 +78,8 @@ func startH2cServer(t *testing.T) net.Listener {
 			t.Error(err)
 			return
 		}
-		h2Server.ServeConn(conn, &ServeConnOpts{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintf(w, "Hello, %v", r.URL.Path)
+		h2Server.ServeConn(&fakeTLSConn{conn}, &ServeConnOpts{Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintf(w, "Hello, %v, http: %v", r.URL.Path, r.TLS == nil)
 		})})
 	}()
 	return l
@@ -92,7 +109,7 @@ func TestTransportH2c(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got, want := string(body), "Hello, /foobar"; got != want {
+	if got, want := string(body), "Hello, /foobar, http: true"; got != want {
 		t.Fatalf("response got %v, want %v", got, want)
 	}
 }
@@ -2616,5 +2633,19 @@ func TestRoundTripDoesntConsumeRequestBodyEarly(t *testing.T) {
 	}
 	if string(slurp) != body {
 		t.Errorf("Body = %q; want %q", slurp, body)
+	}
+}
+
+func TestClientConnPing(t *testing.T) {
+	st := newServerTester(t, func(w http.ResponseWriter, r *http.Request) {}, optOnlyServer)
+	defer st.Close()
+	tr := &Transport{TLSClientConfig: tlsConfigInsecure}
+	defer tr.CloseIdleConnections()
+	cc, err := tr.dialClientConn(st.ts.Listener.Addr().String(), false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err = cc.Ping(testContext{}); err != nil {
+		t.Fatal(err)
 	}
 }

@@ -1,8 +1,10 @@
-hash: a2487d08348752dc91a0df86a80c405527041d561e56cea0e43feda2a7d195f1
-updated: 2016-09-27T13:08:39.860444264+02:00
+hash: 67c004c2d89b104a4fc9d19eb2d1cdb9d5ef2f5536c586db3ceebdcacfc00b36
+updated: 2016-09-30T10:35:20.999202388+02:00
 imports:
 - name: github.com/camembertaulaitcrew/moi-j-aime-generator
   version: 3d3460be75243ad727d12644d2c381b8231955dc
+- name: github.com/camembertaulaitcrew/recettator
+  version: 8174bf3ba3f919e357810789e20b922fdb0058f4
 - name: github.com/gin-gonic/gin
   version: f931d1ea80ae95a6fc739213cdd9399bd2967fb6
 - name: github.com/golang/protobuf
@@ -26,11 +28,11 @@ imports:
   subpackages:
   - soundcloud
 - name: golang.org/x/net
-  version: f09c4662a0bd6bd8943ac7b4931e185df9471da4
+  version: a333c534c871727fb95745870e8b98a69447f2ce
   subpackages:
   - context
 - name: gopkg.in/go-playground/validator.v8
   version: 5f57d2222ad794d0dffb07e664ea05e2ee07d60c
 - name: gopkg.in/yaml.v2
-  version: 31c299268d302dd0aa9a0dcf765a3d58971ac83f
+  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
 devImports: []

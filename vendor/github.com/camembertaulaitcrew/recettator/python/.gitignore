@@ -1,0 +1,7 @@
+tmp/
+.venv
+*.pyc
+*#
+.#*
+*~
+*.egg-info

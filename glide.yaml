@@ -19,3 +19,4 @@ import:
 - package: github.com/ultreme/go-kryptos
 - package: github.com/moul/numberinfo
 - package: github.com/tpyolang/tpyo-cli
+- package: github.com/camembertaulaitcrew/recettator
