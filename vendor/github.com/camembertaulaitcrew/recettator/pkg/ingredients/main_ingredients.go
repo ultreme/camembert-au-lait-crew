@@ -10,12 +10,16 @@ type MainIngredient struct {
 	name     string
 	quantity string
 	rand     *rand.Rand
+	method   Method
 
 	Gender   string
 	Multiple bool
 }
 
-func NewMainIngredient(name, gender string, multiple bool, rnd *rand.Rand) MainIngredient {
+func (i *MainIngredient) SetMethod(method Method) { i.method = method }
+func (i *MainIngredient) GetMethod() Method       { return i.method }
+
+func NewMainIngredient(name, gender string, multiple bool, rnd *rand.Rand) *MainIngredient {
 	ingredient := MainIngredient{
 		name:     name,
 		Gender:   gender,
@@ -122,7 +126,7 @@ func NewMainIngredient(name, gender string, multiple bool, rnd *rand.Rand) MainI
 		break
 	}
 
-	return ingredient
+	return &ingredient
 }
 
 func (i MainIngredient) nameWithPrefix() string {
@@ -147,11 +151,23 @@ func (i MainIngredient) GetSteps() Steps {
 			Instruction: fmt.Sprintf("découpez %s en fines petites tranches", i.nameWithPrefix()),
 			Weight:      -100,
 		},
+		Step{
+			Instruction: fmt.Sprintf("détaillez %s en cubes de 3cm de côté", i.nameWithPrefix()),
+			Weight:      -100,
+		},
+		Step{
+			Instruction: fmt.Sprintf("coupez %s en fines lamelles", i.nameWithPrefix()),
+			Weight:      -100,
+		},
 	}
 
 	availableFinishSteps := Steps{
 		Step{
 			Instruction: fmt.Sprintf("déposez %s juste au dessus", i.nameWithPrefix()),
+			Weight:      100,
+		},
+		Step{
+			Instruction: fmt.Sprintf("versez %s dans une cocotte en fonte de préférence", i.nameWithPrefix()),
 			Weight:      100,
 		},
 	}
@@ -162,6 +178,13 @@ func (i MainIngredient) GetSteps() Steps {
 		steps = append(steps, availableFinishSteps[i.rand.Intn(len(availableFinishSteps))])
 	}
 
+	if i.method != nil {
+		for _, step := range i.method.GetSteps() {
+			step.Instruction = strings.Replace(step.Instruction, "%left%", i.nameWithPrefix(), -1)
+			steps = append(steps, step)
+		}
+	}
+
 	return steps
 }
 
@@ -169,26 +192,30 @@ func (i MainIngredient) IsMultiple() bool  { return i.Multiple }
 func (i MainIngredient) GetGender() string { return i.Gender }
 
 func (i MainIngredient) TitlePart(left Ingredient) string {
-	// fixme: get a random possibility not the first one that trigger
+	nameWithMethod := i.name
+	if i.method != nil {
+		nameWithMethod = fmt.Sprintf("%s %s", i.name, i.method.TitlePart(&i))
+	}
+
 	if left == nil {
-		return i.name
+		return nameWithMethod
 	}
 
 	switch i.rand.Intn(2) {
 	case 0:
 		switch {
 		case i.Multiple:
-			return fmt.Sprintf("aux %s", i.name)
-		case beginsWithVoyel(i.name):
-			return fmt.Sprintf("à l'%s", i.name)
+			return fmt.Sprintf("aux %s", nameWithMethod)
+		case beginsWithVoyel(nameWithMethod):
+			return fmt.Sprintf("à l'%s", nameWithMethod)
 		case i.Gender == "male":
-			return fmt.Sprintf("au %s", i.name)
+			return fmt.Sprintf("au %s", nameWithMethod)
 		case i.Gender == "female":
-			return fmt.Sprintf("à la %s", i.name)
+			return fmt.Sprintf("à la %s", nameWithMethod)
 		}
 	case 1:
 		var suffix string
-		if beginsWithVoyel(i.name) {
+		if beginsWithVoyel(nameWithMethod) {
 			suffix = "d'"
 		} else {
 			suffix = "de "
@@ -196,13 +223,13 @@ func (i MainIngredient) TitlePart(left Ingredient) string {
 
 		switch {
 		case left.GetGender() == "male" && !left.IsMultiple():
-			return fmt.Sprintf("assorti %s%s", suffix, i.name)
+			return fmt.Sprintf("assorti %s%s", suffix, nameWithMethod)
 		case left.GetGender() == "female" && !left.IsMultiple():
-			return fmt.Sprintf("assortie %s%s", suffix, i.name)
+			return fmt.Sprintf("assortie %s%s", suffix, nameWithMethod)
 		case left.GetGender() == "male" && left.IsMultiple():
-			return fmt.Sprintf("assortis %s%s", suffix, i.name)
+			return fmt.Sprintf("assortis %s%s", suffix, nameWithMethod)
 		case left.GetGender() == "female" && left.IsMultiple():
-			return fmt.Sprintf("assorties %s%s", suffix, i.name)
+			return fmt.Sprintf("assorties %s%s", suffix, nameWithMethod)
 		}
 	}
 	panic("should not happen")
@@ -222,5 +249,8 @@ func (i MainIngredient) ToMap() map[string]interface{} {
 	ret["quantity"] = i.quantity
 	ret["is-multiple"] = i.Multiple
 	ret["gender"] = i.Gender
+	if i.method != nil {
+		ret["method"] = i.method.ToMap()
+	}
 	return ret
 }

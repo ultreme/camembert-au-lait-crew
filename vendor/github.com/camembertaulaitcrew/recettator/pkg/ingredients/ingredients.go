@@ -58,7 +58,11 @@ type Ingredient interface {
 	IsMultiple() bool
 	GetGender() string
 	GetSteps() Steps
+	GetMethod() Method
+	SetMethod(Method)
 }
+
+type Method Ingredient
 
 type Ingredients []Ingredient
 
@@ -66,6 +70,7 @@ type IngredientsPool struct {
 	rand                 *rand.Rand
 	MainIngredients      PoolCategory
 	SecondaryIngredients PoolCategory
+	IngredientMethods    PoolCategory
 }
 
 type PoolCategory struct {
@@ -95,7 +100,7 @@ func (i *PoolCategory) Pick() Ingredient {
 	i.Availables.shuffle(i.rand)
 	i.Picked = append(i.Picked, i.Availables[0])
 	i.Availables = i.Availables[1:]
-	return i.Availables[0]
+	return i.Picked[len(i.Picked)-1]
 }
 
 func (i *PoolCategory) GetSteps() Steps {
@@ -149,9 +154,11 @@ func NewPool(rnd *rand.Rand) *IngredientsPool {
 	pool.SecondaryIngredients.rand = rnd
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("amandes", "female", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("anis", "male", false, rnd).SetIsPowder())
+	pool.SecondaryIngredients.append(NewSecondaryIngredient("betteraves", "female", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("beurre", "male", false, rnd).SetIsSpreadable())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("blancs d'oeufs", "male", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("blé", "male", false, rnd).SetIsPowder())
+        pool.SecondaryIngredients.append(NewSecondaryIngredient("cacahuètes", "female", true, rnd).SetIdPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("cacao", "male", false, rnd).SetIsPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("camembert", "male", false, rnd).SetIsSpreadable())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("canelle", "female", false, rnd).SetIsPowder())
@@ -160,12 +167,14 @@ func NewPool(rnd *rand.Rand) *IngredientsPool {
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("citron", "male", false, rnd).SetIsCitrus())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("clous de girofle", "male", false, rnd).SetIsSpice())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("confifure d'oranges amères", "female", false, rnd).SetIsSpreadable())
+	pool.SecondaryIngredients.append(NewSecondaryIngredient("cornichons", "male", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("cube de Kubor®", "male", false, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("dattes", "female", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("épices", "female", true, rnd).SetIsSpice())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("farine", "female", false, rnd).SetIsPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("figues", "female", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("flocons d'avoine", "male", false, rnd).SetIsPowder())
+        pool.SecondaryIngredients.append(NewSecondaryIngredient("frites", "female", true, rnd).SetIdByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("fromage rapé", "male", false, rnd).SetIsPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("fruits sechés", "male", true, rnd).SetIsPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("fruits", "male", false, rnd).SetIsPowder())
@@ -173,6 +182,7 @@ func NewPool(rnd *rand.Rand) *IngredientsPool {
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("graines de pavot", "female", true, rnd).SetIsPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("gui", "male", false, rnd).SetIsUncountable())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("houx", "male", false, rnd).SetIsUncountable()) // can be singular or plural
+	pool.SecondaryIngredients.append(NewSecondaryIngredient("haricots", "male", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("jaunes d'oeufs", "male", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("lierre", "male", false, rnd).SetIsUncountable())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("mascarpone", "female", false, rnd).SetIsSpreadable())
@@ -183,13 +193,27 @@ func NewPool(rnd *rand.Rand) *IngredientsPool {
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("noix de coco", "female", false, rnd).SetIsByPiece()) // can be singular or plural
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("noix", "female", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("oeufs", "male", true, rnd).SetIsByPiece())
+	pool.SecondaryIngredients.append(NewSecondaryIngredient("olives", "female", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("orange", "female", false, rnd).SetIsCitrus())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("pamplemousse", "male", false, rnd).SetIsCitrus())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("petits pois", "male", true, rnd).SetIsPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("pommes de terre", "female", true, rnd).SetIsByPiece())
+	pool.SecondaryIngredients.append(NewSecondaryIngredient("radis", "male", true, rnd).SetIsByPiece())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("reblochon", "male", false, rnd).SetIsSpreadable())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("riz", "male", false, rnd).SetIsPowder())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("sel", "male", false, rnd).SetIsSpice())
+	pool.SecondaryIngredients.append(NewSecondaryIngredient("spaghettis", "male", true, rnd).SetIsUncountable())
 	pool.SecondaryIngredients.append(NewSecondaryIngredient("tomates", "female", true, rnd).SetIsByPiece())
+	pool.SecondaryIngredients.append(NewSecondaryIngredient("vermicelles", "female", true, rnd).SetIsUncountable())
+
+	pool.IngredientMethods.rand = rnd
+	pool.IngredientMethods.append(NewIngredientMethod("farci", "farcie", "farcis", "farcies", Steps{{"remplissez %left% avec ce que vous voulez", 10}}, rnd))
+	pool.IngredientMethods.append(NewIngredientMethod("glacé", "glacée", "glacés", "glacées", Steps{{"mettez %left% au réfrigérateur quelques heures", 50}}, rnd))
+	pool.IngredientMethods.append(NewIngredientMethod("poêlé", "poêlée", "poêlés", "poêlées", Steps{{"faites revenir %left% dans une poêle", 50}}, rnd))
+	pool.IngredientMethods.append(NewIngredientMethod("roti", "rotie", "rotis", "roties", Steps{{"préchauffez le four pour y mettre %left% par la suite", -50}}, rnd))
+	pool.IngredientMethods.append(NewIngredientMethod("chaud", "chaude", "chauds", "chaudes", Steps{{"chauffez légerement %left% au four", 50}}, rnd))
+	//pool.IngredientMethods.append(NewIngredientMethod("découpé", "découpée", "découpés", "découpées", Steps{{"découpez %left% en granches plutôt épaisses", -50}}, rnd))
+	pool.IngredientMethods.append(NewIngredientMethod("grillé", "grillée", "grillés", "grillées", Steps{{"mettez %left% sur le grill", 50}}, rnd))
+	pool.IngredientMethods.append(NewIngredientMethod("battu", "battue", "battus", "battues", Steps{{"battez énergiquement %left% avec un fouet", -10}}, rnd))
 	return &pool
 }

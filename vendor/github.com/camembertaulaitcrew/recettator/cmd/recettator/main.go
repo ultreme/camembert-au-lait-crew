@@ -76,8 +76,8 @@ func run(c *cli.Context) error {
 	} else {
 		output, err = rctt.Markdown()
 		if err != nil {
-			return err
 			//panic(err)
+			return err
 		}
 	}
 

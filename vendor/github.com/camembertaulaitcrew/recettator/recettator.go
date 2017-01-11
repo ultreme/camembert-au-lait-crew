@@ -61,6 +61,15 @@ func (r *Recettator) pickItems() {
 	for i := uint64(0); i < r.settings.SecondaryIngredients; i++ {
 		r.pool.SecondaryIngredients.Pick()
 	}
+
+	for _, ingredient := range r.pool.MainIngredients.Picked {
+		if r.rnd.Intn(20) < 2 {
+			continue
+		}
+		if method := r.pool.IngredientMethods.Pick(); method != nil {
+			ingredient.SetMethod(method)
+		}
+	}
 }
 
 func (r *Recettator) isValid() error {
@@ -145,7 +154,7 @@ Pour {{ .People }} {{ if eq .People 1 }}personne{{ else }}personnes{{ end }}.
 	return buff.String(), nil
 }
 
-func (r *Recettator) JSON() string {
+func (r *Recettator) ToMap() map[string]interface{} {
 	export := make(map[string]interface{}, 0)
 	r.prepare()
 	export["seed"] = r.seed
@@ -157,6 +166,11 @@ func (r *Recettator) JSON() string {
 		"main-ingredients":      r.pool.MainIngredients.Picked.ToMap(),
 		"secondary-ingredients": r.pool.SecondaryIngredients.Picked.ToMap(),
 	}
+	return export
+}
+
+func (r *Recettator) JSON() string {
+	export := r.ToMap()
 	output, _ := json.MarshalIndent(export, "", "  ")
 	return string(output)
 }

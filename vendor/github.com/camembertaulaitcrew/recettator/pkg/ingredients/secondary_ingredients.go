@@ -19,6 +19,9 @@ type SecondaryIngredient struct {
 	rand          *rand.Rand
 }
 
+func (i *SecondaryIngredient) SetMethod(method Method) { panic("Not implemented") }
+func (i *SecondaryIngredient) GetMethod() Method       { return nil }
+
 func NewSecondaryIngredient(name string, gender string, isMultiple bool, rnd *rand.Rand) *SecondaryIngredient {
 	ingredient := SecondaryIngredient{
 		name:       name,
@@ -149,7 +152,7 @@ func (i SecondaryIngredient) GetSteps() Steps {
 			Weight:      -100,
 		},
 		Step{
-			Instruction: fmt.Sprintf("faites chauffer %s et penser à vanne pendant le refroidissement", i.nameWithPrefix()),
+			Instruction: fmt.Sprintf("faites chauffer %s et penser à vanner pendant le refroidissement", i.nameWithPrefix()),
 			Weight:      -100,
 		},
 	}

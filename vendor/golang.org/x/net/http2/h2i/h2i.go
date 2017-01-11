@@ -56,8 +56,8 @@ type command struct {
 }
 
 var commands = map[string]command{
-	"ping": {run: (*h2i).cmdPing},
-	"settings": {
+	"ping": command{run: (*h2i).cmdPing},
+	"settings": command{
 		run: (*h2i).cmdSettings,
 		complete: func() []string {
 			return []string{
@@ -71,13 +71,14 @@ var commands = map[string]command{
 			}
 		},
 	},
-	"quit":    {run: (*h2i).cmdQuit},
-	"headers": {run: (*h2i).cmdHeaders},
+	"quit":    command{run: (*h2i).cmdQuit},
+	"headers": command{run: (*h2i).cmdHeaders},
 }
 
 func usage() {
 	fmt.Fprintf(os.Stderr, "Usage: h2i <hostname>\n\n")
 	flag.PrintDefaults()
+	os.Exit(1)
 }
 
 // withPort adds ":443" if another port isn't already present.
@@ -110,7 +111,6 @@ func main() {
 	flag.Parse()
 	if flag.NArg() != 1 {
 		usage()
-		os.Exit(2)
 	}
 	log.SetFlags(0)
 
