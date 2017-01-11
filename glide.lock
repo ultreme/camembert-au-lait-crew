@@ -1,10 +1,10 @@
 hash: 67c004c2d89b104a4fc9d19eb2d1cdb9d5ef2f5536c586db3ceebdcacfc00b36
-updated: 2017-01-11T20:01:52.972076318+01:00
+updated: 2017-01-11T20:14:46.123768622+01:00
 imports:
 - name: github.com/camembertaulaitcrew/moi-j-aime-generator
   version: 3d3460be75243ad727d12644d2c381b8231955dc
 - name: github.com/camembertaulaitcrew/recettator
-  version: ab7f3b546b964f379448f33d737770f83e1e92e5
+  version: 4c2561bac64697b7e1c1dcf2f298bd7797c2e61a
   subpackages:
   - pkg/ingredients
 - name: github.com/gin-gonic/gin
