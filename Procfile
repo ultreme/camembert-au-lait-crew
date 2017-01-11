@@ -1,0 +1,1 @@
+web: go run ./cmd/calc-www/main.go server
