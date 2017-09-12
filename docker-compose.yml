@@ -1,4 +1,17 @@
-calc-www:
-  labels:
-    io.rancher.container.pull_image: always
-  image: calc/camembert-au-lait-crew:latest
+version: '2'
+
+services:
+  calc-www:
+    labels:
+      io.rancher.container.pull_image: always
+    image: calc/camembert-au-lait-crew:latest
+    environment:
+      - VIRTUAL_HOST=calc-api.m.42.am
+      #- VIRTUAL_PORT=
+    networks:
+      - default
+      - service-proxy
+
+networks:
+  service-proxy:
+    external: true

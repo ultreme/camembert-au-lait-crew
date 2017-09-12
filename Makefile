@@ -6,8 +6,13 @@ calc-www: $(SOURCE)
 	go build -o ./calc-www ./cmd/calc-www/main.go
 
 
-.PHONY: run
-run: calc-www
+run: up
+
+up:
+	docker-compose up -d --force-recreate --remove-orphans
+
+.PHONY: dev
+dev: calc-www
 	./calc-www server
 
 
