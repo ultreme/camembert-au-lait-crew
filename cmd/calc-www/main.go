@@ -1,26 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
-	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tpyolang/tpyo-cli"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/render"
+	"github.com/gobuffalo/packr"
 	"github.com/urfave/cli"
 
 	"ultre.me/calcbiz"
-	"ultre.me/calcbiz/pkg/crew"
 	"ultre.me/calcbiz/pkg/dashboard"
 	"ultre.me/calcbiz/pkg/log"
-	"ultre.me/calcbiz/pkg/numberinfo"
-	"ultre.me/calcbiz/pkg/random"
 	"ultre.me/calcbiz/pkg/soundcloud"
-	"ultre.me/calcbiz/pkg/spreadshirt"
-	"ultre.me/kryptos"
-	"ultre.me/moi-j-aime-generator"
-	"ultre.me/recettator"
 )
 
 func main() {
@@ -76,263 +71,281 @@ func main() {
 }
 
 func server(c *cli.Context) error {
-	r := gin.Default()
+	r := chi.NewRouter()
+	//r.Use(middleware.RequestID)
+	//r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	//r.Use(middleware.URLFormat)
+	r.Use(middleware.Timeout(5 * time.Second))
 
-	// ping
-	pong := func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"result": "pong",
-		})
-	}
-	r.GET("/api/ping", pong)
-	r.POST("/api/ping", pong)
-	r.PUT("/api/ping", pong)
-	r.PATCH("/api/ping", pong)
-	r.DELETE("/api/ping", pong)
+	r.Route("/api", func(r chi.Router) {
+		r.Use(render.SetContentType(render.ContentTypeJSON))
 
-	soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
-	dashboard := calcdashboard.New()
-	dashboard.SetSoundCloud(&soundcloud)
-
-	// dashboard
-	r.GET("/api/dashboard/random", func(c *gin.Context) {
-		dashboard, err := dashboard.Random()
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": err,
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"result": dashboard,
-			})
+		// ping
+		pong := func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte(`{"result":"pong"}`))
 		}
-	})
+		r.Get("/ping", pong)
+		r.Post("/ping", pong)
+		r.Options("/ping", pong)
+		r.Trace("/ping", pong)
+		r.Connect("/ping", pong)
+		r.Head("/ping", pong)
+		r.Put("/ping", pong)
+		r.Patch("/ping", pong)
+		r.Delete("/ping", pong)
 
-	// crew
-	r.GET("/api/crew", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"result": calccrew.CALC,
-		})
-	})
+		soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
+		dashboard := calcdashboard.New()
+		dashboard.SetSoundCloud(&soundcloud)
 
-	// numberinfo
-	r.GET("/api/numberinfo/all/:number", func(c *gin.Context) {
-		number, err := strconv.ParseFloat(c.Param("number"), 64)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": fmt.Sprintf("Invalid number: %v (%v)", c.Param("number"), err),
-			})
-			return
-		}
-
-		info := calcnumberinfo.New(number).All()
-		c.JSON(http.StatusOK, gin.H{
-			"result": info,
-		})
-	})
-
-	// recettator
-	r.GET("/api/recettator/json/:seed", func(c *gin.Context) {
-		seed, err := strconv.ParseInt(c.Param("seed"), 10, 64)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": fmt.Sprintf("Invalid seed: %v (%v)", c.Param("seed"), err),
-			})
-			return
-		}
-
-		rctt := recettator.New(seed)
-		rctt.SetSettings(recettator.Settings{
-			MainIngredients:      2,
-			SecondaryIngredients: 2,
-			Steps:                5,
-		})
-
-		output := rctt.ToMap()
-
-		c.JSON(http.StatusOK, gin.H{
-			"result": output,
-		})
-	})
-
-	// moijaime
-	r.GET("/api/moijaime", func(c *gin.Context) {
-		phrases := []string{}
-		for i := 0; i < 20; i++ {
-			phrases = append(phrases, moijaime.Generate())
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"result": phrases,
-		})
-	})
-
-	// spreadshirt
-	r.GET("/api/spreadshirt/random", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"result": calcspreadshirt.GetRandomProduct(250, 250),
-		})
-	})
-	r.GET("/api/spreadshirt/all", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"result": calcspreadshirt.GetAllProducts(250, 250),
-		})
-	})
-
-	// kryptos
-	r.POST("/api/kryptos/encrypt", func(c *gin.Context) {
-		var data struct {
-			Message string
-		}
-		if err := c.BindJSON(&data); err == nil {
-			c.JSON(http.StatusOK, gin.H{
-				"result": kryptos.Encrypt(data.Message),
-			})
-		} else {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": fmt.Sprintf("Invalid input: %v", err),
-			})
-		}
-	})
-	r.POST("/api/kryptos/decrypt", func(c *gin.Context) {
-		var data struct {
-			Message string
-		}
-		if err := c.BindJSON(&data); err == nil {
-			c.JSON(http.StatusOK, gin.H{
-				"result": kryptos.Decrypt(data.Message),
-			})
-		} else {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": fmt.Sprintf("Invalid input: %v", err),
-			})
-		}
-	})
-
-	// tpyo
-	r.POST("/api/tpyo/enocde", func(c *gin.Context) {
-		var data struct {
-			Message string
-		}
-		if err := c.BindJSON(&data); err == nil {
-			enedocr := tpyo.NewTpyo()
-			c.JSON(http.StatusOK, gin.H{
-				"result": enedocr.Enocde(data.Message),
-			})
-		} else {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": fmt.Sprintf("Invalid input: %v", err),
-			})
-		}
-	})
-
-	// random
-	r.GET("/api/random/wotd", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"result": calcrand.WOTD(),
-		})
-	})
-	r.GET("/api/random/alternate-logo", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"result": calcrand.AlternateLogo(),
-		})
-	})
-
-	// soundcloud
-	r.GET("/api/soundcloud/me", func(c *gin.Context) {
-		me, err := soundcloud.Me()
-		if err != nil {
-			log.Warnf("failed to get /api/soundcloud/me: %v", err)
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"result": me,
-			})
-		}
-	})
-	r.GET("/api/soundcloud/playlists", func(c *gin.Context) {
-		playlists, err := soundcloud.Playlists()
-		if err != nil {
-			log.Warnf("failed to get /api/soundcloud/playlists: %v", err)
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"result": playlists,
-			})
-		}
-	})
-	r.GET("/api/soundcloud/playlists/:id", func(c *gin.Context) {
-		playlistID, err := strconv.ParseUint(c.Param("id"), 10, 64)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": fmt.Sprintf("Invalid playlist id: %v", c.Param("id")),
-			})
-			return
-		}
-
-		playlist, err := soundcloud.Playlist(playlistID)
-		if err != nil {
-			log.Warnf("failed to get /api/soundcloud/playlists/%d: %v", playlistID, err)
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"result": playlist,
-			})
-		}
-	})
-	r.GET("/api/soundcloud/tracks/:id", func(c *gin.Context) {
-		if c.Param("id") == "random" {
-			track, err := soundcloud.RandomTrack()
+		// dashboard
+		r.Get("/dashboard/random", func(w http.ResponseWriter, r *http.Request) {
+			dashboard, err := dashboard.Random()
 			if err != nil {
-				log.Warnf("failed to get /api/soundcloud/tracks/random: %v", err)
 				c.JSON(http.StatusNotFound, gin.H{
-					"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+					"error": err,
 				})
 			} else {
 				c.JSON(http.StatusOK, gin.H{
-					"result": track,
+					"result": dashboard,
 				})
 			}
-			return
-		}
-		trackID, err := strconv.ParseUint(c.Param("id"), 10, 64)
-		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": fmt.Sprintf("Invalid track id: %v", c.Param("id")),
-			})
-			return
-		}
+		})
 
-		track, err := soundcloud.Track(trackID)
-		if err != nil {
-			log.Warnf("failed to get /api/soundcloud/tracks/%d: %v", trackID, err)
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+		/*
+			// crew
+			r.Get("/crew", func(w http.ResponseWriter, r *http.Request) {
+				c.JSON(http.StatusOK, gin.H{
+					"result": calccrew.CALC,
+				})
 			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"result": track,
+
+			// numberinfo
+			r.Get("/numberinfo/all/:number", func(w http.ResponseWriter, r *http.Request) {
+				number, err := strconv.ParseFloat(c.Param("number"), 64)
+				if err != nil {
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": fmt.Sprintf("Invalid number: %v (%v)", c.Param("number"), err),
+					})
+					return
+				}
+
+				info := calcnumberinfo.New(number).All()
+				c.JSON(http.StatusOK, gin.H{
+					"result": info,
+				})
 			})
-		}
+
+			// recettator
+			r.Get("/recettator/json/:seed", func(w http.ResponseWriter, r *http.Request) {
+				seed, err := strconv.ParseInt(c.Param("seed"), 10, 64)
+				if err != nil {
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": fmt.Sprintf("Invalid seed: %v (%v)", c.Param("seed"), err),
+					})
+					return
+				}
+
+				rctt := recettator.New(seed)
+				rctt.SetSettings(recettator.Settings{
+					MainIngredients:      2,
+					SecondaryIngredients: 2,
+					Steps:                5,
+				})
+
+				output := rctt.ToMap()
+
+				c.JSON(http.StatusOK, gin.H{
+					"result": output,
+				})
+			})
+
+			// moijaime
+			r.Get("/moijaime", func(w http.ResponseWriter, r *http.Request) {
+				phrases := []string{}
+				for i := 0; i < 20; i++ {
+					phrases = append(phrases, moijaime.Generate())
+				}
+				c.JSON(http.StatusOK, gin.H{
+					"result": phrases,
+				})
+			})
+
+			// spreadshirt
+			r.Get("/spreadshirt/random", func(w http.ResponseWriter, r *http.Request) {
+				c.JSON(http.StatusOK, gin.H{
+					"result": calcspreadshirt.GetRandomProduct(250, 250),
+				})
+			})
+			r.Get("/spreadshirt/all", func(w http.ResponseWriter, r *http.Request) {
+				c.JSON(http.StatusOK, gin.H{
+					"result": calcspreadshirt.GetAllProducts(250, 250),
+				})
+			})
+
+			// kryptos
+			r.Post("/kryptos/encrypt", func(w http.ResponseWriter, r *http.Request) {
+				var data struct {
+					Message string
+				}
+				if err := c.BindJSON(&data); err == nil {
+					c.JSON(http.StatusOK, gin.H{
+						"result": kryptos.Encrypt(data.Message),
+					})
+				} else {
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": fmt.Sprintf("Invalid input: %v", err),
+					})
+				}
+			})
+			r.Post("/kryptos/decrypt", func(w http.ResponseWriter, r *http.Request) {
+				var data struct {
+					Message string
+				}
+				if err := c.BindJSON(&data); err == nil {
+					c.JSON(http.StatusOK, gin.H{
+						"result": kryptos.Decrypt(data.Message),
+					})
+				} else {
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": fmt.Sprintf("Invalid input: %v", err),
+					})
+				}
+			})
+
+			// tpyo
+			r.Post("/tpyo/enocde", func(w http.ResponseWriter, r *http.Request) {
+				var data struct {
+					Message string
+				}
+				if err := c.BindJSON(&data); err == nil {
+					enedocr := tpyo.NewTpyo()
+					c.JSON(http.StatusOK, gin.H{
+						"result": enedocr.Enocde(data.Message),
+					})
+				} else {
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": fmt.Sprintf("Invalid input: %v", err),
+					})
+				}
+			})
+
+			// random
+			r.Get("/random/wotd", func(w http.ResponseWriter, r *http.Request) {
+				c.JSON(http.StatusOK, gin.H{
+					"result": calcrand.WOTD(),
+				})
+			})
+			r.Get("/random/alternate-logo", func(w http.ResponseWriter, r *http.Request) {
+				c.JSON(http.StatusOK, gin.H{
+					"result": calcrand.AlternateLogo(),
+				})
+			})
+
+			// soundcloud
+			r.Get("/soundcloud/me", func(w http.ResponseWriter, r *http.Request) {
+				me, err := soundcloud.Me()
+				if err != nil {
+					log.Warnf("failed to get /api/soundcloud/me: %v", err)
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+					})
+				} else {
+					c.JSON(http.StatusOK, gin.H{
+						"result": me,
+					})
+				}
+			})
+			r.Get("/soundcloud/playlists", func(w http.ResponseWriter, r *http.Request) {
+				playlists, err := soundcloud.Playlists()
+				if err != nil {
+					log.Warnf("failed to get /api/soundcloud/playlists: %v", err)
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+					})
+				} else {
+					c.JSON(http.StatusOK, gin.H{
+						"result": playlists,
+					})
+				}
+			})
+			r.Get("/soundcloud/playlists/:id", func(w http.ResponseWriter, r *http.Request) {
+				playlistID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+				if err != nil {
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": fmt.Sprintf("Invalid playlist id: %v", c.Param("id")),
+					})
+					return
+				}
+
+				playlist, err := soundcloud.Playlist(playlistID)
+				if err != nil {
+					log.Warnf("failed to get /api/soundcloud/playlists/%d: %v", playlistID, err)
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+					})
+				} else {
+					c.JSON(http.StatusOK, gin.H{
+						"result": playlist,
+					})
+				}
+			})
+			r.Get("/soundcloud/tracks/:id", func(w http.ResponseWriter, r *http.Request) {
+				if c.Param("id") == "random" {
+					track, err := soundcloud.RandomTrack()
+					if err != nil {
+						log.Warnf("failed to get /api/soundcloud/tracks/random: %v", err)
+						c.JSON(http.StatusNotFound, gin.H{
+							"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+						})
+					} else {
+						c.JSON(http.StatusOK, gin.H{
+							"result": track,
+						})
+					}
+					return
+				}
+				trackID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+				if err != nil {
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": fmt.Sprintf("Invalid track id: %v", c.Param("id")),
+					})
+					return
+				}
+
+				track, err := soundcloud.Track(trackID)
+				if err != nil {
+					log.Warnf("failed to get /api/soundcloud/tracks/%d: %v", trackID, err)
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+					})
+				} else {
+					c.JSON(http.StatusOK, gin.H{
+						"result": track,
+					})
+				}
+			})
+			r.Get("/soundcloud/tracks", func(w http.ResponseWriter, r *http.Request) {
+				tracks, err := soundcloud.Tracks()
+				if err != nil {
+					log.Warnf("failed to get /api/soundcloud/tracks: %v", err)
+					c.JSON(http.StatusNotFound, gin.H{
+						"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
+					})
+				} else {
+					c.JSON(http.StatusOK, gin.H{
+						"result": tracks,
+					})
+				}
+			})
+		*/
 	})
-	r.GET("/api/soundcloud/tracks", func(c *gin.Context) {
-		tracks, err := soundcloud.Tracks()
-		if err != nil {
-			log.Warnf("failed to get /api/soundcloud/tracks: %v", err)
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"result": tracks,
-			})
-		}
-	})
+
+	// static files
+	box := packr.NewBox("./static")
+	r.Handle("/", http.FileServer(box))
 
 	// FIXME: handle socket.io
 	http.Handle("/", r)

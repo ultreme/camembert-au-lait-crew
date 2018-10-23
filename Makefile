@@ -11,7 +11,7 @@ up:
 	docker-compose up -d --force-recreate --remove-orphans
 
 .PHONY: dev
-dev: calc-www
+dev: install
 	calc-www server
 
 
