@@ -1,8 +1,0 @@
-contrib/docker/entrypoint
-/advanced-ssh-config
-/assh
-/cmd/assh/assh
-profile.out
-dist/
-docker/assh
-docker/[0-9]*
