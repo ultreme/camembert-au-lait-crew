@@ -6,20 +6,21 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/crew"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/dashboard"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/log"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/numberinfo"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/random"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
-	"github.com/camembertaulaitcrew/moi-j-aime-generator"
-	"github.com/camembertaulaitcrew/recettator"
 	"github.com/gin-gonic/gin"
 	"github.com/tpyolang/tpyo-cli"
-	"github.com/ultreme/go-kryptos"
 	"github.com/urfave/cli"
+
+	"ultre.me/calcbiz"
+	"ultre.me/calcbiz/pkg/crew"
+	"ultre.me/calcbiz/pkg/dashboard"
+	"ultre.me/calcbiz/pkg/log"
+	"ultre.me/calcbiz/pkg/numberinfo"
+	"ultre.me/calcbiz/pkg/random"
+	"ultre.me/calcbiz/pkg/soundcloud"
+	"ultre.me/calcbiz/pkg/spreadshirt"
+	"ultre.me/kryptos"
+	"ultre.me/moi-j-aime-generator"
+	"ultre.me/recettator"
 )
 
 func main() {

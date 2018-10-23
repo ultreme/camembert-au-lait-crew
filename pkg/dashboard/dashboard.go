@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/soundcloud"
-	"github.com/camembertaulaitcrew/camembert-au-lait-crew/pkg/spreadshirt"
+	"ultre.me/calcbiz/pkg/soundcloud"
+	"ultre.me/calcbiz/pkg/spreadshirt"
 )
 
 type CALCDashboard struct {

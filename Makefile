@@ -1,9 +1,8 @@
 SOURCE :=	$(shell find . -name "*.go")
-OWN_PACKAGES := $(shell go list ./... | grep -v vendor)
 
 
-calc-www: $(SOURCE)
-	go build -o ./calc-www ./cmd/calc-www/main.go
+install:
+	go install ./cmd/calc-www
 
 
 run: up
@@ -13,14 +12,14 @@ up:
 
 .PHONY: dev
 dev: calc-www
-	./calc-www server
+	calc-www server
 
 
 .PHONY: docker
 docker:
-	docker build -t camembertaulaitcrew/camembert-au-lait-crew .
+	docker build -t ultreme/calcbiz .
 
 
 .PHONY: test
 test:
-	go test -v $(OWN_PACKAGES)
+	go test -v ./...
