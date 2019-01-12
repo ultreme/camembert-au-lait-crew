@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package calcbiz.server;
+
+import "google/api/annotations.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+//import "google/protobuf/timestamp.proto";
+
+option go_package = "calcbiz.pw/server";
+option (gogoproto.sizer_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+
+service Server {
+  rpc KryptosEncrypt(KryptosInput) returns (KryptosOutput) {
+    option (google.api.http) = {
+      post: "/kryptos/encrypt"
+      body: "*"
+    };
+  };
+  rpc KryptosDecrypt(KryptosInput) returns (KryptosOutput) {
+    option (google.api.http) = {
+      post: "/kryptos/encrypt"
+      body: "*"
+    };
+  };
+  rpc TpyoEnocde(TpyoEnocdeIpunt) returns (TpyoEnocdeOuptut) {
+    option (google.api.http) = {
+      post: "/spreadshirt/all"
+      body: "*"
+    }; }
+
+  rpc Ping(Void) returns (Void) { option (google.api.http) = { get: "/ping" }; };
+  rpc Dashboard(Void) returns (DashboardOutput) { option (google.api.http) = {get: "/dashboard"}; }
+  rpc Crew(Void) returns (CrewOutput) { option (google.api.http) = {get: "/crew"}; }
+  rpc Numberinfo(NumberinfoInput) returns (NumberinfoOutput) { option (google.api.http) = {get: "/numberinfo/{number}"}; }
+  rpc Recettator(RecettatorInput) returns (RecettatorOutput) { option (google.api.http) = {get: "/recettator/{seed}"}; }
+  rpc Moijaime(Void) returns (MoijaimeOutput) { option (google.api.http) = {get: "/moijaime"}; }
+  rpc SpreadshirtRandom(Void) returns (SpreadshirtRandomOutput) { option (google.api.http) = {get: "/spreadshirt/random"}; }
+  rpc SpreadshirtAll(Void) returns (SpreadshirtAllOutput) { option (google.api.http) = {get: "/spreadshirt/all"}; }
+  rpc Wotd(Void) returns (WotdOutput) { option (google.api.http) = {get: "/wotd"}; }
+  rpc AlternateLogo(Void) returns (AlternateLogoOutput) { option (google.api.http) = {get: "/alternate-logo"}; }
+  rpc SoundcloudMe(Void) returns (SoundcloudMeOutput) { option (google.api.http) = {get: "/soundcloud/me"}; }
+  rpc SoundcloudPlaylists(Void) returns (SoundcloudPlaylistsOutput) { option (google.api.http) = {get: "/soundcloud/playlists"}; }
+  rpc SoundcloudPlaylist(SoundcloudPlaylistInput) returns (SoundcloudPlaylistOutput) { option (google.api.http) = {get: "/soundcloud/playlists/{playlist_id}"}; }
+  rpc SoundcloudTracks(Void) returns (SoundcloudTracksOutput) { option (google.api.http) = {get: "/soundcloud/tracks"}; }
+  rpc SoundcloudTrack(SoundcloudTrackInput) returns (SoundcloudTrackOutput) { option (google.api.http) = {get: "/soundcloud/tracks/{track_id}"}; }
+
+  // SoundcloudAlbums
+  // Airtable...
+  // Amuse...
+  // Distrokid...
+  // Apple...
+  // Musicbrainz...
+  // Genius...
+}
+
+message Void {}
+
+message CrewOutput { /* TODO */ }
+message KryptosInput { string from = 1; }
+message KryptosOutput { string to = 1; }
+message TpyoEnocdeIpunt { string from = 1; }
+message TpyoEnocdeOuptut { string to = 1; }
+message DahsboardRandomOutput { /* TODO */ }
+message NumberinfoInput { string number = 1; }
+message NumberinfoOutput { /* TODO */ }
+message MoijaimeOutput { repeated string kiffs = 1; }
+message WotdOutput { string word = 1; }
+message AlternateLogoOutput { string path = 1; }
+message DahsboardOutput { /* TODO */ }
+message RecettatorInput { int64 seed = 1; }
+message RecettatorOutput { /* TODO */ }
+message DashboardOutput { /* TODO */ }
+message SpreadshirtRandomOutput { /* TODO */ }
+message SpreadshirtAllOutput { /* TODO */ }
+message SoundcloudMeOutput { /* TODO */ }
+message SoundcloudPlaylistsOutput { /* TODO */ }
+message SoundcloudPlaylistOutput { /* TODO */ }
+message SoundcloudTracksOutput { /* TODO */ }
+message SoundcloudTrackOutput { /* TODO */ }
+message SoundcloudPlaylistInput { string playlist_id = 1; }
+message SoundcloudTrackInput { string track_id = 1; }
