@@ -9,7 +9,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/gobuffalo/packr"
 	"github.com/gogo/gateway"
+	"github.com/gorilla/handlers"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -140,7 +142,11 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
 	mux := http.NewServeMux()
 	mux.Handle("/api/", gwmux)
-	return http.ListenAndServe(opts.HTTPBind, mux)
+
+	box := packr.NewBox("./static")
+	mux.Handle("/", http.FileServer(box))
+
+	return http.ListenAndServe(opts.HTTPBind, handlers.LoggingHandler(os.Stderr, mux))
 }
 
 func startGRPCServer(ctx context.Context, opts *serverOptions) error {

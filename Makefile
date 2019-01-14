@@ -39,11 +39,18 @@ run: $(BIN)
 .PHONY: install
 install: $(BIN)
 $(BIN): .generated $(OUR_SOURCES)
+	packr clean
+	go install -v .
+
+.PHONY: release
+release:
+	packr
 	go install -v .
 
 .PHONY: clean
 clean:
 	rm -f $(GENERATED_FILES) .generated
+	packr clean
 
 .PHONY: _ci_prepare
 _ci_prepare:
