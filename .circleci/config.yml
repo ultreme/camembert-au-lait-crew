@@ -1,0 +1,20 @@
+version: 2
+
+jobs:
+  docker.build:
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - run: apk --no-cache add make
+      - checkout
+      - setup_remote_docker
+      - run: docker info
+      - run: make docker.build
+      - run: docker run -it --rm ultreme/calcbiz -h || true
+      # FIXME: save cache
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - docker.build
