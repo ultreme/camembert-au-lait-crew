@@ -4,5 +4,5 @@ services:
 - docker
 
 script:
-- docker build -t camembertaulaitcrew/camembert-au-lait-crew .
-- docker run -it --rm camembertaulaitcrew/camembert-au-lait-crew calc-www -h
+- make docker.build
+- docker run -it --rm ultreme/calcbiz -h || true
