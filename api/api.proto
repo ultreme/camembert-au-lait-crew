@@ -5,6 +5,7 @@ package calcbiz.server;
 import "google/api/annotations.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 //import "google/protobuf/timestamp.proto";
+import "pkg/crew/crew.proto";
 
 option go_package = "ultre.me/calcbiz/api";
 option (gogoproto.sizer_all) = true;
@@ -32,7 +33,7 @@ service Server {
 
   rpc Ping(Void) returns (Pong) { option (google.api.http) = { get: "/api/ping" }; };
   rpc Dashboard(Void) returns (DashboardOutput) { option (google.api.http) = {get: "/api/dashboard"}; }
-  rpc Crew(Void) returns (CrewOutput) { option (google.api.http) = {get: "/api/crew"}; }
+  rpc Crew(Void) returns (calcbiz.crew.Crew) { option (google.api.http) = {get: "/api/crew"}; }
   rpc Numberinfo(NumberinfoInput) returns (NumberinfoOutput) { option (google.api.http) = {get: "/api/numberinfo/{number}"}; }
   rpc Recettator(RecettatorInput) returns (RecettatorOutput) { option (google.api.http) = {get: "/api/recettator/{seed}"}; }
   rpc Moijaime(Void) returns (MoijaimeOutput) { option (google.api.http) = {get: "/api/moijaime"}; }
@@ -58,7 +59,6 @@ service Server {
 message Void {}
 
 message Pong { string pong = 1; }
-message CrewOutput { /* TODO */ }
 message KryptosInput { string from = 1; }
 message KryptosOutput { string to = 1; }
 message TpyoEnocdeIpunt { string from = 1; }

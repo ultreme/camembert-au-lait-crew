@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"ultre.me/calcbiz/api"
+	"ultre.me/calcbiz/pkg/crew"
 	"ultre.me/kryptos"
 )
 
@@ -45,8 +46,8 @@ func (svc *svc) Dashboard(_ context.Context, input *api.Void) (*api.DashboardOut
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Crew(_ context.Context, input *api.Void) (*api.CrewOutput, error) {
-	return nil, fmt.Errorf("not implemented")
+func (svc *svc) Crew(_ context.Context, input *api.Void) (*crew.Crew, error) {
+	return &crew.CALC, nil
 }
 
 func (svc *svc) Numberinfo(_ context.Context, input *api.NumberinfoInput) (*api.NumberinfoOutput, error) {
