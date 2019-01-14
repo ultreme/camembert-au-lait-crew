@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"ultre.me/calcbiz/api"
+	"ultre.me/kryptos"
 )
 
 type Options struct {
@@ -20,95 +21,84 @@ func New(opts Options) (api.ServerServer, error) {
 	return &svc{opts: opts}, nil
 }
 
-func (svc *svc) KryptosEncrypt(context.Context, *api.KryptosInput) (*api.KryptosOutput, error) {
+func (svc *svc) Ping(_ context.Context, input *api.Void) (*api.Pong, error) {
+	return &api.Pong{Pong: "pong"}, nil
+}
+
+func (svc *svc) KryptosEncrypt(_ context.Context, input *api.KryptosInput) (*api.KryptosOutput, error) {
+	return &api.KryptosOutput{
+		To: kryptos.Encrypt(input.From),
+	}, nil
+}
+
+func (svc *svc) KryptosDecrypt(_ context.Context, input *api.KryptosInput) (*api.KryptosOutput, error) {
+	return &api.KryptosOutput{
+		To: kryptos.Decrypt(input.From),
+	}, nil
+}
+
+func (svc *svc) TpyoEnocde(_ context.Context, input *api.TpyoEnocdeIpunt) (*api.TpyoEnocdeOuptut, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) KryptosDecrypt(context.Context, *api.KryptosInput) (*api.KryptosOutput, error) {
+func (svc *svc) Dashboard(_ context.Context, input *api.Void) (*api.DashboardOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) TpyoEnocde(context.Context, *api.TpyoEnocdeIpunt) (*api.TpyoEnocdeOuptut, error) {
+func (svc *svc) Crew(_ context.Context, input *api.Void) (*api.CrewOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Ping(context.Context, *api.Void) (*api.Void, error) {
+func (svc *svc) Numberinfo(_ context.Context, input *api.NumberinfoInput) (*api.NumberinfoOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Dashboard(context.Context, *api.Void) (*api.DashboardOutput, error) {
+func (svc *svc) Recettator(_ context.Context, input *api.RecettatorInput) (*api.RecettatorOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Crew(context.Context, *api.Void) (*api.CrewOutput, error) {
+func (svc *svc) Moijaime(_ context.Context, input *api.Void) (*api.MoijaimeOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Numberinfo(context.Context, *api.NumberinfoInput) (*api.NumberinfoOutput, error) {
+func (svc *svc) SpreadshirtRandom(_ context.Context, input *api.Void) (*api.SpreadshirtRandomOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Recettator(context.Context, *api.RecettatorInput) (*api.RecettatorOutput, error) {
+func (svc *svc) SpreadshirtAll(_ context.Context, input *api.Void) (*api.SpreadshirtAllOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Moijaime(context.Context, *api.Void) (*api.MoijaimeOutput, error) {
+func (svc *svc) Wotd(_ context.Context, input *api.Void) (*api.WotdOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) SpreadshirtRandom(context.Context, *api.Void) (*api.SpreadshirtRandomOutput, error) {
+func (svc *svc) AlternateLogo(_ context.Context, input *api.Void) (*api.AlternateLogoOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) SpreadshirtAll(context.Context, *api.Void) (*api.SpreadshirtAllOutput, error) {
+func (svc *svc) SoundcloudMe(_ context.Context, input *api.Void) (*api.SoundcloudMeOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) Wotd(context.Context, *api.Void) (*api.WotdOutput, error) {
+func (svc *svc) SoundcloudPlaylists(_ context.Context, input *api.Void) (*api.SoundcloudPlaylistsOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) AlternateLogo(context.Context, *api.Void) (*api.AlternateLogoOutput, error) {
+func (svc *svc) SoundcloudPlaylist(_ context.Context, input *api.SoundcloudPlaylistInput) (*api.SoundcloudPlaylistOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) SoundcloudMe(context.Context, *api.Void) (*api.SoundcloudMeOutput, error) {
+func (svc *svc) SoundcloudTracks(_ context.Context, input *api.Void) (*api.SoundcloudTracksOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) SoundcloudPlaylists(context.Context, *api.Void) (*api.SoundcloudPlaylistsOutput, error) {
-	return nil, fmt.Errorf("not implemented")
-}
-
-func (svc *svc) SoundcloudPlaylist(context.Context, *api.SoundcloudPlaylistInput) (*api.SoundcloudPlaylistOutput, error) {
-	return nil, fmt.Errorf("not implemented")
-}
-
-func (svc *svc) SoundcloudTracks(context.Context, *api.Void) (*api.SoundcloudTracksOutput, error) {
-	return nil, fmt.Errorf("not implemented")
-}
-
-func (svc *svc) SoundcloudTrack(context.Context, *api.SoundcloudTrackInput) (*api.SoundcloudTrackOutput, error) {
+func (svc *svc) SoundcloudTrack(_ context.Context, input *api.SoundcloudTrackInput) (*api.SoundcloudTrackOutput, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
 /*
 	r.Route("/api", func(r chi.Router) {
-		r.Use(render.SetContentType(render.ContentTypeJSON))
-
-		// ping
-		pong := func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte(`{"result":"pong"}`))
-		}
-		r.Get("/ping", pong)
-		r.Post("/ping", pong)
-		r.Options("/ping", pong)
-		r.Trace("/ping", pong)
-		r.Connect("/ping", pong)
-		r.Head("/ping", pong)
-		r.Put("/ping", pong)
-		r.Patch("/ping", pong)
-		r.Delete("/ping", pong)
 
 		soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
 		dashboard := calcdashboard.New()
@@ -199,35 +189,6 @@ func (svc *svc) SoundcloudTrack(context.Context, *api.SoundcloudTrackInput) (*ap
 					})
 				})
 
-				// kryptos
-				r.Post("/kryptos/encrypt", func(w http.ResponseWriter, r *http.Request) {
-					var data struct {
-						Message string
-					}
-					if err := c.BindJSON(&data); err == nil {
-						c.JSON(http.StatusOK, gin.H{
-							"result": kryptos.Encrypt(data.Message),
-						})
-					} else {
-						c.JSON(http.StatusNotFound, gin.H{
-							"error": fmt.Sprintf("Invalid input: %v", err),
-						})
-					}
-				})
-				r.Post("/kryptos/decrypt", func(w http.ResponseWriter, r *http.Request) {
-					var data struct {
-						Message string
-					}
-					if err := c.BindJSON(&data); err == nil {
-						c.JSON(http.StatusOK, gin.H{
-							"result": kryptos.Decrypt(data.Message),
-						})
-					} else {
-						c.JSON(http.StatusNotFound, gin.H{
-							"error": fmt.Sprintf("Invalid input: %v", err),
-						})
-					}
-				})
 
 				// tpyo
 				r.Post("/tpyo/enocde", func(w http.ResponseWriter, r *http.Request) {

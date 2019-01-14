@@ -68,3 +68,5 @@ google.golang.org/grpc v1.16.0/go.mod h1:0JHn/cJsOMiMfNA9+DeHDlAU7KAAB5GDlYFpa9M
 google.golang.org/grpc v1.17.0 h1:TRJYBgMclJvGYn2rIMjj+h9KtMt5r1Ij7ODVRIZkwhk=
 google.golang.org/grpc v1.17.0/go.mod h1:6QZJwpn2B+Zp71q/5VxRsJ6NXXVCE5NRUHRo+f3cWCs=
 honnef.co/go/tools v0.0.0-20180728063816-88497007e858/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
+ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033 h1:t1sY4eMB9q2+ZmzxjxHagtz1iZPRGnVNyKrpMXX3XaU=
+ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033/go.mod h1:NueMpFJdxVrRfBPrlVYEfjJhNj6ozlBz1RXYRhsWUak=
