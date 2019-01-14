@@ -21,6 +21,7 @@ require (
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.9.1
 	golang.org/x/net v0.0.0-20190110044637-be1c187aa6c6
+	google.golang.org/appengine v1.2.0 // indirect
 	google.golang.org/genproto v0.0.0-20190108161440-ae2f86662275
 	google.golang.org/grpc v1.17.0
 	ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033

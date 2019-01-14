@@ -6,6 +6,7 @@ import (
 
 	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/pkg/crew"
+	"ultre.me/calcbiz/pkg/soundcloud"
 	"ultre.me/kryptos"
 )
 
@@ -15,17 +16,20 @@ type Options struct {
 }
 
 type svc struct {
-	opts Options
-	// soundcloud
+	opts       Options
+	soundcloud soundcloud.Soundcloud
 	// dashboard
 }
 
 func New(opts Options) (api.ServerServer, error) {
-	//soundcloud := calcsoundcloud.New(c.String("soundcloud-client-id"), uint64(c.Int("soundcloud-user-id")))
-	//dashboard := calcdashboard.New()
-	//dashboard.SetSoundCloud(&soundcloud)
-
-	return &svc{opts: opts}, nil
+	svc := &svc{opts: opts}
+	svc.soundcloud = soundcloud.New(
+		opts.SoundcloudClientID,
+		uint64(opts.SoundcloudUserID),
+	)
+	// svc.dashboard := calcdashboard.New()
+	// svc.dashboard.SetSoundCloud(&soundcloud)
+	return svc, nil
 }
 
 func (svc *svc) Ping(_ context.Context, input *api.Void) (*api.Pong, error) {
@@ -194,127 +198,28 @@ func (svc *svc) AlternateLogo(_ context.Context, input *api.Void) (*api.Alternat
 	return nil, fmt.Errorf("not implemented")
 }
 
-func (svc *svc) SoundcloudMe(_ context.Context, input *api.Void) (*api.SoundcloudMeOutput, error) {
-	/*
-		r.Get("/soundcloud/me", func(w http.ResponseWriter, r *http.Request) {
-			me, err := soundcloud.Me()
-			if err != nil {
-				log.Warnf("failed to get /api/soundcloud/me: %v", err)
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-				})
-			} else {
-				c.JSON(http.StatusOK, gin.H{
-					"result": me,
-				})
-			}
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+func (svc *svc) SoundcloudMe(_ context.Context, input *api.Void) (*soundcloud.User, error) {
+	return svc.soundcloud.Me()
 }
 
-func (svc *svc) SoundcloudPlaylists(_ context.Context, input *api.Void) (*api.SoundcloudPlaylistsOutput, error) {
-	/*
-		r.Get("/soundcloud/playlists", func(w http.ResponseWriter, r *http.Request) {
-			playlists, err := soundcloud.Playlists()
-			if err != nil {
-				log.Warnf("failed to get /api/soundcloud/playlists: %v", err)
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-				})
-			} else {
-				c.JSON(http.StatusOK, gin.H{
-					"result": playlists,
-				})
-			}
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+func (svc *svc) SoundcloudPlaylists(_ context.Context, input *api.Void) (*soundcloud.Playlists, error) {
+	return svc.soundcloud.GetPlaylists()
 }
 
-func (svc *svc) SoundcloudPlaylist(_ context.Context, input *api.SoundcloudPlaylistInput) (*api.SoundcloudPlaylistOutput, error) {
-	/*
-		r.Get("/soundcloud/playlists/:id", func(w http.ResponseWriter, r *http.Request) {
-			playlistID, err := strconv.ParseUint(c.Param("id"), 10, 64)
-			if err != nil {
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": fmt.Sprintf("Invalid playlist id: %v", c.Param("id")),
-				})
-				return
-			}
-
-			playlist, err := soundcloud.Playlist(playlistID)
-			if err != nil {
-				log.Warnf("failed to get /api/soundcloud/playlists/%d: %v", playlistID, err)
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-				})
-			} else {
-				c.JSON(http.StatusOK, gin.H{
-					"result": playlist,
-				})
-			}
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+func (svc *svc) SoundcloudPlaylist(_ context.Context, input *api.SoundcloudPlaylistInput) (*soundcloud.Playlist, error) {
+	if input.PlaylistId < 1 { // pick random
+		return svc.soundcloud.GetRandomPlaylist()
+	}
+	return svc.soundcloud.GetPlaylist(input.PlaylistId)
 }
 
-func (svc *svc) SoundcloudTracks(_ context.Context, input *api.Void) (*api.SoundcloudTracksOutput, error) {
-	/*
-		r.Get("/soundcloud/tracks", func(w http.ResponseWriter, r *http.Request) {
-			tracks, err := soundcloud.Tracks()
-			if err != nil {
-				log.Warnf("failed to get /api/soundcloud/tracks: %v", err)
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-				})
-			} else {
-				c.JSON(http.StatusOK, gin.H{
-					"result": tracks,
-				})
-			}
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+func (svc *svc) SoundcloudTracks(_ context.Context, input *api.Void) (*soundcloud.Tracks, error) {
+	return svc.soundcloud.GetTracks()
 }
 
-func (svc *svc) SoundcloudTrack(_ context.Context, input *api.SoundcloudTrackInput) (*api.SoundcloudTrackOutput, error) {
-	/*
-		r.Get("/soundcloud/tracks/:id", func(w http.ResponseWriter, r *http.Request) {
-			if c.Param("id") == "random" {
-				track, err := soundcloud.RandomTrack()
-				if err != nil {
-					log.Warnf("failed to get /api/soundcloud/tracks/random: %v", err)
-					c.JSON(http.StatusNotFound, gin.H{
-						"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-					})
-				} else {
-					c.JSON(http.StatusOK, gin.H{
-						"result": track,
-					})
-				}
-				return
-			}
-			trackID, err := strconv.ParseUint(c.Param("id"), 10, 64)
-			if err != nil {
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": fmt.Sprintf("Invalid track id: %v", c.Param("id")),
-				})
-				return
-			}
-
-			track, err := soundcloud.Track(trackID)
-			if err != nil {
-				log.Warnf("failed to get /api/soundcloud/tracks/%d: %v", trackID, err)
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": soundcloud.EscapeString(fmt.Sprintf("%v", err)),
-				})
-			} else {
-				c.JSON(http.StatusOK, gin.H{
-					"result": track,
-				})
-			}
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+func (svc *svc) SoundcloudTrack(_ context.Context, input *api.SoundcloudTrackInput) (*soundcloud.Track, error) {
+	if input.TrackId < 1 { // pick random
+		return svc.soundcloud.GetRandomTrack()
+	}
+	return svc.soundcloud.GetTrack(input.TrackId)
 }

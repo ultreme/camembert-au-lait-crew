@@ -227,7 +227,7 @@ func request_Server_SoundcloudPlaylist_0(ctx context.Context, marshaler runtime.
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "playlist_id")
 	}
 
-	protoReq.PlaylistId, err = runtime.String(val)
+	protoReq.PlaylistId, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "playlist_id", err)
@@ -263,7 +263,7 @@ func request_Server_SoundcloudTrack_0(ctx context.Context, marshaler runtime.Mar
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "track_id")
 	}
 
-	protoReq.TrackId, err = runtime.String(val)
+	protoReq.TrackId, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "track_id", err)

@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 //import "google/protobuf/timestamp.proto";
 import "pkg/crew/crew.proto";
+import "pkg/soundcloud/soundcloud.proto";
 
 option go_package = "ultre.me/calcbiz/api";
 option (gogoproto.sizer_all) = true;
@@ -41,11 +42,11 @@ service Server {
   rpc SpreadshirtAll(Void) returns (SpreadshirtAllOutput) { option (google.api.http) = {get: "/api/spreadshirt/all"}; }
   rpc Wotd(Void) returns (WotdOutput) { option (google.api.http) = {get: "/api/wotd"}; }
   rpc AlternateLogo(Void) returns (AlternateLogoOutput) { option (google.api.http) = {get: "/api/alternate-logo"}; }
-  rpc SoundcloudMe(Void) returns (SoundcloudMeOutput) { option (google.api.http) = {get: "/api/soundcloud/me"}; }
-  rpc SoundcloudPlaylists(Void) returns (SoundcloudPlaylistsOutput) { option (google.api.http) = {get: "/api/soundcloud/playlists"}; }
-  rpc SoundcloudPlaylist(SoundcloudPlaylistInput) returns (SoundcloudPlaylistOutput) { option (google.api.http) = {get: "/api/soundcloud/playlists/{playlist_id}"}; }
-  rpc SoundcloudTracks(Void) returns (SoundcloudTracksOutput) { option (google.api.http) = {get: "/api/soundcloud/tracks"}; }
-  rpc SoundcloudTrack(SoundcloudTrackInput) returns (SoundcloudTrackOutput) { option (google.api.http) = {get: "/api/soundcloud/tracks/{track_id}"}; }
+  rpc SoundcloudMe(Void) returns (calcbiz.soundcloud.User) { option (google.api.http) = {get: "/api/soundcloud/me"}; }
+  rpc SoundcloudPlaylists(Void) returns (calcbiz.soundcloud.Playlists) { option (google.api.http) = {get: "/api/soundcloud/playlists"}; }
+  rpc SoundcloudPlaylist(SoundcloudPlaylistInput) returns (calcbiz.soundcloud.Playlist) { option (google.api.http) = {get: "/api/soundcloud/playlists/{playlist_id}"}; }
+  rpc SoundcloudTracks(Void) returns (calcbiz.soundcloud.Tracks) { option (google.api.http) = {get: "/api/soundcloud/tracks"}; }
+  rpc SoundcloudTrack(SoundcloudTrackInput) returns (calcbiz.soundcloud.Track) { option (google.api.http) = {get: "/api/soundcloud/tracks/{track_id}"}; }
 
   // SoundcloudAlbums
   // Airtable...
@@ -75,10 +76,15 @@ message RecettatorOutput { /* TODO */ }
 message DashboardOutput { /* TODO */ }
 message SpreadshirtRandomOutput { /* TODO */ }
 message SpreadshirtAllOutput { /* TODO */ }
-message SoundcloudMeOutput { /* TODO */ }
 message SoundcloudPlaylistsOutput { /* TODO */ }
 message SoundcloudPlaylistOutput { /* TODO */ }
 message SoundcloudTracksOutput { /* TODO */ }
 message SoundcloudTrackOutput { /* TODO */ }
-message SoundcloudPlaylistInput { string playlist_id = 1; }
-message SoundcloudTrackInput { string track_id = 1; }
+
+message SoundcloudPlaylistInput {
+  uint64 playlist_id = 1;
+}
+
+message SoundcloudTrackInput {
+  uint64 track_id = 1;
+}

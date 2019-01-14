@@ -43,7 +43,7 @@ func main() {
 	app.Before = func(c *cli.Context) error {
 		config := zap.NewDevelopmentConfig()
 		config.Level.SetLevel(zap.DebugLevel)
-		config.DisableStacktrace = true
+		config.DisableStacktrace = false
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 		l, err := config.Build()
 		if err != nil {
@@ -108,8 +108,8 @@ func serverOptionsFromCliContext(c *cli.Context) serverOptions {
 		GRPCBind: c.String("grpc-bind"),
 		HTTPBind: c.String("http-bind"),
 		ServiceOptions: svc.Options{
-			SoundcloudUserID:   c.Int("soundcloud-client-id"),
-			SoundcloudClientID: c.String("soundcloud-user-id"),
+			SoundcloudUserID:   c.Int("soundcloud-user-id"),
+			SoundcloudClientID: c.String("soundcloud-client-id"),
 		},
 	}
 }
@@ -146,7 +146,10 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	box := packr.NewBox("./static")
 	mux.Handle("/", http.FileServer(box))
 
-	return http.ListenAndServe(opts.HTTPBind, handlers.LoggingHandler(os.Stderr, mux))
+	handler := handlers.LoggingHandler(os.Stderr, mux)
+	handler = handlers.RecoveryHandler(handlers.PrintRecoveryStack(true))(handler)
+
+	return http.ListenAndServe(opts.HTTPBind, handler)
 }
 
 func startGRPCServer(ctx context.Context, opts *serverOptions) error {
@@ -201,27 +204,3 @@ func startGRPCServer(ctx context.Context, opts *serverOptions) error {
 	zap.L().Info("starting gRPC server", zap.String("bind", opts.GRPCBind))
 	return grpcServer.Serve(listener)
 }
-
-/*
-
-	r := chi.NewRouter()
-	//r.Use(middleware.RequestID)
-	//r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	//r.Use(middleware.URLFormat)
-	r.Use(middleware.Timeout(5 * time.Second))
-
-
-	})
-
-	// static files
-	box := packr.NewBox("./static")
-	r.Handle("/", http.FileServer(box))
-
-	// FIXME: handle socket.io
-	http.Handle("/", r)
-	log.Infof("Listening and serving HTTP on %s", c.String("bind-address"))
-	return http.ListenAndServe(c.String("bind-address"), nil)
-}
-*/

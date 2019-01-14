@@ -16,7 +16,8 @@ PROTOS = $(call rwildcard, ./, *.proto)
 OUR_PROTOS = $(filter-out $(call rwildcard,vendor//,*.proto),$(PROTOS))
 GENERATED_FILES = \
         $(patsubst %.proto,%.pb.go,$(PROTOS)) \
-        $(call rwildcard ./, *.gen.go)
+        $(call rwildcard .//, *.gen.go) \
+        $(call rwildcard .//, *.pb.gw.go)
 PROTOC_OPTS = -I/protobuf:vendor:.
 RUN_OPTS ?=
 
