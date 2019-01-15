@@ -18,7 +18,7 @@ GENERATED_FILES = \
         $(patsubst %.proto,%.pb.go,$(PROTOS)) \
         $(call rwildcard .//, *.gen.go) \
         $(call rwildcard .//, *.pb.gw.go) \
-	apidocs.swagger.json
+	swagger.yaml
 
 PROTOC_OPTS = -I/protobuf:vendor:.
 RUN_OPTS ?=
@@ -90,11 +90,12 @@ test: .generated
 	  --gogofaster_out=plugins=grpc:"$(GOPATH)/src" \
 	  "$(dir $<)"/*.proto
 
-apidocs.swagger.json: $(OUR_PROTOS)
+swagger.yaml: $(OUR_PROTOS)
 	protoc \
 	  $(PROTOC_OPTS) \
 	  --swagger_out=allow_merge=true:. \
 	  ./api/api.proto
+	mv apidocs.swagger.json swagger.yaml
 
 .PHONY: lint
 lint:
