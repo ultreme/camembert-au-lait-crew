@@ -1,4 +1,4 @@
-package calcdashboard
+package dashboard // import "ultre.me/calcbiz/pkg/dashboard"
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 type CALCDashboard struct {
-	soundcloud *calcsoundcloud.CALCSoundcloud
+	soundcloud *soundcloud.Soundcloud
 }
 
 const (
@@ -22,7 +22,7 @@ func New() *CALCDashboard {
 	return &CALCDashboard{}
 }
 
-func (d *CALCDashboard) SetSoundCloud(soundcloud *calcsoundcloud.CALCSoundcloud) {
+func (d *CALCDashboard) SetSoundCloud(soundcloud *soundcloud.Soundcloud) {
 	d.soundcloud = soundcloud
 }
 
@@ -66,7 +66,7 @@ func (d *CALCDashboard) trackEntries(limit int) (Entries, error) {
 func (d *CALCDashboard) merchEntries(limit int) (Entries, error) {
 	entries := Entries{}
 
-	products := calcspreadshirt.GetAllProducts(250, 250)
+	products := spreadshirt.GetAllProducts(250, 250)
 	if len(products) < limit {
 		limit = len(products)
 	}

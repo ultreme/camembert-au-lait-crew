@@ -1,4 +1,4 @@
-package calcnumberinfo
+package numberinfo // import "ultre.me/calcbiz/pkg/numberinfo"
 
 import (
 	"math"

@@ -1,4 +1,4 @@
-package calcrand
+package random // import "ultre.me/calcbiz/pkg/random"
 
 import (
 	"fmt"

@@ -28,7 +28,7 @@ service Server {
   };
   rpc TpyoEnocde(TpyoEnocdeIpunt) returns (TpyoEnocdeOuptut) {
     option (google.api.http) = {
-      post: "/api/spreadshirt/all"
+      post: "/api/tpyo"
       body: "*"
     }; }
 
@@ -62,11 +62,11 @@ message Void {}
 message Pong { string pong = 1; }
 message KryptosInput { string from = 1; }
 message KryptosOutput { string to = 1; }
-message TpyoEnocdeIpunt { string from = 1; }
+message TpyoEnocdeIpunt { string form = 1; }
 message TpyoEnocdeOuptut { string to = 1; }
 message DahsboardRandomOutput { /* TODO */ }
-message NumberinfoInput { string number = 1; }
-message NumberinfoOutput { /* TODO */ }
+message NumberinfoInput { float number = 1; }
+message NumberinfoOutput { map<string, string> facts = 1; }
 message MoijaimeOutput { repeated string kiffs = 1; }
 message WotdOutput { string word = 1; }
 message AlternateLogoOutput { string path = 1; }

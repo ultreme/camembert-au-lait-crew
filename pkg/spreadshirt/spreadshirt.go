@@ -1,4 +1,4 @@
-package calcspreadshirt
+package spreadshirt // import "ultre.me/calcbiz/pkg/spreadshirt"
 
 import (
 	"fmt"

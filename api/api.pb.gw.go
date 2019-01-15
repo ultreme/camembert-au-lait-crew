@@ -110,7 +110,7 @@ func request_Server_Numberinfo_0(ctx context.Context, marshaler runtime.Marshale
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "number")
 	}
 
-	protoReq.Number, err = runtime.String(val)
+	protoReq.Number, err = runtime.Float32(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "number", err)
@@ -680,7 +680,7 @@ var (
 
 	pattern_Server_KryptosDecrypt_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "kryptos", "decrypt"}, ""))
 
-	pattern_Server_TpyoEnocde_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "spreadshirt", "all"}, ""))
+	pattern_Server_TpyoEnocde_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "tpyo"}, ""))
 
 	pattern_Server_Ping_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "ping"}, ""))
 

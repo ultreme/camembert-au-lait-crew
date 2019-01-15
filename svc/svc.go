@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	tpyo "github.com/tpyolang/tpyo-cli"
 	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/pkg/crew"
+	"ultre.me/calcbiz/pkg/numberinfo"
+	"ultre.me/calcbiz/pkg/random"
 	"ultre.me/calcbiz/pkg/soundcloud"
 	"ultre.me/kryptos"
 )
@@ -49,24 +52,10 @@ func (svc *svc) KryptosDecrypt(_ context.Context, input *api.KryptosInput) (*api
 }
 
 func (svc *svc) TpyoEnocde(_ context.Context, input *api.TpyoEnocdeIpunt) (*api.TpyoEnocdeOuptut, error) {
-	/*
-		r.Post("/tpyo/enocde", func(w http.ResponseWriter, r *http.Request) {
-			var data struct {
-				Message string
-			}
-			if err := c.BindJSON(&data); err == nil {
-				enedocr := tpyo.NewTpyo()
-				c.JSON(http.StatusOK, gin.H{
-					"result": enedocr.Enocde(data.Message),
-				})
-			} else {
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": fmt.Sprintf("Invalid input: %v", err),
-				})
-			}
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+	enedocr := tpyo.NewTpyo()
+	return &api.TpyoEnocdeOuptut{
+		To: enedocr.Enocde(input.Form),
+	}, nil
 }
 
 func (svc *svc) Dashboard(_ context.Context, input *api.Void) (*api.DashboardOutput, error) {
@@ -92,23 +81,12 @@ func (svc *svc) Crew(_ context.Context, input *api.Void) (*crew.Crew, error) {
 }
 
 func (svc *svc) Numberinfo(_ context.Context, input *api.NumberinfoInput) (*api.NumberinfoOutput, error) {
-	/*
-		r.Get("/numberinfo/all/:number", func(w http.ResponseWriter, r *http.Request) {
-			number, err := strconv.ParseFloat(c.Param("number"), 64)
-			if err != nil {
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": fmt.Sprintf("Invalid number: %v (%v)", c.Param("number"), err),
-				})
-				return
-			}
-
-			info := calcnumberinfo.New(number).All()
-			c.JSON(http.StatusOK, gin.H{
-				"result": info,
-			})
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+	// FIXME: validate: input.Number is mandatory
+	facts := map[string]string{}
+	for k, v := range numberinfo.New(float64(input.Number)).All() {
+		facts[k] = fmt.Sprintf("%v", v)
+	}
+	return &api.NumberinfoOutput{Facts: facts}, nil
 }
 
 func (svc *svc) Recettator(_ context.Context, input *api.RecettatorInput) (*api.RecettatorOutput, error) {
@@ -177,25 +155,15 @@ func (svc *svc) SpreadshirtAll(_ context.Context, input *api.Void) (*api.Spreads
 }
 
 func (svc *svc) Wotd(_ context.Context, input *api.Void) (*api.WotdOutput, error) {
-	/*
-		r.Get("/random/wotd", func(w http.ResponseWriter, r *http.Request) {
-			c.JSON(http.StatusOK, gin.H{
-				"result": calcrand.WOTD(),
-			})
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+	return &api.WotdOutput{
+		Word: random.WOTD(),
+	}, nil
 }
 
 func (svc *svc) AlternateLogo(_ context.Context, input *api.Void) (*api.AlternateLogoOutput, error) {
-	/*
-		r.Get("/random/alternate-logo", func(w http.ResponseWriter, r *http.Request) {
-			c.JSON(http.StatusOK, gin.H{
-				"result": calcrand.AlternateLogo(),
-			})
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+	return &api.AlternateLogoOutput{
+		Path: random.AlternateLogo(),
+	}, nil
 }
 
 func (svc *svc) SoundcloudMe(_ context.Context, input *api.Void) (*soundcloud.User, error) {

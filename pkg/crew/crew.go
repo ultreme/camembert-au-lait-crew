@@ -1,4 +1,4 @@
-package crew
+package crew // import "ultre.me/calcbiz/pkg/crew"
 
 var CALC = Crew{
 	Name:    "Camembert au lait crew",
