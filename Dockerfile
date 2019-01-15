@@ -6,6 +6,7 @@ ENV             GO111MODULE=on
 COPY            go.* /go/src/ultre.me/calcbiz/
 RUN             go mod download
 COPY            . /go/src/ultre.me/calcbiz/
+RUN             make _ci_prepare
 RUN             make release
 
 FROM            alpine:3.8
