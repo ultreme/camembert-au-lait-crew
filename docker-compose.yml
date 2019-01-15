@@ -8,7 +8,7 @@ services:
     build: .
     environment:
       - VIRTUAL_HOST=calc-api.m.42.am
-      #- VIRTUAL_PORT=
+      - VIRTUAL_PORT=9000
     networks:
       - default
       - service-proxy
