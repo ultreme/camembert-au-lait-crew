@@ -3,7 +3,7 @@ module ultre.me/calcbiz
 require (
 	github.com/gobuffalo/packr v1.21.9
 	github.com/gogo/gateway v1.0.0
-	github.com/gogo/protobuf v1.2.0
+	github.com/gogo/protobuf v1.2.0 // indirect
 	github.com/golang/protobuf v1.2.0
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/gorilla/handlers v1.4.0
@@ -24,7 +24,7 @@ require (
 	go.uber.org/zap v1.9.1
 	golang.org/x/net v0.0.0-20190110044637-be1c187aa6c6
 	google.golang.org/appengine v1.2.0 // indirect
-	google.golang.org/genproto v0.0.0-20190108161440-ae2f86662275
+	google.golang.org/genproto v0.0.0-20190108161440-ae2f86662275 // indirect
 	google.golang.org/grpc v1.17.0
 	ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033
 )

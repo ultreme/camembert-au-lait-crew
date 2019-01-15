@@ -11,13 +11,15 @@ rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subs
 GOPATH ?= $(HOME)/go
 BIN = $(GOPATH)/bin/calcbiz
 SOURCES = $(call rwildcard, ./, *.go)
-OUR_SOURCES = $(filter-out $(call rwildcard,vendor//,*.go),$(SOURCES))
+OUR_SOURCES = $(filter-out $(call rwildcard,./vendor,*.go),$(SOURCES))
 PROTOS = $(call rwildcard, ./, *.proto)
-OUR_PROTOS = $(filter-out $(call rwildcard,vendor//,*.proto),$(PROTOS))
+OUR_PROTOS = $(filter-out $(call rwildcard,./vendor,*.proto),$(PROTOS))
 GENERATED_FILES = \
         $(patsubst %.proto,%.pb.go,$(PROTOS)) \
         $(call rwildcard .//, *.gen.go) \
-        $(call rwildcard .//, *.pb.gw.go)
+        $(call rwildcard .//, *.pb.gw.go) \
+	apidocs.swagger.json
+
 PROTOC_OPTS = -I/protobuf:vendor:.
 RUN_OPTS ?=
 
@@ -87,6 +89,12 @@ test: .generated
 	  --grpc-gateway_out=logtostderr=true:"$(GOPATH)/src" \
 	  --gogofaster_out=plugins=grpc:"$(GOPATH)/src" \
 	  "$(dir $<)"/*.proto
+
+apidocs.swagger.json: $(OUR_PROTOS)
+	protoc \
+	  $(PROTOC_OPTS) \
+	  --swagger_out=allow_merge=true:. \
+	  ./api/api.proto
 
 .PHONY: lint
 lint:
