@@ -36,7 +36,7 @@ service Server {
   rpc Dashboard(Void) returns (DashboardOutput) { option (google.api.http) = {get: "/api/dashboard"}; }
   rpc Crew(Void) returns (calcbiz.crew.Crew) { option (google.api.http) = {get: "/api/crew"}; }
   rpc Numberinfo(NumberinfoInput) returns (NumberinfoOutput) { option (google.api.http) = {get: "/api/numberinfo/{number}"}; }
-  rpc Recettator(RecettatorInput) returns (RecettatorOutput) { option (google.api.http) = {get: "/api/recettator/{seed}"}; }
+  rpc Recettator(RecettatorInput) returns (RecettatorOutput) { option (google.api.http) = {get: "/api/recettator"}; }
   rpc Moijaime(Void) returns (MoijaimeOutput) { option (google.api.http) = {get: "/api/moijaime"}; }
   rpc SpreadshirtRandom(Void) returns (SpreadshirtRandomOutput) { option (google.api.http) = {get: "/api/spreadshirt/random"}; }
   rpc SpreadshirtAll(Void) returns (SpreadshirtAllOutput) { option (google.api.http) = {get: "/api/spreadshirt/all"}; }
@@ -57,34 +57,77 @@ service Server {
   // Genius...
 }
 
-message Void {}
+// general messages
 
+message Void {}
 message Pong { string pong = 1; }
+
+// kryptos messages
+
 message KryptosInput { string from = 1; }
 message KryptosOutput { string to = 1; }
+
+// tpyo megasess
 message TpyoEnocdeIpunt { string form = 1; }
 message TpyoEnocdeOuptut { string to = 1; }
+
+// dashboard messages
+
 message DahsboardRandomOutput { /* TODO */ }
+message DahsboardOutput { /* TODO */ }
+message DashboardOutput { /* TODO */ }
+
+// numberinfo messages
 message NumberinfoInput { float number = 1; }
 message NumberinfoOutput { map<string, string> facts = 1; }
+
+// moijaime messages
+
 message MoijaimeOutput { repeated string kiffs = 1; }
+
+// random messages
+
 message WotdOutput { string word = 1; }
 message AlternateLogoOutput { string path = 1; }
-message DahsboardOutput { /* TODO */ }
-message RecettatorInput { int64 seed = 1; }
-message RecettatorOutput { /* TODO */ }
-message DashboardOutput { /* TODO */ }
+
+// spreadshirt messages
+
 message SpreadshirtRandomOutput { /* TODO */ }
 message SpreadshirtAllOutput { /* TODO */ }
-message SoundcloudPlaylistsOutput { /* TODO */ }
-message SoundcloudPlaylistOutput { /* TODO */ }
-message SoundcloudTracksOutput { /* TODO */ }
-message SoundcloudTrackOutput { /* TODO */ }
+
+// soundcloud messages
 
 message SoundcloudPlaylistInput {
   uint64 playlist_id = 1;
 }
-
 message SoundcloudTrackInput {
   uint64 track_id = 1;
+}
+
+// recettator messages
+
+message RecettatorInput {
+  int64 seed = 1;
+  uint64 main_ingredients = 2;
+  uint64 secondary_ingredients = 3;
+  uint64 steps = 4;
+}
+message RecettatorIngredient {
+  string name = 1;
+  string quantity = 2;
+  string method = 3;
+  string gender = 4;
+  bool multiple = 5;
+  string kind = 6;
+  string name_and_quantity = 7;
+}
+message RecettatorOutput {
+  string title = 1;
+  uint64 people = 2;
+  string markdown = 3;
+  repeated string steps = 4;
+  repeated RecettatorIngredient main_ingredients = 5;
+  repeated RecettatorIngredient secondary_ingredients = 6;
+  int64 seed = 7;
+  //string json = 4;
 }

@@ -3,14 +3,18 @@ package svc // import "ultre.me/calcbiz/svc"
 import (
 	"context"
 	"fmt"
+	"math/rand"
 
 	tpyo "github.com/tpyolang/tpyo-cli"
+	"go.uber.org/zap"
+
 	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/pkg/crew"
 	"ultre.me/calcbiz/pkg/numberinfo"
 	"ultre.me/calcbiz/pkg/random"
 	"ultre.me/calcbiz/pkg/soundcloud"
 	"ultre.me/kryptos"
+	"ultre.me/recettator"
 )
 
 type Options struct {
@@ -90,31 +94,53 @@ func (svc *svc) Numberinfo(_ context.Context, input *api.NumberinfoInput) (*api.
 }
 
 func (svc *svc) Recettator(_ context.Context, input *api.RecettatorInput) (*api.RecettatorOutput, error) {
-	/*
-		r.Get("/recettator/json/:seed", func(w http.ResponseWriter, r *http.Request) {
-			seed, err := strconv.ParseInt(c.Param("seed"), 10, 64)
-			if err != nil {
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": fmt.Sprintf("Invalid seed: %v (%v)", c.Param("seed"), err),
-				})
-				return
-			}
+	if input.Seed == 0 {
+		input.Seed = int64(rand.Intn(1000))
+	}
+	if input.Steps == 0 {
+		input.Steps = uint64(rand.Intn(4) + 3)
+	}
+	if input.MainIngredients == 0 {
+		input.MainIngredients = uint64(rand.Intn(2) + 1)
+	}
+	if input.SecondaryIngredients == 0 {
+		input.SecondaryIngredients = uint64(rand.Intn(2) + 1)
+	}
+	rctt := recettator.New(input.Seed)
+	rctt.SetSettings(recettator.Settings{
+		MainIngredients:      input.MainIngredients,
+		SecondaryIngredients: input.SecondaryIngredients,
+		Steps:                input.Steps,
+	})
 
-			rctt := recettator.New(seed)
-			rctt.SetSettings(recettator.Settings{
-				MainIngredients:      2,
-				SecondaryIngredients: 2,
-				Steps:                5,
-			})
-
-			output := rctt.ToMap()
-
-			c.JSON(http.StatusOK, gin.H{
-				"result": output,
-			})
+	markdown, err := rctt.Markdown()
+	if err != nil {
+		zap.L().Warn("failed to marshal recettator in markdown", zap.Error(err))
+	}
+	output := &api.RecettatorOutput{
+		Title:                rctt.Title(),
+		People:               rctt.People(),
+		Markdown:             markdown,
+		Steps:                rctt.Steps(),
+		Seed:                 input.Seed,
+		MainIngredients:      []*api.RecettatorIngredient{},
+		SecondaryIngredients: []*api.RecettatorIngredient{},
+	}
+	for _, ingredient := range rctt.Pool().MainIngredients.Picked {
+		output.MainIngredients = append(output.MainIngredients, &api.RecettatorIngredient{
+			Name: ingredient.Name(),
+			// Quantity:        ingredient.Quantity(),
+			NameAndQuantity: ingredient.NameAndQuantity(),
+			Kind:            ingredient.Kind(),
+			Method:          ingredient.GetMethod().NameAndQuantity(),
+			Gender:          ingredient.GetGender(),
+			Multiple:        ingredient.IsMultiple(),
 		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+	}
+
+	// fmt.Println(rctt.JSON())
+
+	return output, nil
 }
 
 func (svc *svc) Moijaime(_ context.Context, input *api.Void) (*api.MoijaimeOutput, error) {
