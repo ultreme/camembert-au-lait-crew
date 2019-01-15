@@ -6,6 +6,12 @@
 * Live: https://www.camembertaulaitcrew.biz
 * Install/Dev: `go get ultre.me/calcbiz`
 
+## Swagger
+
+`swagger.yaml` is automatically generated, and linked with Apiary.
+
+Result: https://camembertaulaitcrew.docs.apiary.io/
+
 ## API Usages (gRPC)
 
 Use gRPC port with .proto files as API definitions
