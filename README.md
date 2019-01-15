@@ -6,6 +6,10 @@
 * Live: https://www.camembertaulaitcrew.biz
 * Install/Dev: `go get ultre.me/calcbiz`
 
+## API Usages (gRPC)
+
+Use gRPC port with .proto files as API definitions
+
 ## API Usages (HTTP)
 
 ### SoundCloud (`pkg/soundcloud`)
