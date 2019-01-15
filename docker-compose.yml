@@ -2,9 +2,10 @@ version: '2'
 
 services:
   calc-www:
-    labels:
-      io.rancher.container.pull_image: always
-    image: ultreme/calcbiz:latest
+    #labels:
+    #  io.rancher.container.pull_image: always
+    #image: ultreme/calcbiz:latest
+    build: .
     environment:
       - VIRTUAL_HOST=calc-api.m.42.am
       #- VIRTUAL_PORT=

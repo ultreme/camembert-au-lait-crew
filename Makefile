@@ -107,8 +107,17 @@ lint:
 
 .PHONY: docker.up
 docker.up:
+	docker-compose build --pull
 	docker-compose up -d --force-recreate --remove-orphans
 
 .PHONY: docker.build
 docker.build:
 	docker build -t ultreme/calcbiz .
+
+.PHONY: docker.release
+docker.release: docker.build
+	docker push ultreme/calcbiz
+
+.PHONY: release
+release: docker.release
+	ssh zrwf.m.42.am -xec 'cd ~/go/src/ultre.me/calcbiz; git pull; make docker.up'
