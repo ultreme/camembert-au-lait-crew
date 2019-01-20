@@ -7,6 +7,7 @@ require (
 	github.com/golang/protobuf v1.2.0
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/gorilla/handlers v1.4.0
+	github.com/gorilla/mux v1.6.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190104160321-4832df01553a
 	github.com/grpc-ecosystem/grpc-gateway v1.6.4
 	github.com/jtolds/gls v4.2.1+incompatible // indirect

@@ -12,6 +12,7 @@ import (
 	"github.com/gobuffalo/packr"
 	"github.com/gogo/gateway"
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -26,6 +27,7 @@ import (
 
 	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/svc"
+	"ultre.me/calcbiz/views"
 )
 
 // VERSION represents the version of the Camembert au lait crew's website
@@ -140,11 +142,14 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 		return err
 	}
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
+	router := mux.NewRouter()
+	views.Setup(router)
+	box := packr.NewBox("./static")
+	router.PathPrefix("/").Handler(http.FileServer(box))
 	mux := http.NewServeMux()
 	mux.Handle("/api/", gwmux)
-
-	box := packr.NewBox("./static")
-	mux.Handle("/", http.FileServer(box))
+	mux.Handle("/", router)
+	// FIXME: handle 404
 
 	handler := handlers.LoggingHandler(os.Stderr, mux)
 	handler = handlers.RecoveryHandler(handlers.PrintRecoveryStack(true))(handler)
