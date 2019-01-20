@@ -18,7 +18,7 @@ func Setup(opts *Options) error {
 	opts.Router.HandleFunc("/", homeHandler)
 	opts.Router.HandleFunc("/muzik", muzikHandler)
 	opts.Router.HandleFunc("/hackz", hackzHandler)
-	opts.Router.HandleFunc("/copains", copaingsHandler)
+	opts.Router.HandleFunc("/copaings", copaingsHandler)
 	return nil
 }
 

@@ -14,23 +14,19 @@
     <meta name="description" content="Le Camembert au lait crew a un site des internets, du fun, de la musique et des hacks en perspective, c'est pas mal la fete hein, wesh">
     <meta name="author" content="Camembert au lait crew">
 
-
-{{/*
-    {% set sharing_image_url = sharing_image_url | default('http://www.camembertaulaitcrew.biz/static/img/logo-300.png') %}
-    {% set sharing_description = sharing_description | default('C\'est cool') %}
-    {% set active_page = active_page | default('home') %}
-    {% set current_url = request.url %}
-    {# {% set current_url = url_for(request.endpoint, _external=True) %} #}
-
+    <!-- favicon -->
     <link rel="image_src" content="{{ sharing_image_url }}" />
-    {# viewport ? #}
-    <link rel="shortcut icon" type="image/png" href="{{ '/static/img/logo-300.png' | resize('32x32', fill=1) }}" />
-    <link rel="icon" type="image/png" href="{{ '/static/img/logo-300.png' | resize('32x32', fill=1) }}" />
+    <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon-60x60.png">
+
+    <!-- REFRESH at least once per hour -->
     <meta http-equiv="refresh" content="3600;URL={{ current_url }}" />
 
-    {# FACEBOOK #}
-    <meta property="og:title"
-          content="Camembert au lait crew{% if page_title %} - {{page_title}}{% endif %}" />
+    <!-- FACEBOOK -->
+    <meta property="og:title" content="Camembert au lait crew{{ if page_title }} - {{page_title}}{{end}}" />
     <meta property="og:description" content="{{ sharing_description }}" />
     <!--<meta property="og:url" content="http://camembertaulaitcrew.biz/" />-->
     <meta property="og:type" content="website" />
@@ -39,13 +35,13 @@
     <meta property="og:image" content="{{ sharing_image_url }}" />
     <meta property="og:image:secure_url" content="{{ sharing_image_url }}" />
 
-    {# GEOLOC #}
+    <!-- GEOLOC -->
     <meta name="ICBM" content="49.4435, 1.1"/>
     <meta name="geo.position" content="49.4435; 1.1"/>
     <meta name="geo.placename" content="Rouen, Seine-Maritime"/>
     <meta name="geo.region" content="FR-Haute-Normandie"/>
 
-    {# TWITTER #}
+    <!-- TWITTER -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@camembertaulait" />
     <meta name="twitter:creator" content="@camembertaulait" />
@@ -54,28 +50,20 @@
     <meta name="twitter:image" content="{{ sharing_image_url }}" />
     <meta name="twitter:url" content="{{ current_url }}" />
 
+    <!-- FIXME: bundle .css files + minify -->
+    <link href="components/bootstrap/dist/css/bootstrap.min.css?{{invalid_cache}}" rel="stylesheet" data-no-instant />
+    <link href="/css/calc.css?{{invalid_cache}}" rel="stylesheet" data-no-instant />
 
-    {% assets filters="cssmin", output="bundles/base.css",
-       "components/bootstrap/dist/css/bootstrap.min.css",
-       "css/calc.css"
-    %}
-      <link href="{{ ASSET_URL }}" rel="stylesheet" data-no-instant />
-    {% endassets %}
+    <!-- FIXME: bundle .js files + minify -->
     <!--[if lt IE 9]>
-      {% assets filters="jsmin", output="bundles/base-old-browsers.js",
-         "components/html5shiv/dist/html5shiv.min.js",
-         "components/respond/dest/respond.min.js"
-      %}
-        <script type="text/javascript" src="{{ ASSET_URL }}" data-no-instant></script>
-      {% endassets %}
+    <script type="text/javascript" src="components/html5shiv/dist/html5shiv.min.js" data-no-instant></script>
+    <script type="text/javascript" src="components/respond/dest/respond.min.js" data-no-instant></script>
     <![endif]-->
-    {% block extra_css %}{% endblock %}
-*/}}
+
+    {{ block "extra_css" . }}{{ end }}
   </head>
 
   <body>
-    {{template "content" .}}
-{{/*
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -86,33 +74,33 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{ url_for('home') }}">
+          <a class="navbar-brand" href="/">
             Camembert au lait crew
           </a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="{% if active_page == 'home' %}active {% endif %}">
-              <a href="{{ url_for('home') }}" class="disco">Maizon</a>
+            <li class="{{ if eq active_page "home" }}active {{ end }}">
+              <a href="/" class="disco">Maizon</a>
             </li>
-            <li class="{% if active_page == 'muzik' %}active {% endif %}">
-              <a href="{{ url_for('albumz') }}" class="disco">Muzik</a>
+            <li class="{{ if eq active_page "muzik" }}active {{end}}">
+              <a href="/muzik" class="disco">Muzik</a>
             </li>
-            <li class="{% if active_page == 'hackz' %}active {% endif %}">
-              <a href="{{ url_for('hackz') }}" class="disco">Hackz</a>
+            <li class="{{ if eq active_page "hackz" }}active {{end}}">
+              <a href="/hackz" class="disco">Hackz</a>
             </li>
-            {#<li class="{% if active_page == 'vidz' %}active {% endif %}">
-              <a href="{{ url_for('vidz') }}" class="disco">Vidz</a>
-            </li>#}
-            <li class="{% if active_page == 'copaings' %}active {% endif %}">
-              <a href="{{ url_for('copaings') }}" class="disco">Copaings</a>
+            <!--<li class="{{ if eq active_page "vidz" }}active {{end}}">
+              <a href="/vidz" class="disco">Vidz</a>
+            </li>-->
+            <li class="{{ if eq active_page "copaings" }}active {{end}}">
+              <a href="/copaings" class="disco">Copaings</a>
             </li>
-            {#<li class="{% if active_page == 'tofz' %}active {% endif %}">
-              <a href="{{ url_for('tofz') }}" class="disco">Tofz</a>
-            </li>#}
-            {#<li class="{% if active_page == 'concertz' %}active {% endif %}">
-              <a href="{{ url_for('concertz') }}" class="disco">Concertz</a>
-            </li>#}
+            <!--<li class="{{ if eq active_page "tofz" }}active {{end}}">
+              <a href="/tofz" class="disco">Tofz</a>
+            </li>-->
+            <!--<li class="{{ if eq active_page "concertz" }}active {{end}}">
+              <a href="/concertz" class="disco">Concertz</a>
+            </li>-->
           </ul>
         </div>
       </div>
@@ -123,37 +111,92 @@
 
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-md-push-3 col-lg-push-3">
           <div class="row">
-            {% if layout == 'two_columns' %}
+            THE CONTENT
+            {{/*
+            {{ block "content" . }}
+                                             {{ if layout == 'two_columns' }}
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
               <h1>{{ self.title() }} <small>{{ self.subtitle() }}</small></h1>
-              {% block main_column %}{% endblock %}
+              {{ block main_column }}{{ endblock }}
             </div>
             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
               <hr class="hidden-md hidden-lg" />
-              {% block secondary_column %}{% endblock %}
+              {{ block secondary_column }}{{ endblock }}
             </div>
-            {% else %} {# one column #}
+            {{ else }} {# one column #}
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <h1>{{ self.title() }} <small>{{ self.subtitle() }}</small></h1>
-              {% block content %}{% endblock %}
+              {{template "content" .}}
             </div>
-            {% endif %}
-          </div>
+            {{end}}
+*/}}
+
+                                </div>
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-md-pull-9 col-lg-pull-9">
           <div class="row">
             <hr class="hidden-md hidden-lg" />
             <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-              {% include 'includes/main_logo.html' %}
-              {# <hr class="hidden-sm hidden-xs" /> #}
+<a href="/">
+  <img src="{{ "/img/logo-300.png" | resize "300x300" "fill=1"}}"
+       class="bicool img-responsive img-rounded"
+       data-alternate="{{ logo_alternate | resize "300x300" "fill=1" }}"
+       title="Camembert au lait crew" width="300" height="300" />
+</a>
+<!--<hr class="hidden-sm hidden-xs" /> -->
             </div>
             <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-              {% include 'includes/le_mot_du_jour.html' %}
-              {# <hr class="hidden-sm hidden-xs" /> #}
+<div class="le-mot-du-jour">
+  <h4>Le mot du jour est
+    <small class="blink">{{ mot_du_jour }}</small>
+  </h4>
+</div>
+<!-- <hr class="hidden-sm hidden-xs" /> -->
             </div>
             <div class="col-x-6 col-sm-6 col-md-12 col-lg-12">
-              {% include 'includes/social_links.html' %}
+<div class="social-links">
+  <a href="https://soundcloud.com/camembert-au-lait-crew/"
+     class="logo-social" target="_blank" title="Nos chansons sont sur SoundCloud">
+    <img src="/img/logo-sc.png" />
+  </a>
+  <a href="https://www.facebook.com/camembertaulaitcrew"
+     class="logo-social" target="_blank" title="Like nous sur Facebook !">
+    <img src="/img/logo-ff.png" />
+  </a>
+  <a href="https://twitter.com/camembertaulait"
+     class="logo-social" target="_blank" title="On tweet sur... Twitter">
+    <img src="/img/logo-tw.png" />
+  </a>
+  <a href="https://www.youtube.com/user/camembertaulaitcrew"
+     class="logo-social" target="_blank" title="Nos vid&eacute;os sont sur Youtube">
+    <img src="/img/logo-yt.png" />
+  </a>
+  <a href="https://open.spotify.com/artist/36CEVQIzO8Ez8eKgTRxW4T"
+     class="logo-social" target="_blank" title="Nos musiques sur Spotify">
+    <img src="/img/logo-sp.png" />
+  </a>
+  <a href="https://itunes.apple.com/fr/artist/camembert-au-lait-crew/1142187863"
+     class="logo-social" target="_blank" title="Nos musiques sur iTunes">
+    <img src="/img/logo-it.png" />
+  </a>
+  <a href="https://github.com/ultreme"
+     class="logo-social" target="_blank" title="Notre code est sur Github">
+    <img src="/img/logo-gh.png" />
+  </a>
+  <!--
+  <a href="http://camembertaulaitcrew.tumblr.com/"
+     class="logo-social" target="_blank" title="Nos neurones sont sur Tumblr">
+    <img src="/img/logo-tm.png" />
+  </a>
+  {# TODO: grooveshark #}
+  {# TODO: myspace? #}
+  {# TODO: spreadshirt: http://camembertaulaitcrew.spreadshirt.fr #}
+  {# TODO: #}
+  {# TODO: #}
+  -->
+</div>
+
             </div>
           </div>
         </div>
@@ -165,8 +208,8 @@
       <div class="container">
         <p class="text-muted">
           <span>
-            Page g&eacute;n&eacute;r&eacute;e avec {{ megahertz() }}
-            m&eacute;gahertz et beaucoup de {{ mot_debile_qui_se_mange() }}.
+            Page g&eacute;n&eacute;r&eacute;e avec {{ megahertz }}
+            m&eacute;gahertz et beaucoup de {{ mot_debile_qui_se_mange }}.
           </span>
           <span>
             Salut <a href="#" id="username_button" class="username_data">mec</a> !
@@ -174,26 +217,17 @@
         </p>
       </div>
     </div>
-    {% if neige %}<canvas id="neige"></canvas>{% endif %}
-    {% assets filters="jsmin", output="bundles/base.js",
-       "components/jquery/dist/jquery.min.js",
-       "components/bootstrap/dist/js/bootstrap.min.js",
-       "components/jquery-cookie/jquery.cookie.js",
-       "components/konami-js/konami.js",
-       "components/instantclick/instantclick.js",
-       "js/calc.js"
-    %}
-      <script type="text/javascript" src="{{ ASSET_URL }}" data-no-instant></script>
-    {% endassets %}
+    {{ if neige }}<canvas id="neige"></canvas>{{end}}
+    <script type="text/javascript" src="components/jquery/dist/jquery.min.js" data-no-instant></script>
+    <script type="text/javascript" src="components/bootstrap/dist/js/bootstrap.min.js" data-no-instant></script>
+    <script type="text/javascript" src="components/jquery-cookie/jquery.cookie.js" data-no-instant></script>
+    <script type="text/javascript" src="components/konami-js/konami.js" data-no-instant></script>
+    <script type="text/javascript" src="components/instantclick/instantclick.js" data-no-instant></script>
+    <script type="text/javascript" src="js/calc.js" data-no-instant></script>
 
-    {% if neige %}
-      {% assets filters="jsmin", output="bundles/neige.js", "js/snow4.js"%}
-      <script type="text/javascript" src="{{ ASSET_URL }}" data-no-instant></script>
-      {% endassets %}
-    {% endif %}
+    {{ if neige }}<script type="text/javascript" src="js/snow4.js" data-no-instant></script>{{end}}
 
-    {% block extra_js %}{% endblock %}
-*/}}
+    {{ block "extra_js" . }}{{ end }}
   </body>
 </html>
 {{ end }}

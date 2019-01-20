@@ -40,7 +40,8 @@ func loadTemplates(opts *Options) error {
 	}
 
 	// generate optimized templates
-	mainTemplate := template.New("main").Funcs(funcmap(opts))
+	funcmap := getFuncmap(opts)
+	mainTemplate := template.New("main").Funcs(funcmap)
 	mainTemplate = template.Must(mainTemplate.Parse(`{{define "main"}}{{template "base" .}}{{end}}`))
 	mainTemplate = template.Must(mainTemplate.Parse(layoutContent))
 	for filepath, content := range pageContents {
