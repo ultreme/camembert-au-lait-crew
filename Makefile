@@ -21,7 +21,7 @@ GENERATED_FILES = \
 	swagger.yaml
 
 PROTOC_OPTS = -I/protobuf:vendor:.
-RUN_OPTS ?=
+RUN_OPTS ?= --debug
 
 ##
 ## rules
