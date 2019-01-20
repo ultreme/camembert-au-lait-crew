@@ -19,6 +19,8 @@ import (
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/pkg/errors"
+	minify "github.com/tdewolff/minify/v2"
+	"github.com/tdewolff/minify/v2/html"
 	"github.com/urfave/cli"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -73,6 +75,10 @@ func main() {
 					Usage: "TCP port address for gRPC server",
 					Value: ":9001",
 				},
+				cli.BoolFlag{
+					Name:  "debug",
+					Usage: "Enable debug mode",
+				},
 				// service options
 				cli.StringFlag{
 					Name:   "soundcloud-client-id",
@@ -103,12 +109,14 @@ type serverOptions struct {
 	GRPCBind       string
 	HTTPBind       string
 	ServiceOptions svc.Options
+	Debug          bool
 }
 
 func serverOptionsFromCliContext(c *cli.Context) serverOptions {
 	return serverOptions{
 		GRPCBind: c.String("grpc-bind"),
 		HTTPBind: c.String("http-bind"),
+		Debug:    c.Bool("debug"),
 		ServiceOptions: svc.Options{
 			SoundcloudUserID:   c.Int("soundcloud-user-id"),
 			SoundcloudClientID: c.String("soundcloud-client-id"),
@@ -141,21 +149,41 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	if err := api.RegisterServerHandlerFromEndpoint(ctx, gwmux, opts.GRPCBind, grpcOpts); err != nil {
 		return err
 	}
-	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
+
+	// configure HTTP server
 	router := mux.NewRouter()
-	if err := views.Setup(router); err != nil {
+	if err := views.Setup(&views.Options{
+		Router: router,
+		Debug:  opts.Debug,
+	}); err != nil {
 		return errors.Wrap(err, "failed to setup views")
 	}
 	box := packr.NewBox("./static")
 	router.PathPrefix("/").Handler(http.FileServer(box))
+
+	var routerHandler http.Handler = router
+	if !opts.Debug {
+		m := minify.New()
+		m.Add("text/html", &html.Minifier{
+			KeepDocumentTags:        true,
+			KeepConditionalComments: true,
+			KeepEndTags:             true,
+			KeepDefaultAttrVals:     true,
+			//KeepWhitespace:          true,
+		})
+		routerHandler = m.Middleware(router)
+	}
+
+	// configure top-level mux
 	mux := http.NewServeMux()
 	mux.Handle("/api/", gwmux)
-	mux.Handle("/", router)
+	mux.Handle("/", routerHandler)
 	// FIXME: handle 404
 
 	handler := handlers.LoggingHandler(os.Stderr, mux)
 	handler = handlers.RecoveryHandler(handlers.PrintRecoveryStack(true))(handler)
 
+	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
 	return http.ListenAndServe(opts.HTTPBind, handler)
 }
 

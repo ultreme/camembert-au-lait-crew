@@ -18,7 +18,7 @@ var (
 	bufpool   *bpool.BufferPool
 )
 
-func loadTemplates() error {
+func loadTemplates(opts *Options) error {
 	box = packr.NewBox("../templates")
 	bufpool = bpool.NewBufferPool(64)
 	templates = make(map[string]*template.Template)
@@ -40,7 +40,7 @@ func loadTemplates() error {
 	}
 
 	// generate optimized templates
-	mainTemplate := template.New("main")
+	mainTemplate := template.New("main").Funcs(funcmap(opts))
 	mainTemplate = template.Must(mainTemplate.Parse(`{{define "main"}}{{template "base" .}}{{end}}`))
 	mainTemplate = template.Must(mainTemplate.Parse(layoutContent))
 	for filepath, content := range pageContents {

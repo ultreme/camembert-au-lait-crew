@@ -1,16 +1,20 @@
 {{ define "base" }}
 <!DOCTYPE html>
 <html
-{{/*
    lang="fr"
-   class="{{ yomyman_style() }}{% if devel %} devel{% endif %}"
-   xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:og="http://ogp.me/ns#"
-xmlns:fb="https://www.facebook.com/2008/fbml"
-*/}}
+   class="{{yomyman_style}}{{if devel}} devel{{end}}"
+   xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="https://www.facebook.com/2008/fbml"
   >
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{{ block "fulltitle" . }}{{block "title" .}}{{end}} - Camembert au lait crew{{end}}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Le Camembert au lait crew a un site des internets, du fun, de la musique et des hacks en perspective, c'est pas mal la fete hein, wesh">
+    <meta name="author" content="Camembert au lait crew">
+
+
 {{/*
     {% set sharing_image_url = sharing_image_url | default('http://www.camembertaulaitcrew.biz/static/img/logo-300.png') %}
     {% set sharing_description = sharing_description | default('C\'est cool') %}
@@ -18,13 +22,7 @@ xmlns:fb="https://www.facebook.com/2008/fbml"
     {% set current_url = request.url %}
     {# {% set current_url = url_for(request.endpoint, _external=True) %} #}
 
-    <title>{% if page_title %}{{page_title}} - {% endif %}Camembert au lait crew - Site des internets</title>
     <link rel="image_src" content="{{ sharing_image_url }}" />
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Le Camembert au lait crew a un site des internets, du fun, de la musique et des hacks en perspective, c'est pas mal la fete hein, wesh">
-    <meta name="author" content="Camembert au lait crew">
     {# viewport ? #}
     <link rel="shortcut icon" type="image/png" href="{{ '/static/img/logo-300.png' | resize('32x32', fill=1) }}" />
     <link rel="icon" type="image/png" href="{{ '/static/img/logo-300.png' | resize('32x32', fill=1) }}" />
