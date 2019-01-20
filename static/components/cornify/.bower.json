@@ -1,0 +1,20 @@
+{
+  "name": "cornify",
+  "version": "0.0.3",
+  "main": "cornify.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "homepage": "https://github.com/L1fescape/cornify",
+  "_release": "0.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.3",
+    "commit": "381bdd7f5cd955f349bf61c152f3bf82f66d8a8c"
+  },
+  "_source": "https://github.com/L1fescape/cornify.git",
+  "_target": "~0.0.3",
+  "_originalSource": "cornify"
+}

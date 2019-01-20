@@ -1,0 +1,18 @@
+    /*#tetris   { margin: 1em auto; padding: 1em; border: 4px solid black; border-radius: 10px; background-color: #F8F8F8; }*/
+    #stats    { display: inline-block; vertical-align: top; }
+    #canvas   { display: inline-block; vertical-align: top; /*background: url(texture.jpg);*/ /*box-shadow: 10px 10px 10px #999;*/ border: 2px solid #333; }
+    /*#menu     { display: inline-block; vertical-align: top; position: relative; }
+    #menu p   { margin: 0.5em 0; text-align: center; }
+    #menu p a { text-decoration: none; color: black; }*/
+    #upcoming { display: block; background-color: #E0E0E0; }
+    #score    { color: red; font-weight: bold; vertical-align: middle; }
+    #rows     { color: blue; font-weight: bold; vertical-align: middle; }
+    #stats    { position: absolute; bottom: 0em; right: 1em; }
+    #start a  { background: black;  color: white; padding: 5px; line-height: 30px }
+    @media screen and (min-width:   0px) and (min-height:   0px)  { #tetris { font-size: 0.75em; } #menu { width: 75px; height: 150px; } #upcoming { width:  50px; height:  50px; } #canvas { width: 75px; height: 150px; } } /* 10px chunks */
+    @media screen and (min-width: 400px) and (min-height: 400px)  { #tetris { font-size: 1.00em; } #menu { width: 125px; height: 250px; } #upcoming { width:  75px; height:  75px; } #canvas { width: 125px; height: 250px; } } /* 15px chunks */
+    @media screen and (min-width: 500px) and (min-height: 500px)  { #tetris { font-size: 1.25em; } #menu { width: 175px; height: 350px; } #upcoming { width: 100px; height: 100px; } #canvas { width: 175px; height: 350px; } } /* 20px chunks */
+    @media screen and (min-width: 600px) and (min-height: 600px)  { #tetris { font-size: 1.50em; } #menu { width: 225px; height: 450px; } #upcoming { width: 125px; height: 125px; } #canvas { width: 225px; height: 450px; } } /* 25px chunks */
+    @media screen and (min-width: 700px) and (min-height: 700px)  { #tetris { font-size: 1.75em; } #menu { width: 275px; height: 550px; } #upcoming { width: 150px; height: 150px; } #canvas { width: 275px; height: 550px; } } /* 30px chunks */
+    @media screen and (min-width: 800px) and (min-height: 800px)  { #tetris { font-size: 2.00em; } #menu { width: 325px; height: 650px; } #upcoming { width: 175px; height: 175px; } #canvas { width: 325px; height: 650px; } } /* 35px chunks */
+    @media screen and (min-width: 900px) and (min-height: 900px)  { #tetris { font-size: 2.25em; } #menu { width: 375px; height: 750px; } #upcoming { width: 200px; height: 200px; } #canvas { width: 375px; height: 750px; } } /* 40px chunks */

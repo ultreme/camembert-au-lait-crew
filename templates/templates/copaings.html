@@ -1,0 +1,41 @@
+{% set active_page = 'copaings' %}
+{% extends "base.html" %}
+{% set page_title = 'Copaings' %}
+{% set columns = 3 %}
+{% set grid_size = 12 // columns %}
+{% set square_size = 250 %}
+
+{% block title %}Des copaings{% endblock %}
+{% block subtitle %}d'amour{% endblock %}
+
+{% block content %}
+  <h4>Les sites d'internet des copaings</h4>
+
+  <div class="row">
+    {% for copaing in copaings : %}
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random">
+      <div class="thumbnail"
+           width="{{square_size}}" height="{{square_size}}">
+        <div class="caption-wrapper">
+          <div class="caption">
+            <h4>{{ copaing.title }}</h4>
+            <h5>{{ copaing.description }}</h5>
+            <hr />
+            {% for link in copaing.links %}
+            <a class="btn btn-primary"
+               href="{{ link.url }}"
+               target="_blank">
+              {{ link.title }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        <img src="{{ copaing.img | cache_external_assets | resize('250x250', fill=1) }}"
+             class="img-responsive" width="{{square_size}}" height="{{square_size}}" />
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+{% endblock %}

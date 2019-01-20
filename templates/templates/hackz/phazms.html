@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set active_page = 'hackz' %}
+{% set page_title = 'Phazms' %}
+{% set layout = 'two_columns' %}
+
+{% block title %}Des Phazms par milliards{% endblock %}
+{% block subtitle %}Nommage de phazms en temps r&eacute;el.{% endblock %}
+
+{% block main_column %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nom</th>
+        <th>Date de naissance</th>
+        <th>Propri&eacute;taire</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for phazm in phazms %}
+      <tr>
+        <td>{{ phazm.id }}</td>
+        <td>{{ phazm.name }}</td>
+        <td>{{ phazm.birthdate }}</td>
+        <td>{{ phazm.owner }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block secondary_column %}
+  <div>
+    <img src="/static/img/hackz/phazms/logo.jpg"
+         class="img-responsive img-rounded rotate-random"
+         title="Les phazms, c'est tr&egrave;s tr&egrave;s bien" />
+  </div>
+
+  {% if new_phazm %}
+  <br />
+  <div class="alert alert-success" role="alert">
+    Bienvenue &agrave; <b>{{ new_phazm.name }}</b> sur la plan&egrave;te du
+    Terre (Syst&egrave;me solaire), tu vas voir, on va bien s'amuser!
+  </div>
+  {% else %}
+  <br />
+  {% endif %}
+
+  <form id="form-add-phazms" name="new-phazms" action="" method="post">
+    <input type="hidden" name="login" id="phazms-login" />
+    <Button type="submit" class="btn btn-lg btn-success">
+      Ajouter un une Phazm
+    </button>
+  </form>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="/static/js/phazms.js"></script>
+{% endblock %}

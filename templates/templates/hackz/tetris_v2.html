@@ -1,0 +1,63 @@
+{% set active_page = 'hackz' %}
+{% extends "base.html" %}
+{% set page_title = 'Ultreme Tetris' %}
+{% set layout = 'two_columns' %}
+
+{% block title %}Ultreme Tetris{% endblock %}
+{% block subtitle %}<b>{{ niveau }}&egrave;me</b> niveau de difficult&eacute;{% endblock %}
+
+{% block main_column %}
+  {# {% include '../../../static/hackz/tetris_v2/app.html' %} #}
+  <div id="tetris">
+    <canvas id="canvas">
+      D&eacute;sol&eacute;, ce tetris n'est pas g&eacute;r&eacute; par votre navigateur.
+    </canvas>
+  </div>
+{% endblock %}
+
+{% block secondary_column %}
+  <div class="row">
+    <div class="col-xs-4 col-sm-4 col-md-12 col-lg-12">
+      <p><canvas id="upcoming"></canvas></p>
+    </div>
+    <div class="col-xs-4 col-sm-5 col-md-12 col-lg-12">
+      <p id="start" class="pulse2"><a href="javascript:play();">Appuyez sur espace pour commencer.</a></p>
+      <p>score <span id="score">00000</span></p>
+      <p>lignes <span id="rows">0</span></p>
+      <hr class="hidden-xs hidden-sm" />
+    </div>
+    <div class="col-xs-4 col-sm-3 col-md-12 col-lg-12">
+      <div><label>Niveaux &ccedil;a va</label></div>
+      <div class="btn-group">
+        <a class="btn btn-primary {% if niveau == '1' %}disabled{% endif %}" href="?niveau=1" />1</a>
+        <a class="btn btn-primary {% if niveau == '2' %}disabled{% endif %}" href="?niveau=2" />2</a>
+        <a class="btn btn-primary {% if niveau == '42' %}disabled{% endif %}" href="?niveau=42" />4.2</a>
+        <a class="btn btn-primary {% if niveau == '5' %}disabled{% endif %}" href="?niveau=5" />5</a>
+      </div>
+      <div><label>Niveaux Danger</label></div>
+      <div class="btn-group">
+        <a class="btn btn-danger {% if niveau == '6' %}disabled{% endif %}" href="?niveau=6" />6</a>
+        <a class="btn btn-danger {% if niveau == '8' %}disabled{% endif %}" href="?niveau=8" />8</a>
+      </div>
+      <hr class="hidden-xs hidden-sm" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <h2>Hackzers les plus {{ mot_cool() }} <small>pour l'instant</small></h2>
+      <ul>
+        {% for scor in hackzers %}
+          <li>#{{ loop.index }} {{ scor.login }} avec {{ scor.score }} {{ mot_debile_qui_se_mange() }} le {{ scor.created_at}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="/static/hackz/tetris_v2/script.js"></script>
+{% endblock %}
+{% block extra_css %}
+  <link href="/static/hackz/tetris_v2/style.css" rel="stylesheet" />
+{% endblock %}

@@ -1,0 +1,24 @@
+{% set active_page = 'hackz' %}
+{% extends "base.html" %}
+{% set page_title = 'Miroir' %}
+
+{% block title %}Miroir{% endblock %}
+{% block subtitle %}magique{% endblock %}
+
+{% block content %}
+<div class="position: absolute">
+  <div id="my_camera" style="width:500px; height:667px; z-index: 1000;"></div>
+  <img id="miroir-cool" style="width:500px; height:667px; position:relative; top:-667px; z-index: 1001;" src="/static/img/hackz/miroir/miroir2.png" />
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="/static/hackz/webcam/webcam.min.js"></script>
+    <script>
+      $('#miroir-cool').width(0);
+      Webcam.on('live', function() {
+        $('#miroir-cool').width(500);
+      });
+      Webcam.attach('#my_camera');
+    </script>
+{% endblock %}

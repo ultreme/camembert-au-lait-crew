@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% set active_page = 'hackz' %}
+{% set page_title = 'Convertisseur' %}
+
+{% block title %}Convertisseur{% endblock %}
+{% block subtitle %}atomique{% endblock %}
+
+{% set layout = 'two_columns' %}
+
+{% block main_column %}
+      <form role="form" method="GET">
+        <div class="form-group">
+          <label for="truc">Entre un truc</label>
+          <input name="truc" {% if truc %}value="{{truc}}"{% endif %} type="text" class="form-control" id="truc" placeholder="Ici">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-default">Convertissage!</button>
+        </div>
+      </form>
+
+      {% if truc %}
+      <hr />
+      <div>
+        <b>{{ truc }}</b> est
+        {% for info in infos %}<b>{{ info }}</b>, {% endfor %}
+        c'est &agrave; peu pr&ecirc;t tout ce qu'il y a &agrave;
+        savoir &agrave ce sujet.
+      </div>
+      <div>
+        <h3>R&eacute;sultats du convertissage</h3>
+        <ul>
+          {% for result in results %}
+          <li>
+            <b>{{ truc }}{% if result.input_type %}
+              {{ result.input_type }}{% endif %}</b> &ccedil;a fait
+            <b>{{ result.value }} {{ result.output_type }}</b>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+{% endblock %}
+
+{% block secondary_column %}
+      <img src="/static/img/hackz/convertisseur/logo.jpg"
+           class="img-responsive img-rounded rotate-random"
+           title="Le convertisseur, c'est tr&egrave;s tr&egrave;s comliqu&eacute;" />
+{% endblock %}
+
+{% block extra_js %}
+  {# <script src="/static/js/hackz/convertisseur.js"></script> #}
+{% endblock %}

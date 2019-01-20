@@ -1,0 +1,54 @@
+{% set active_page = 'vidz' %}
+{% extends "base.html" %}
+{% set page_title = 'Vidz' %}
+{% set columns = 3 %}
+{% set grid_size = 12 // columns %}
+{# {% set layout = 'two_columns' %} #}
+{% set square_size = 480 %}
+
+{% block title %}Des videos{% endblock %}
+{% block subtitle %}en mouvement{% endblock %}
+
+{% block secondary_column %}
+  <div>
+    <script src="https://apis.google.com/js/platform.js"></script>
+    <div class="g-ytsubscribe" data-channel="camembertaulaitcrew" data-layout="full" data-count="default"></div>
+  </div>
+{% endblock %}
+
+{% block main_column %}
+
+  {# <script src="http://www.gmodules.com/ig/ifr?url=http://www.google.com/ig/modules/youtube.xml&amp;up_channel=camembertaulaitcrew&amp;synd=open&amp;w=320&amp;h=390&amp;title=&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"></script> #}
+
+  {# <iframe width="340" height="280" src="//www.youtube.com/embed/-_x5XNwviho" frameborder="0" allowfullscreen></iframe> #}
+  <p>Retrouvez nos vid&eacute;os sur Youtube</p>
+
+  {#
+  <a href="http://youtube.com/camembertaulaitcrew"
+     class="thumbnail rotate-random img-rounded img-responsive col-md-6 col-lg-6 col-xs-6"
+     target="_blank"
+     width="{{square_size}}" height="{{square_size}}">
+    <img src="{{ '/static/img/thumbs/yt.jpg' | resize('250x250')}}"
+         width="{{square_size}}" height="{{square_size}}" />
+  </a>
+  #}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    {% for video in videos : %}
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random">
+      <a href="{{ video.youtube_url }}" target="_blank" class="thumbnail">
+        <div class="caption-wrapper">
+          <p class="caption">
+            {{ video.title }}
+          </p>
+        </div>
+        <img src="{{ video.img.url | cache_external_assets | resize('480x360', fill=1) }}" class="img-responsive" width="480" height="480">
+      </a>
+    </div>
+
+    {% endfor %}
+  </div>
+{% endblock %}

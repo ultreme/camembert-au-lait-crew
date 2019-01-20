@@ -1,0 +1,41 @@
+{% set active_page = 'hackz' %}
+{% extends "base.html" %}
+{% set page_title = 'Terminul' %}
+
+{% block title %}Terminul{% endblock %}
+{% block subtitle %}informaticien{% endblock %}
+
+{% block content %}
+  <div id="terminul"></div>
+{% endblock %}
+
+{% block extra_js %}
+<!--<script src="/static/hackz/terminul/terminul.js"></script>-->
+  <!--<script src="/static/hackz/terminul/js/jquery-1.7.1.min.js"></script>-->
+    <script src="/static/hackz/terminul/js/jquery.mousewheel-min.js"></script>
+    <script src="/static/hackz/terminul/js/jquery.terminal-min.js"></script>
+    <link href="/static/hackz/terminul/css/jquery.terminal.css" rel="stylesheet"/>
+    <script>
+      jQuery(document).ready(function(){
+
+      $('#terminul').terminal(function(command, term) {
+        if (command !== '') {
+          try {
+            var result = window.eval(command);
+            if (result !== undefined) {
+              term.echo(new String(result));
+            }
+          } catch(e) {
+            term.error(new String(e));
+          }
+        } else {
+          term.echo('');
+        }
+      }, {
+        greetings: 'Terminul 2.0',
+        name: 'terminul',
+        height: 500,
+        prompt: 'naze> '});
+      });
+    </script>
+{% endblock %}

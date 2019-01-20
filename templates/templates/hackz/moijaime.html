@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% set active_page = 'hackz' %}
+{% set page_title = 'Moi j\'aime' %}
+{% set layout = 'two_columns' %}
+
+{% block title %}Moi j'aime{% endblock %}
+{% block subtitle %}plein de trucs{% endblock %}
+
+{% block main_column %}
+  <div class="paper-container">
+    <div class="paper">
+      <p></p>
+      {% for phrase in jaime %}
+      <span style="color: {{ random_color(dark=1) }}">{{ phrase }}</span><br />
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block secondary_column %}
+  <img src="/static/img/hackz/moijaime/logo.jpg" alt="Moi j'aime!"
+       class="img-responsive img-rounded rotate-random" />
+  <hr />
+  <a href="#" class="refresh-page btn btn-primary">Raffraichir</a>
+{% endblock %}

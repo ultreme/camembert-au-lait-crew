@@ -1,0 +1,14 @@
+{% set active_page = 'hackz' %}
+{% extends "base.html" %}
+{% set page_title = 'Hackz' %}
+
+{% block title %}Des scorz{% endblock %}
+{% block subtitle %}les meilleurs{% endblock %}
+
+{% block content %}
+  <ul>
+    {% for scor in scorz %}
+    <li>#{{ loop.index }} {{ scor.login }} avec {{ scor.score }} {{ mot_debile_qui_se_mange() }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

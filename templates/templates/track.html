@@ -1,0 +1,41 @@
+{% set active_page = 'muzik' %}
+{% extends "base.html" %}
+{% set page_title = track.title %}
+
+{% block title %}Du son {{ mot_cool() }}{% endblock %}
+{% block subtitle %}{{track.title}}{% endblock %}
+
+{% set layout = 'two_columns' %}
+{% set track_url_split = track.url.split('/') %}
+
+{% block main_column %}
+<iframe
+  width="100%"
+  height="600"
+  scrolling="no"
+  frameborder="no"
+  src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/{{ track_url_split[2] }}&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">
+</iframe>
+
+      <pre class="track_description">{{ track.description | urlize(50, true) }}</pre>
+{% endblock %}
+
+{% block secondary_column %}
+      <a href="{{ track.ext_url }}" target="_blank">
+        <img src="{{ track.img | cache_external_assets }}" alt="{{ track.title }}"
+             class="img-responsive img-rounded rotate-random" />
+      </a>
+
+      <div class="track_date">
+        {{ track.created_at }}
+      </div>
+
+      {# FIXME: handle tags etc in html headers for SEO #}
+
+      <div class="track_tags">
+        {% for tag in track.tags %}
+        <span class="label label-primary">#{{ tag }}</span>
+        {% endfor %}
+      </div>
+
+{% endblock %}

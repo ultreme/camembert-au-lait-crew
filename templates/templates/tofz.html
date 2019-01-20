@@ -1,0 +1,54 @@
+{% set active_page = 'tofz' %}
+{% extends "base.html" %}
+{% set page_title = 'tofz' %}
+{% set columns = 4 %}
+{% set grid_size = 12 // columns %}
+{% set title = 'Tofz {{ mot_cool() }}' %}
+{% set square_size = 400 %}
+
+{% block title %}Tofz {{ mot_cool() }}{% endblock %}
+{% block subtitle %}(des photographies){% endblock %}
+
+{% block content %}
+
+{% if true %}
+  <div class="row">
+    {% for album in albumz : %}
+
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+      <a href="{{ album.url }}" class="thumbnail"
+         width="{{square_size}}" height="{{square_size}}" target="_blank">
+        <div class="caption-wrapper">
+          <p class="caption">
+            {{ album.title }}
+          </p>
+          </div>
+        <img src="{{ album.img | cache_external_assets | resize('400x400', fill=1) }}"
+             class="img-responsive"
+             width="{{square_size}}" height="{{square_size}}" />
+        {{ album.source }}
+      </a>
+    </div>
+
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+ {% if false %}
+  <div class="row">
+    {% for tof in tofz : %}
+
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+      <a href="{{ tof.source }}" class="thumbnail">
+        <img src="{{ tof.source | cache_external_assets | resize('400x400', fill=1) }}"
+             class="img-responsive" width="400" height="400" />
+        {{ tof.source }}
+      </a>
+    </div>
+
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% endblock %}
