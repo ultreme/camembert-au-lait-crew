@@ -143,7 +143,9 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	}
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
 	router := mux.NewRouter()
-	views.Setup(router)
+	if err := views.Setup(router); err != nil {
+		return errors.Wrap(err, "failed to setup views")
+	}
 	box := packr.NewBox("./static")
 	router.PathPrefix("/").Handler(http.FileServer(box))
 	mux := http.NewServeMux()

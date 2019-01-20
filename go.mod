@@ -1,6 +1,7 @@
 module ultre.me/calcbiz
 
 require (
+	github.com/gobuffalo/packd v0.0.0-20181212173646-eca3b8fd6687
 	github.com/gobuffalo/packr v1.21.9
 	github.com/gogo/gateway v1.0.0
 	github.com/gogo/protobuf v1.2.0
@@ -12,6 +13,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.6.4
 	github.com/jtolds/gls v4.2.1+incompatible // indirect
 	github.com/moul/numberinfo v0.0.0-20160903151149-753f372df509
+	github.com/oxtoacart/bpool v0.0.0-20150712133111-4e1c5567d7c2
 	github.com/pkg/errors v0.8.1
 	github.com/shazow/memoizer v0.0.0-20130904030615-74fc48eaeadc
 	github.com/sirupsen/logrus v1.3.0 // indirect

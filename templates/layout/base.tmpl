@@ -1,13 +1,17 @@
+{{ define "base" }}
 <!DOCTYPE html>
 <html
+{{/*
    lang="fr"
    class="{{ yomyman_style() }}{% if devel %} devel{% endif %}"
    xmlns="http://www.w3.org/1999/xhtml"
    xmlns:og="http://ogp.me/ns#"
-   xmlns:fb="https://www.facebook.com/2008/fbml"
-   >
+xmlns:fb="https://www.facebook.com/2008/fbml"
+*/}}
+  >
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+{{/*
     {% set sharing_image_url = sharing_image_url | default('http://www.camembertaulaitcrew.biz/static/img/logo-300.png') %}
     {% set sharing_description = sharing_description | default('C\'est cool') %}
     {% set active_page = active_page | default('home') %}
@@ -68,9 +72,12 @@
       {% endassets %}
     <![endif]-->
     {% block extra_css %}{% endblock %}
+*/}}
   </head>
 
   <body>
+    {{template "content" .}}
+{{/*
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -188,5 +195,7 @@
     {% endif %}
 
     {% block extra_js %}{% endblock %}
+*/}}
   </body>
 </html>
+{{ end }}

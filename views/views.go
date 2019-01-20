@@ -6,8 +6,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Setup(router *mux.Router) {
+func Setup(router *mux.Router) error {
+	if err := loadTemplates(); err != nil {
+		return err
+	}
 	router.HandleFunc("/", homeHandler)
+	return nil
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -15,5 +19,5 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{
 		"hello": "world",
 	}
-	render(w, r, "home.html", data)
+	render(w, r, "home.tmpl", data)
 }
