@@ -13,7 +13,7 @@ import (
 var box = packr.NewBox("../templates")
 
 func setDefaultHeaders(w http.ResponseWriter) {
-	// push(w, "/static/xxx.css")
+	push(w, "/css/calc.css")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
@@ -36,4 +36,14 @@ func render(w http.ResponseWriter, r *http.Request, tplPath string, data interfa
 		return
 	}
 	w.Write(buf.Bytes())
+}
+
+func push(w http.ResponseWriter, resource string) {
+	pusher, ok := w.(http.Pusher)
+	if ok {
+		if err := pusher.Push(resource, nil); err == nil {
+			zap.L().Warn("failed to push resource", zap.String("path", resource), zap.Error(err))
+			return
+		}
+	}
 }
