@@ -1,0 +1,14 @@
+{% set active_page = 'hackz' %}
+{% extends "base.html" %}
+{% set page_title = 'MMO Paint' %}
+
+{% block title %}MMO Paint{% endblock %}
+{% block subtitle %}super sexy{% endblock %}
+
+{% block content %}
+  <div id="paint_frame"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/hackz/paint/paint.js"></script>
+{% endblock %}

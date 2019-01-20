@@ -1,0 +1,104 @@
+{% set active_page = 'hackz' %}
+{% extends "base.html" %}
+{% set page_title = 'Calculatrice.exe' %}
+
+{% block title %}Calculatrice.exe{% endblock %}
+{% block subtitle %}(c'est comme des maths){% endblock %}
+
+{% block content %}
+<div id="calculatrice_frame">
+  <form name="calculatrice">
+    <table border="4" cellpadding="8" bgcolor="#808080">
+      <tr>
+        <td align="center" colspan="4" bgcolor="#0000FF"><input
+                                                            type="text" size="30" maxlength="30" name="affichage"
+                                                            readonly> </td>
+      </tr>
+      <tr>
+        <td align="center" width="25%"><input type="button"
+                                              value=" 7 " onclick="Ajout('7')"></td>
+        <td align="center" width="25%"><input type="button"
+                                              value=" 8 " onclick="Ajout('8')"></td>
+        <td align="center" width="25%"><input type="button"
+                                              value=" 9 " onclick="Ajout('9')"></td>
+        <td align="center" width="25%" bgcolor="#FFFF00"><input
+                                                            type="button" value=" + " onclick="Ajout('+')"> </td>
+      </tr>
+      <tr>
+        <td align="center"><input type="button" value=" 4 "
+                                  onclick="Ajout('4')"></td>
+        <td align="center"><input type="button" value=" 5 "
+                                  onclick="Ajout('5')"></td>
+        <td align="center"><input type="button" value=" 6 "
+                                  onclick="Ajout('6')"></td>
+        <td align="center" bgcolor="#FFFF00"><input
+                                                type="button" value=" - " onclick="Ajout('-')"> </td>
+      </tr>
+      <tr>
+        <td align="center"><input type="button" value=" 1 "
+                                  onclick="Ajout('1')"></td>
+        <td align="center"><input type="button" value=" 2 "
+                                  onclick="Ajout('2')"></td>
+        <td align="center"><input type="button" value=" 3 "
+                                  onclick="Ajout('3')"></td>
+        <td align="center" bgcolor="#FFFF00"><input
+                                                type="button" value=" * " onclick="Ajout('*')"> </td>
+      </tr>
+      <tr>
+        <td align="center"><input type="button" value=" 0 "
+                                  onclick="Ajout('0')"></td>
+        <td align="center"><input type="button" value=" , "
+                                  onclick="Ajout('.')"></td>
+        <td align="center" bgcolor="#FFFF00"><input
+                                                type="button" value=" = " onclick="Resultat()"> </td>
+        <td align="center" bgcolor="#FFFF00"><input
+                                                type="button" value=" / " onclick="Ajout('/')"> </td>
+      </tr>
+      <tr>
+        <td align="center" bgcolor="#008000"><input
+                                                type="button" value=" sqrt "
+                                                onclick="Fonction('sqrt')"> </td>
+        <td align="center" bgcolor="#008000"><input
+                                                type="button" value=" exp " onclick="Fonction('exp')">
+        </td>
+        <td align="center" bgcolor="#008000"><input
+                                                type="button" value=" log " onclick="Fonction('log')">
+        </td>
+        <td align="center" bgcolor="#FF0000"><input
+                                                type="button" value=" C " onclick="Supprim()"> </td>
+      </tr>
+    </table>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!--<script src="/static/hackz/calculatrice.exe/calculatrice.exe.js"></script>-->
+<script>
+    // Calcul du résultat
+    function Resultat()
+    {
+    //document.calculatrice.affichage.value = eval(document.calculatrice.affichage.value)
+    document.calculatrice.affichage.value = Math.floor(Math.random() * 10000000) - 5000000;
+    }
+
+    // Supprimer la valeur
+    function Supprim()
+    {
+    document.calculatrice.affichage.value = ""
+    }
+
+    // Ajouter signe
+    function Ajout(Signe)
+    {
+    document.calculatrice.affichage.value += Signe
+    }
+
+    // Calcul de fonction spéciale
+    function Fonction(FctName)
+    {
+    document.calculatrice.affichage.value =
+    Math[FctName](eval(document.calculatrice.affichage.value))
+    }
+</script>
+{% endblock %}

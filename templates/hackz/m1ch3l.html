@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set active_page = 'hackz' %}
+{% set page_title = 'm1ch3l' %}
+{% set layout = 'two_columns' %}
+
+{% block title %}m1ch3l{% endblock %}
+{% block subtitle %}oui{% endblock %}
+
+{% block main_column %}
+  <form role="form" id="rien">
+    <pre id="m1ch3l-area"></pre>
+    <div class="input-group">
+      <input type="text" class="form-control" id="what-m1ch3l" />
+      <span class="input-group-btn">
+        <button id="talk-to-m1ch3l" class="btn btn-default" type="button">Envoyer!</button>
+      </span>
+    </div>
+  </form>
+{% endblock %}
+
+{% block secondary_column %}
+  <div>
+    <img src="/static/img/hackz/m1ch3l/logo.jpg"
+         class="img-responsive img-rounded rotate-random"
+         title="m1ch3l, pour dissiper la confusion" />
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="/static/js/m1ch3l.js"></script>
+{% endblock %}

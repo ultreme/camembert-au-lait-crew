@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>SCC TRANSLATE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="assets/css/bootstrap-orig/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="jumbotron masthead">
+      <div class="container">
+        <h1>Cryptage</h1>
+        <p>Le service utilisé par James Bond pour coder ses communications.</p>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+          <p>Tranduction en langage codé</p>
+        </div>
+        <div class="row-fluid">
+          <div class="span6" id="langfrom">
+            <label class="radio">
+              <input type="radio" id="langfrom1" name="langFrom" value="french" checked=checked> Cryptage
+            </label>
+            <label class="radio">
+              <input type="radio" id="langfrom2" name="langFrom" value="yougo"> Décryptage
+            </label>
+          </div>
+          <div class="span6" id="langto">
+            <div style="display: none">
+              <label class="radio">
+                <input type="radio" id="langto1" name="langTo" value="french" disabled> Cryptage
+              </label>
+              <label class="radio">
+                <input type="radio" id="langto2" name="langTo" value="yougo" checked=checked> Décryptage
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row-fluid">
+          <div class="span6">
+            <textarea id="source" rows="10" style="width:100%">coucou</textarea>
+          </div>
+          <div class="span6">
+            <textarea id="dest" rows="10" style="width:100%">coucou</textarea>
+          </div>
+        </div>
+    </div>
+
+    <script src="assets/js/jquery.js"></script>
+    <script src="cryptage.js"></script>
+  </body>
+</html>

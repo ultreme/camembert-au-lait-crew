@@ -1,0 +1,18 @@
+{
+  "name": "cornify",
+  "title": "cornify",
+  "description": "Share unicorns and rainbows with the masses.",
+  "version": "0.0.2",
+  "author": {
+    "name": "Andrew Kennedy",
+    "url": "http://akenn.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/L1fescape/cornify.git"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {},
+  "keywords": ["cornify", "unicorns", "rainbows", "love", "joy", "happiness"]
+}

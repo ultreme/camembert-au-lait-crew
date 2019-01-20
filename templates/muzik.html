@@ -1,0 +1,56 @@
+{% set active_page = 'muzik' %}
+{% extends "base.html" %}
+{% set page_title = 'Muzik' %}
+{% set columns = 2 %}
+{% set square_size = 250 %}
+{% set grid_size = 12 // columns %}
+
+{% block title %}Des albums{% endblock %}
+{% block subtitle %}pas au hasard{% endblock %}
+
+{% block content %}
+  <hr />
+  <h2>Boom boom</h2>
+  <div class="row">
+    {% for album in first : %}
+
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 rotate-random">
+      <a href="{{ album.url }}" class="thumbnail"
+         width="{{square_size}}" height="{{square_size}}">
+        <div class="caption-wrapper">
+          <p class="caption">
+              {{ album.title }}
+          </p>
+        </div>
+        <img width="{{square_size}}" height="{{square_size}}"
+             class="img-responsive"
+             src="{{ album.img | cache_external_assets | resize('250x250', fill=1) }}"
+             />
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+
+  <h2>Trucs &agrave; la con</h2>
+  <div class="row">
+    {% for album in second : %}
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random">
+      <a href="{{ album.url }}" class="thumbnail"
+         width="{{square_size}}" height="{{square_size}}">
+        <div class="caption-wrapper">
+          <p class="caption">
+              {{ album.title }}
+          </p>
+        </div>
+        <img width="{{square_size}}" height="{{square_size}}"
+             class="img-responsive"
+             src="{{ album.img | cache_external_assets | resize('250x250', fill=1) }}"
+             />
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

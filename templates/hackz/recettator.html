@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% set active_page = 'hackz' %}
+{% set page_title = 'Recettator' %}
+{% set layout = 'two_columns' %}
+
+{% block title %}Recettator{% endblock %}
+{% block subtitle %}bon appetit hein <a href="{{seed_url}}">#{{recettator.seed}}</a>{% endblock %}
+
+{% block main_column %}
+  <div class="paper-container">
+    <div class="paper">
+      <h3>{{ recettator.title }}</h3>
+
+      <div>{{ recettator.people }}</div>
+
+      <h4>Ingr&eacute;dients</h4>
+      <ul>
+        {% for ingredient in recettator.ingredients %}
+          <li>{{ingredient}}</li>
+        {% endfor %}
+      </ul>
+
+      <h4>Etapes</h4>
+      <ul>
+        {% for step in recettator.steps %}
+          <li>{{step}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+
+{% block secondary_column %}
+  <img src="/static/img/hackz/recettator/logo.jpg" alt="Recettator"
+       class="img-responsive img-rounded rotate-random" />
+  <hr />
+  <a href="{{new_recette_url}}" class="btn btn-primary blink_me">Nouvelle recette</a>
+
+  <ul>
+  {% for other_recette in other_recettes %}
+    <li>
+      <a href="{{other_recette.url}}">{{other_recette.title}}</a>
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}

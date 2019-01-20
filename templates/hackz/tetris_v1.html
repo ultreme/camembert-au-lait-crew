@@ -1,0 +1,24 @@
+{% set active_page = 'hackz' %}
+{% extends "base.html" %}
+{% set page_title = 'Ultreme Tetris' %}
+{% set layout = 'two_columns' %}
+
+{% block title %}Ultreme Tetris{% endblock %}
+{% block subtitle %}<b>{{ niveau }}&egrave;me</b> niveau de difficult&eacute;{% endblock %}
+
+{% block main_column %}
+  {# <audio id="clearsound" src="sound/pop.ogg" preload="auto"></audio> #}
+  <canvas width="300" height="600"></canvas>
+{% endblock %}
+
+{% block secondary_column %}
+    <a class="btn btn-primary {% if niveau == '5' %}disabled{% endif %}" href="?niveau=5" />Niveau 5</a>
+    <a class="btn btn-danger {% if niveau == '6' %}disabled{% endif %}" href="?niveau=6" />Niveau 6 (danger)</a>
+    <a class="btn btn-danger {% if niveau == '8' %}disabled{% endif %}" href="?niveau=8" />Niveau 8 (tr&egrave;s danger)</a>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="/static/hackz/tetris/js/tetris.js"></script>
+  <script src="/static/hackz/tetris/js/controller.js"></script>
+  <script src="/static/hackz/tetris/js/render.js"></script>
+{% endblock %}

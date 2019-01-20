@@ -1,0 +1,33 @@
+{
+  "name": "konami",
+  "homepage": "https://github.com/snaptortoise/konami-js",
+  "authors": [
+    "George Mandis <george@snaptortoise.com>"
+  ],
+  "description": "An easter-egg script for adding the Konami Code to your website or project.",
+  "main": "konami.js",
+  "keywords": [
+    "konami",
+    "easter-egg"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "version": "1.6.2",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snaptortoise/konami-js.git"
+  },
+  "author": "George Mandis",
+  "bugs": {
+    "url": "https://github.com/snaptortoise/konami-js/issues"
+  }
+}

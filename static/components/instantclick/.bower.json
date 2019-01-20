@@ -1,0 +1,22 @@
+{
+  "name": "instantclick",
+  "description": "InstantClick makes following links in your website instant.",
+  "version": "3.0.1",
+  "main": [
+    "./instantclick.js"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "pjax"
+  ],
+  "homepage": "http://instantclick.io/",
+  "_release": "3.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.0.1",
+    "commit": "a92fd5c9d9f10929e1a482c4b07bf72b5fc1acf5"
+  },
+  "_source": "https://github.com/dieulot/instantclick.git",
+  "_target": "~3.0.1",
+  "_originalSource": "instantclick"
+}
