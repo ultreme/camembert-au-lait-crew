@@ -18,7 +18,7 @@ var (
 	bufpool   *bpool.BufferPool
 )
 
-func loadTemplates(opts *Options) error {
+func (h *handlers) loadTemplates() error {
 	box = packr.NewBox("../templates")
 	bufpool = bpool.NewBufferPool(64)
 	templates = make(map[string]*template.Template)
@@ -40,8 +40,8 @@ func loadTemplates(opts *Options) error {
 	}
 
 	// generate optimized templates
-	funcmap := getFuncmap(opts)
-	mainTemplate := template.New("main").Funcs(funcmap)
+	h.funcmap = getFuncmap(h.opts)
+	mainTemplate := template.New("main").Funcs(h.funcmap.fm)
 	mainTemplate = template.Must(mainTemplate.Parse(`{{define "main"}}{{template "base" .}}{{end}}`))
 	mainTemplate = template.Must(mainTemplate.Parse(layoutContent))
 	for filepath, content := range pageContents {
@@ -52,35 +52,49 @@ func loadTemplates(opts *Options) error {
 	return nil
 }
 
-func setDefaultHeaders(w http.ResponseWriter) {
-	push(w, "/css/calc.css")
+func (h *handlers) setDefaultHeaders(w http.ResponseWriter) {
+	h.push(w, "/css/calc.css")
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
-func renderError(w http.ResponseWriter, r *http.Request, err error) {
+func (h *handlers) renderError(w http.ResponseWriter, r *http.Request, err error) {
 	zap.L().Warn("rendering error", zap.Error(err))
 	http.Error(w, fmt.Sprintf("Error: %v\n", err), http.StatusInternalServerError)
 }
 
-func render(w http.ResponseWriter, r *http.Request, name string, data interface{}) {
+func (h *handlers) render(w http.ResponseWriter, r *http.Request, name string, data renderData) {
 	tmpl, ok := templates[name]
 	if !ok {
-		renderError(w, r, fmt.Errorf("the template %s does not exist.", name))
+		h.renderError(w, r, fmt.Errorf("the template %s does not exist.", name))
 		return
 	}
 
 	buf := bufpool.Get()
 	defer bufpool.Put(buf)
 
+	if data == nil {
+		data = make(renderData)
+	}
+
+	data["req"] = map[string]interface{}{
+		"name": name,
+		"r":    r,
+	}
+
+	// set current request in ctxFuncmap objects
+	h.mutex.Lock()
+	defer h.mutex.Unlock()
+	h.funcmap.req = r
+
 	if err := tmpl.Execute(buf, data); err != nil {
-		renderError(w, r, err)
+		h.renderError(w, r, err)
 		return
 	}
 
 	buf.WriteTo(w)
 }
 
-func push(w http.ResponseWriter, resource string) {
+func (h *handlers) push(w http.ResponseWriter, resource string) {
 	pusher, ok := w.(http.Pusher)
 	if ok {
 		if err := pusher.Push(resource, nil); err == nil {

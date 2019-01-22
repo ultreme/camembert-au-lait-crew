@@ -1,5 +1,36 @@
 {{define "title"}}Copaings{{end}}
+{{define "h1"}}Des copaings{{end}}
+{{define "h1small"}}d'amour{{end}}
 
 {{define "content"}}
-Copaingzzz
+  {{ $square_size := 250 }}
+
+  <h4>Les sites d'internet des copaings</h4>
+  <div class="row">
+    {{ range $key, $copain := .friends }}
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random">
+      <div class="thumbnail"
+           width="{{$square_size}}" height="{{$square_size}}">
+        <div class="caption-wrapper">
+          <div class="caption">
+            <h4>{{ $copain.Name }}</h4>
+            <h5>{{ $copain.Description }}</h5>
+            <hr />
+            {{ range $link := $copain.Links }}
+            <a class="btn btn-primary"
+               href="{{ $link.URL }}"
+               target="_blank">
+              {{ $link.Name }}
+            </a>
+            {{ end }}
+          </div>
+        </div>
+        <img src="{{ $copain.ImageURL | cache_external_assets | resize (printf "%dx%d" $square_size $square_size) "fill=1" }}"
+             class="img-responsive" width="{{$square_size}}" height="{{$square_size}}" />
+      </div>
+    </div>
+
+    {{ end }}
+  </div>
 {{end}}
