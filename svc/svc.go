@@ -10,6 +10,7 @@ import (
 
 	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/pkg/crew"
+	"ultre.me/calcbiz/pkg/dashboard"
 	"ultre.me/calcbiz/pkg/numberinfo"
 	"ultre.me/calcbiz/pkg/random"
 	"ultre.me/calcbiz/pkg/soundcloud"
@@ -24,8 +25,8 @@ type Options struct {
 
 type svc struct {
 	opts       Options
-	soundcloud soundcloud.Soundcloud
-	// dashboard
+	soundcloud *soundcloud.Soundcloud
+	dashboard  *dashboard.Dashboard
 }
 
 func New(opts Options) (api.ServerServer, error) {
@@ -34,7 +35,9 @@ func New(opts Options) (api.ServerServer, error) {
 		opts.SoundcloudClientID,
 		uint64(opts.SoundcloudUserID),
 	)
-	// svc.dashboard := calcdashboard.New()
+	svc.dashboard = dashboard.New(&dashboard.Options{
+		Soundcloud: svc.soundcloud,
+	})
 	// svc.dashboard.SetSoundCloud(&soundcloud)
 	return svc, nil
 }
@@ -62,22 +65,8 @@ func (svc *svc) TpyoEnocde(_ context.Context, input *api.TpyoEnocdeIpunt) (*api.
 	}, nil
 }
 
-func (svc *svc) Dashboard(_ context.Context, input *api.Void) (*api.DashboardOutput, error) {
-	/*
-		r.Get("/dashboard/random", func(w http.ResponseWriter, r *http.Request) {
-			dashboard, err := dashboard.Random()
-			if err != nil {
-				c.JSON(http.StatusNotFound, gin.H{
-					"error": err,
-				})
-			} else {
-				c.JSON(http.StatusOK, gin.H{
-					"result": dashboard,
-				})
-			}
-		})
-	*/
-	return nil, fmt.Errorf("not implemented")
+func (svc *svc) Dashboard(_ context.Context, input *api.Void) (*dashboard.Entries, error) {
+	return svc.dashboard.Random()
 }
 
 func (svc *svc) Crew(_ context.Context, input *api.Void) (*crew.Crew, error) {

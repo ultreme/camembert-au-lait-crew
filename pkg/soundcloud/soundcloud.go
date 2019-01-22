@@ -16,8 +16,8 @@ type Soundcloud struct {
 	cache    memoizer.Memoize
 }
 
-func New(clientID string, userID uint64) Soundcloud {
-	return Soundcloud{
+func New(clientID string, userID uint64) *Soundcloud {
+	return &Soundcloud{
 		client: &gosoundcloud.Api{
 			ClientId: clientID,
 		},

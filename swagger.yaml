@@ -54,7 +54,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/serverDashboardOutput"
+              "$ref": "#/definitions/dashboardEntries"
             }
           }
         },
@@ -392,6 +392,16 @@
     }
   },
   "definitions": {
+    "EntryKind": {
+      "type": "string",
+      "enum": [
+        "Undefined",
+        "Hack",
+        "Track",
+        "Merch"
+      ],
+      "default": "Undefined"
+    },
     "crewCrew": {
       "type": "object",
       "properties": {
@@ -486,6 +496,37 @@
         }
       }
     },
+    "dashboardEntries": {
+      "type": "object",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dashboardEntry"
+          }
+        }
+      }
+    },
+    "dashboardEntry": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/EntryKind"
+        }
+      }
+    },
     "serverAlternateLogoOutput": {
       "type": "object",
       "properties": {
@@ -493,9 +534,6 @@
           "type": "string"
         }
       }
-    },
-    "serverDashboardOutput": {
-      "type": "object"
     },
     "serverKryptosInput": {
       "type": "object",

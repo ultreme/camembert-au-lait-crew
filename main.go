@@ -32,6 +32,8 @@ import (
 	"ultre.me/calcbiz/views"
 )
 
+// FIXME: handle context cancel (when client aborts a request)
+
 // VERSION represents the version of the Camembert au lait crew's website
 const VERSION = "2.1.0"
 

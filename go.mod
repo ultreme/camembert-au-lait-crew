@@ -7,6 +7,7 @@ require (
 	github.com/gogo/protobuf v1.2.0
 	github.com/golang/protobuf v1.2.0
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
+	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/handlers v1.4.0
 	github.com/gorilla/mux v1.6.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190104160321-4832df01553a
@@ -21,7 +22,7 @@ require (
 	github.com/sirupsen/logrus v1.3.0 // indirect
 	github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d // indirect
 	github.com/smartystreets/goconvey v0.0.0-20181108003508-044398e4856c // indirect
-	github.com/tdewolff/minify v2.3.6+incompatible
+	github.com/tdewolff/minify v2.3.6+incompatible // indirect
 	github.com/tdewolff/minify/v2 v2.3.8
 	github.com/tdewolff/parse v2.3.4+incompatible // indirect
 	github.com/tpyolang/tpyo-cli v1.0.0

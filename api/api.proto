@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 //import "google/protobuf/timestamp.proto";
 import "pkg/crew/crew.proto";
+import "pkg/dashboard/dashboard.proto";
 import "pkg/soundcloud/soundcloud.proto";
 
 option go_package = "ultre.me/calcbiz/api";
@@ -33,7 +34,7 @@ service Server {
     }; }
 
   rpc Ping(Void) returns (Pong) { option (google.api.http) = { get: "/api/ping" }; };
-  rpc Dashboard(Void) returns (DashboardOutput) { option (google.api.http) = {get: "/api/dashboard"}; }
+  rpc Dashboard(Void) returns (calcbiz.dashboard.Entries) { option (google.api.http) = {get: "/api/dashboard"}; }
   rpc Crew(Void) returns (calcbiz.crew.Crew) { option (google.api.http) = {get: "/api/crew"}; }
   rpc Numberinfo(NumberinfoInput) returns (NumberinfoOutput) { option (google.api.http) = {get: "/api/numberinfo/{number}"}; }
   rpc Recettator(RecettatorInput) returns (RecettatorOutput) { option (google.api.http) = {get: "/api/recettator"}; }
@@ -70,12 +71,6 @@ message KryptosOutput { string to = 1; }
 // tpyo megasess
 message TpyoEnocdeIpunt { string form = 1; }
 message TpyoEnocdeOuptut { string to = 1; }
-
-// dashboard messages
-
-message DahsboardRandomOutput { /* TODO */ }
-message DahsboardOutput { /* TODO */ }
-message DashboardOutput { /* TODO */ }
 
 // numberinfo messages
 message NumberinfoInput { float number = 1; }
