@@ -119,5 +119,5 @@ docker.release: docker.build
 	docker push ultreme/calcbiz
 
 .PHONY: deploy
-deploy: docker.release
+deploy:
 	ssh zrwf.m.42.am -xec 'cd ~/go/src/ultre.me/calcbiz; git pull; make docker.up'
