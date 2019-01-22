@@ -112,6 +112,7 @@ type serverOptions struct {
 	HTTPBind       string
 	ServiceOptions svc.Options
 	Debug          bool
+	svc            api.ServerServer
 }
 
 func serverOptionsFromCliContext(c *cli.Context) serverOptions {
@@ -131,6 +132,12 @@ func server(c *cli.Context) error {
 	defer cancel()
 
 	opts := serverOptionsFromCliContext(c)
+
+	svc, err := svc.New(opts.ServiceOptions)
+	if err != nil {
+		return errors.Wrap(err, "failed to initialize service")
+	}
+	opts.svc = svc
 
 	errs := make(chan error)
 	go func() { errs <- errors.Wrap(startGRPCServer(ctx, &opts), "gRPC server error") }()
@@ -157,6 +164,7 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	if err := views.Setup(&views.Options{
 		Router: router,
 		Debug:  opts.Debug,
+		Svc:    opts.svc,
 	}); err != nil {
 		return errors.Wrap(err, "failed to setup views")
 	}
@@ -224,11 +232,7 @@ func startGRPCServer(ctx context.Context, opts *serverOptions) error {
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(serverUnaryOpts...)),
 	)
 
-	svc, err := svc.New(opts.ServiceOptions)
-	if err != nil {
-		return errors.Wrap(err, "failed to initialize service")
-	}
-	api.RegisterServerServer(grpcServer, svc)
+	api.RegisterServerServer(grpcServer, opts.svc)
 	//if opts.WithReflection {
 	reflection.Register(grpcServer)
 	//}

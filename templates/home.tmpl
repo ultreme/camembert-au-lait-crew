@@ -1,46 +1,38 @@
 {{define "fulltitle"}}Camembert au lait crew{{end}}
 
-{{define "content"}}
-Maizonn
-{{end}}
-
-
-
-
-
-
 {{/*
-{% extends "base.html" %}
-{# set page_title = 'Coucou' #}
-{% set columns = 4 %}
-{% set grid_size = 12 // columns %}
-{% set square_size = 250 %}
-{% set neige = 0 %}
+{{ block title }}{{ images | length }} trucs{{ endblock }}
+{{ block subtitle }}au hasard{{ endblock }}
+*/}}
 
-{% block title %}{{ images | length }} trucs{% endblock %}
-{% block subtitle %}au hasard{% endblock %}
 
-{% block content %}
+{{define "content"}}
+{{ $columns := 4 }}
+{{ $grid_size := div 12 $columns }}
+{{ $square_size := 250 }}
+{{ $neige := 0 }}
+
+
   <div class="row">
-    {% for image in images %}
+    {{ range $entry := .dashboard.Entries }}
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">{# add rotate-random after christmas #}
-      <a href="{{ image.url }}" class="thumbnail"
-         width="{{square_size}}" height="{{square_size}}"
-         {% if image.external %} target="_blank"{% endif %}>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 rotate-random">
+      <a href="{{ $entry.URL}}" class="thumbnail"
+         width="{{$square_size}}" height="{{$square_size}}"
+         {{ if $entry.IsExternal }} target="_blank"{{ end }}>
         <div class="caption-wrapper">
           <p class="caption">
-            {{ image.title }}
+            {{ $entry.Title }}
           </p>
         </div>
-        <img src="{{ image.img | cache_external_assets | resize('250x250', fill=1) }}"
+        <img src="{{ $entry.ImageURL | cache_external_assets | resize "250x250" "fill=1" }}"
              class="img-responsive"
-             width="{{square_size}}" height="{{square_size}}" />
+             width="{{$square_size}}" height="{{$square_size}}" />
       </a>
     </div>
 
-    {% endfor %}
+    {{ end }}
+
   </div>
   <p class="well">Et plein d'autres..</p>
-{% endblock %}
-*/}}
+{{end}}

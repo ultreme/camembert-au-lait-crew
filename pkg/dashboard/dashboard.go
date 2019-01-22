@@ -15,13 +15,14 @@ func (e *Entries) append(entries ...*Entry) {
 	}
 }
 
-func NewManualEntry(title, URL, imageURL, description string, kind Entry_Kind) *Entry {
+func NewManualEntry(title, URL, imageURL, description string, kind Entry_Kind, isExternal bool) *Entry {
 	return &Entry{
 		Title:       title,
 		URL:         URL,
 		Description: description,
 		ImageURL:    imageURL,
 		Kind:        kind,
+		IsExternal:  isExternal,
 	}
 }
 
@@ -46,8 +47,22 @@ func newEntries() *Entries {
 
 func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries := newEntries()
-	entries.append(NewManualEntry("Moi j'aime", "hackz/moijaime", "", "Générateur de phrase de moi j'aime", Entry_Hack))
-	entries.append(NewManualEntry("3615cryptage", "hackz/3615cryptage", "", "Messages codés de James Bond", Entry_Hack))
+	entries.append(NewManualEntry(
+		"Moi j'aime",
+		"hackz/moijaime",
+		"",
+		"Générateur de phrase de moi j'aime",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"3615cryptage",
+		"hackz/3615cryptage",
+		"",
+		"Messages codés de James Bond",
+		Entry_Hack,
+		false,
+	))
 
 	entries.shuffle()
 	if len(entries.Entries) < limit {
@@ -81,6 +96,7 @@ func (d *Dashboard) trackEntries(limit int) (*Entries, error) {
 			track.ArtworkUrl,
 			track.Description,
 			Entry_Track,
+			false,
 		))
 	}
 
@@ -102,6 +118,7 @@ func (d *Dashboard) merchEntries(limit int) (Entries, error) {
 			product.ImageURL,
 			"",
 			Entry_Merch,
+			true,
 		))
 	}
 

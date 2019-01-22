@@ -31,5 +31,6 @@ message Entry {
   string url = 2 [(gogoproto.customname) = "URL"];
   string description = 3;
   string image_url = 4 [(gogoproto.customname) = "ImageURL"];
-  Kind kind = 5;
+  bool is_external = 5;
+  Kind kind = 6;
 }

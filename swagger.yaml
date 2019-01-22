@@ -522,6 +522,10 @@
         "image_url": {
           "type": "string"
         },
+        "is_external": {
+          "type": "boolean",
+          "format": "boolean"
+        },
         "kind": {
           "$ref": "#/definitions/EntryKind"
         }

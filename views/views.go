@@ -5,12 +5,14 @@ import (
 	"sync"
 
 	"github.com/gorilla/mux"
+	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/pkg/crew"
 )
 
 type Options struct {
 	Router *mux.Router
 	Debug  bool
+	Svc    api.ServerServer
 }
 
 func Setup(opts *Options) error {
@@ -75,7 +77,12 @@ type renderData map[string]interface{}
 
 func (h *handlers) homeHandler(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
-	data := renderData{"hello": "world"}
+	dashboard, err := h.opts.Svc.Dashboard(nil, &api.Void{})
+	if err != nil {
+		h.renderError(w, r, err)
+		return
+	}
+	data := renderData{"dashboard": dashboard}
 	h.render(w, r, "home.tmpl", data)
 }
 
