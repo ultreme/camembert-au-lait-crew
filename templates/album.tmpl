@@ -1,0 +1,42 @@
+{{define "title"}}{{.album.Title}}{{end}}
+{{define "h1"}}Album {{ mot_cool }}{{end}}
+{{define "h1small"}}{{.album.Title}}{{end}}
+
+{{define "content"}}
+
+<div class="row">
+  <!--<pre>{{.album|toPrettyJson}}</pre>-->
+
+  <iframe
+    width="100%"
+    height="600"
+    scrolling="no"
+    frameborder="no"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/{{ .album.ID }}&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">
+  </iframe>
+
+  {{ if .album.Description }}
+    <pre class="album_description">{{ .album.Description | linkify }}</pre>
+  {{end}}
+
+  <h2>Tracks</h2>
+  {{ range $entry := .album.Tracks }}
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 rotate-random2">
+      <!--<pre>{{$entry|toPrettyJson}}</pre>-->
+      <a href="{{ $entry.URL}}" class="thumbnail"
+         width="500" height="500"
+         {{ if $entry.IsExternal }} target="_blank"{{ end }}>
+        <div class="caption-wrapper">
+          <p class="caption">
+            {{ $entry.Title }}
+          </p>
+        </div>
+        <img src="{{ $entry.ImageURL | resize "fill=250x250" }}"
+             class="img-responsive"
+             width="250" height="250" />
+                   </a>
+    </div>
+  {{ end }}
+</div>
+
+{{end}}

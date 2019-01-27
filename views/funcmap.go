@@ -140,6 +140,7 @@ func (f *ctxFuncmap) resize(opts ...string) string {
 	buf := []byte(fmt.Sprintf("%s:%v", path, opts))
 	h := make([]byte, 8)
 	sha3.ShakeSum256(h, buf)
+	//FIXME: process hash based on file content instead of filepath (keep opts)
 	newpath := fmt.Sprintf("./static/img/cache/%x%s", h, filepath.Ext(path))
 
 	if _, err := os.Stat(newpath); !os.IsNotExist(err) {

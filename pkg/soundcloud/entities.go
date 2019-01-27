@@ -22,6 +22,14 @@ func (p *Playlist) Section() string {
 	return "other"
 }
 
+func (p *Playlist) URL() string {
+	return fmt.Sprintf("/album/%d", p.ID)
+}
+
+func (p *Playlist) IsExternal() bool { return false }
+
+func (p *Playlist) ImageURL() string { return p.ArtworkUrl }
+
 func (p *Playlists) BySection(section string) []*Playlist {
 	out := []*Playlist{}
 	for _, playlist := range p.Playlists {
@@ -32,10 +40,10 @@ func (p *Playlists) BySection(section string) []*Playlist {
 	return out
 }
 
-func (p *Playlist) URL() string {
-	return fmt.Sprintf("/album/%d", p.ID)
+func (t *Track) URL() string {
+	return fmt.Sprintf("/track/%d", t.ID)
 }
 
-func (p *Playlist) IsExternal() bool { return true }
+func (t *Track) IsExternal() bool { return false }
 
-func (p *Playlist) ImageURL() string { return p.ArtworkUrl }
+func (t *Track) ImageURL() string { return t.ArtworkUrl }

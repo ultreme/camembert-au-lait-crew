@@ -26,6 +26,7 @@ func Setup(opts *Options) error {
 	opts.Router.HandleFunc("/hackz", handlers.hackzHandler)
 	opts.Router.HandleFunc("/copaings", handlers.copaingsHandler)
 	opts.Router.HandleFunc("/track/{track_id:[0-9]+}", handlers.trackHandler)
+	opts.Router.HandleFunc("/album/{album_id:[0-9]+}", handlers.albumHandler)
 
 	//
 	// old routes (to be imported)
@@ -45,7 +46,6 @@ func Setup(opts *Options) error {
 	// /hackz/recettator
 	// /hackz/moijaime
 	// /hackz/phazms GET/POST
-	// /album/<int:album_id>
 	// /scorz/inc/<string:user>/<string:what>/<int:points>
 	// /sitemap.xml
 
@@ -116,6 +116,24 @@ func (h *handlers) trackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	data := renderData{"track": track}
 	h.render(w, r, "track.tmpl", data)
+}
+
+func (h *handlers) albumHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	albumId, err := strconv.ParseUint(vars["album_id"], 10, 64)
+	if err != nil {
+		h.renderError(w, r, err)
+		return
+	}
+	album, err := h.opts.Svc.SoundcloudPlaylist(r.Context(), &api.SoundcloudPlaylistInput{
+		PlaylistId: albumId,
+	})
+	if err != nil {
+		h.renderError(w, r, err)
+		return
+	}
+	data := renderData{"album": album}
+	h.render(w, r, "album.tmpl", data)
 }
 
 func (h *handlers) copaingsHandler(w http.ResponseWriter, r *http.Request) {
