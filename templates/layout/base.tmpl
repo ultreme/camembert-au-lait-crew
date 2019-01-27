@@ -17,10 +17,10 @@
     <!-- favicon -->
     <link rel="image_src" content="{{ sharing_image_url }}" />
     <link rel="shortcut icon" href="/favicon.ico" sizes="32x32">
-    <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" href="apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon-60x60.png">
 
     <!-- REFRESH at least once per hour -->
     <meta http-equiv="refresh" content="3600;URL={{ current_url }}" />
@@ -51,13 +51,13 @@
     <meta name="twitter:url" content="{{ current_url }}" />
 
     <!-- FIXME: bundle .css files + minify -->
-    <link href="components/bootstrap/dist/css/bootstrap.min.css?{{invalid_cache}}" rel="stylesheet" data-no-instant />
+    <link href="/components/bootstrap/dist/css/bootstrap.min.css?{{invalid_cache}}" rel="stylesheet" data-no-instant />
     <link href="/css/calc.css?{{invalid_cache}}" rel="stylesheet" data-no-instant />
 
     <!-- FIXME: bundle .js files + minify -->
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="components/html5shiv/dist/html5shiv.min.js" data-no-instant></script>
-    <script type="text/javascript" src="components/respond/dest/respond.min.js" data-no-instant></script>
+    <script type="text/javascript" src="/components/html5shiv/dist/html5shiv.min.js" data-no-instant></script>
+    <script type="text/javascript" src="/components/respond/dest/respond.min.js" data-no-instant></script>
     <![endif]-->
 
     {{ block "extra_css" . }}{{ end }}
@@ -217,14 +217,14 @@
       </div>
     </div>
     {{ if neige }}<canvas id="neige"></canvas>{{end}}
-    <script type="text/javascript" src="components/jquery/dist/jquery.min.js" data-no-instant></script>
-    <script type="text/javascript" src="components/bootstrap/dist/js/bootstrap.min.js" data-no-instant></script>
-    <script type="text/javascript" src="components/jquery-cookie/jquery.cookie.js" data-no-instant></script>
-    <script type="text/javascript" src="components/konami-js/konami.js" data-no-instant></script>
-    <script type="text/javascript" src="components/instantclick/instantclick.js" data-no-instant></script>
-    <script type="text/javascript" src="js/calc.js" data-no-instant></script>
+    <script type="text/javascript" src="/components/jquery/dist/jquery.min.js" data-no-instant></script>
+    <script type="text/javascript" src="/components/bootstrap/dist/js/bootstrap.min.js" data-no-instant></script>
+    <script type="text/javascript" src="/components/jquery-cookie/jquery.cookie.js" data-no-instant></script>
+    <script type="text/javascript" src="/components/konami-js/konami.js" data-no-instant></script>
+    <script type="text/javascript" src="/components/instantclick/instantclick.js" data-no-instant></script>
+    <script type="text/javascript" src="/js/calc.js" data-no-instant></script>
 
-    {{ if neige }}<script type="text/javascript" src="js/snow4.js" data-no-instant></script>{{end}}
+    {{ if neige }}<script type="text/javascript" src="/js/snow4.js" data-no-instant></script>{{end}}
 
     {{ block "extra_js" . }}{{ end }}
   </body>

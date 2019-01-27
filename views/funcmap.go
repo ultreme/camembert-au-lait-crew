@@ -36,10 +36,12 @@ func getFuncmap(opts *Options) *ctxFuncmap {
 	fm["invalid_cache"] = f.invalidCache
 	fm["logo_alternate"] = random.AlternateLogo
 	fm["mot_du_jour"] = random.WOTD
+	fm["mot_cool"] = random.MotCool
 	fm["megahertz"] = f.megahertz
 	fm["mot_debile_qui_se_mange"] = random.MotDebileQuiSeMange
 	fm["neige"] = func() bool { return false }
 	fm["cache_external_asset"] = f.cacheExternalAsset
+	fm["linkify"] = f.linkify
 	f.fm = fm
 	return f
 }
@@ -48,6 +50,11 @@ type ctxFuncmap struct {
 	fm   template.FuncMap
 	opts *Options
 	req  *http.Request
+}
+
+func (f *ctxFuncmap) linkify(input string) string {
+	// FIXME: replace URLs with links
+	return input
 }
 
 func (f *ctxFuncmap) devel() bool { return f.opts.Debug }
@@ -61,16 +68,17 @@ func (f *ctxFuncmap) activePage() string {
 }
 
 func (f *ctxFuncmap) activeMenu() string {
-	switch f.req.URL.Path {
-	case "/":
+	switch path := f.req.URL.Path; {
+	case path == "/":
 		return "home"
-	case "/muzik":
-		// FIXME: support albums, songs
+	case path == "/muzik" ||
+		strings.HasPrefix(f.req.URL.Path, "/track/") ||
+		strings.HasPrefix(f.req.URL.Path, "/album/"):
 		return "muzik"
-	case "/copaings":
+	case path == "/copaings":
 		return "copaings"
-	case "/hackz":
-		// FIXME: support hackz URLs
+	case path == "/hackz" ||
+		strings.HasPrefix(f.req.URL.Path, "/hackz"):
 		return "hackz"
 	default:
 		return "home"
@@ -118,6 +126,10 @@ func (f *ctxFuncmap) cacheExternalAsset(input string) (string, error) {
 func (f *ctxFuncmap) resize(opts ...string) string {
 	path := opts[len(opts)-1]
 	opts = opts[:len(opts)-1]
+	urlAppend := ""
+	if f.opts.Debug {
+		urlAppend += "?src=" + path
+	}
 
 	var err error
 	if path, err = f.cacheExternalAsset(path); err != nil {
@@ -131,7 +143,7 @@ func (f *ctxFuncmap) resize(opts ...string) string {
 	newpath := fmt.Sprintf("./static/img/cache/%x%s", h, filepath.Ext(path))
 
 	if _, err := os.Stat(newpath); !os.IsNotExist(err) {
-		return strings.Replace(newpath, "./static/", "./", -1)
+		return strings.Replace(newpath, "./static/", "/", -1) + urlAppend
 	}
 
 	logger := zap.L().With(
@@ -184,7 +196,7 @@ func (f *ctxFuncmap) resize(opts ...string) string {
 		logger.Warn("failed to save resized image", zap.Error(err))
 		return path
 	}
-	return strings.Replace(newpath, "./static/", "./", -1)
+	return strings.Replace(newpath, "./static/", "/", -1) + urlAppend
 }
 
 func (f *ctxFuncmap) yomymanStyle() string {
