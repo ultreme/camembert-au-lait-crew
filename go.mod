@@ -1,6 +1,7 @@
 module ultre.me/calcbiz
 
 require (
+	github.com/disintegration/imaging v1.5.0
 	github.com/gobuffalo/packd v0.0.0-20181212173646-eca3b8fd6687
 	github.com/gobuffalo/packr v1.21.9
 	github.com/gogo/gateway v1.0.0
@@ -31,6 +32,8 @@ require (
 	go.uber.org/atomic v1.3.2 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.9.1
+	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
+	golang.org/x/image v0.0.0-20190118043309-183bebdce1b2 // indirect
 	golang.org/x/net v0.0.0-20190110044637-be1c187aa6c6
 	google.golang.org/appengine v1.2.0 // indirect
 	google.golang.org/genproto v0.0.0-20190108161440-ae2f86662275

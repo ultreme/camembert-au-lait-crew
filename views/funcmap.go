@@ -1,11 +1,22 @@
 package views
 
 import (
+	"fmt"
 	"html/template"
+	"image"
+	"io"
 	"math/rand"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
 
+	"github.com/disintegration/imaging"
 	"github.com/moul/sprig"
+	"go.uber.org/zap"
+	"golang.org/x/crypto/sha3"
+
 	"ultre.me/calcbiz/pkg/random"
 )
 
@@ -28,7 +39,7 @@ func getFuncmap(opts *Options) *ctxFuncmap {
 	fm["megahertz"] = f.megahertz
 	fm["mot_debile_qui_se_mange"] = random.MotDebileQuiSeMange
 	fm["neige"] = func() bool { return false }
-	fm["cache_external_assets"] = f.cacheExternalAsset
+	fm["cache_external_asset"] = f.cacheExternalAsset
 	f.fm = fm
 	return f
 }
@@ -75,17 +86,105 @@ func (f *ctxFuncmap) currentURL() string {
 	// FIXME: make it flexible (should be canonical url
 }
 
-func (f *ctxFuncmap) cacheExternalAsset(path string) string {
-	// FIXME: implement
-	return path
+func (f *ctxFuncmap) cacheExternalAsset(input string) (string, error) {
+	if !strings.HasPrefix(input, "http") {
+		return input, nil
+	}
+
+	h := make([]byte, 8)
+	sha3.ShakeSum256(h, []byte(input))
+	// fixme parse url
+	newpath := fmt.Sprintf("./static/img/cache/%x%s", h, filepath.Ext(input))
+
+	out, err := os.Create(newpath)
+	if err != nil {
+		return input, err
+	}
+	defer out.Close()
+	resp, err := http.Get(input)
+	if err != nil {
+		return input, err
+	}
+	defer resp.Body.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return input, err
+	}
+
+	return newpath, nil
 }
 
 func (f *ctxFuncmap) resize(opts ...string) string {
 	path := opts[len(opts)-1]
 	opts = opts[:len(opts)-1]
-	//zap.L().Debug("resize", zap.String("path", path), zap.Strings("opts", opts))
-	// FIXME: apply transform + cache + give new URL
-	return path
+
+	var err error
+	if path, err = f.cacheExternalAsset(path); err != nil {
+		zap.L().Warn("failed to get external asset", zap.String("path", path), zap.Error(err))
+		return path
+	}
+
+	buf := []byte(fmt.Sprintf("%s:%v", path, opts))
+	h := make([]byte, 8)
+	sha3.ShakeSum256(h, buf)
+	newpath := fmt.Sprintf("./static/img/cache/%x%s", h, filepath.Ext(path))
+
+	if _, err := os.Stat(newpath); !os.IsNotExist(err) {
+		return strings.Replace(newpath, "./static/", "./", -1)
+	}
+
+	logger := zap.L().With(
+		zap.String("srcpath", path),
+		zap.String("destpath", newpath),
+		zap.Strings("opts", opts),
+		zap.String("buf", string(buf)),
+		zap.String("hash", fmt.Sprintf("%x", h)),
+	)
+
+	src, err := imaging.Open(path)
+	if err != nil {
+		logger.Warn("failed to open image", zap.Error(err))
+		return path
+	}
+
+	var newimg image.Image
+	for _, opt := range opts {
+		spl := strings.Split(opt, "=")
+		if len(spl) != 2 {
+			logger.Warn("invalid options", zap.String("opt", opt))
+			return path
+		}
+		switch spl[0] {
+		case "fill":
+			dims := strings.Split(spl[1], "x")
+			if len(dims) != 2 {
+				logger.Warn("invalid dimensions", zap.String("opt", opt))
+				return path
+			}
+			width, err1 := strconv.ParseInt(dims[0], 10, 64)
+			height, err2 := strconv.ParseInt(dims[1], 10, 64)
+			if err1 != nil || err2 != nil {
+				logger.Warn("invalid dimensions (not a number)", zap.String("opt", opt))
+				return path
+			}
+			newimg = imaging.Fill(src, int(width), int(height), imaging.Center, imaging.Lanczos)
+		default:
+			logger.Warn("unhandled option type", zap.String("opt", opt))
+			return path
+		}
+	}
+
+	if newimg == nil {
+		logger.Warn("no operation done on image, doing nothing")
+		return path
+	}
+
+	if err := imaging.Save(newimg, newpath); err != nil {
+		logger.Warn("failed to save resized image", zap.Error(err))
+		return path
+	}
+	return strings.Replace(newpath, "./static/", "./", -1)
 }
 
 func (f *ctxFuncmap) yomymanStyle() string {

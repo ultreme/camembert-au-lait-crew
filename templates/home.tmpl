@@ -25,7 +25,7 @@
             {{ $entry.Title }}
           </p>
         </div>
-        <img src="{{ $entry.ImageURL | cache_external_assets | resize "250x250" "fill=1" }}"
+        <img src="{{ $entry.ImageURL | resize "fill=250x250" }}"
              class="img-responsive"
              width="{{$square_size}}" height="{{$square_size}}" />
       </a>

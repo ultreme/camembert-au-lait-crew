@@ -56,7 +56,7 @@ var alternateLogos = []string{
 
 func AlternateLogo() string {
 	file := alternateLogos[rand.Intn(len(alternateLogos))]
-	return fmt.Sprintf("/img/logo-alternate-300/%s", file)
+	return fmt.Sprintf("./static/img/logo-alternate-300/%s", file)
 }
 
 func MotDebileQuiSeMange() string {

@@ -115,7 +115,7 @@ func fromSoundcloudTracks(input []*gosoundcloud.Track) *Tracks {
 
 func artworkURL(input string) string {
 	if input == "" {
-		return "/img/img-not-found-400.png"
+		return "./static/img/img-not-found-400.png"
 	}
 	return strings.Replace(input, "-large", "-t500x500", -1)
 }

@@ -23,7 +23,7 @@
             {{ $entry.Title }}
           </p>
         </div>
-        <img src="{{ $entry.ImageURL | cache_external_assets | resize "250x250" "fill=1" }}"
+        <img src="{{ $entry.ImageURL | resize "fill=250x250" }}"
              class="img-responsive"
              width="{{$square_size}}" height="{{$square_size}}" />
       </a>
@@ -35,30 +35,7 @@
   <p class="well">Et plein d'autres..</p>
 {{end}}
 
-
 {{/*
-{% block main_column %}
-  <div class="row">
-    {% for hack in hackz : %}
-
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random">
-      <a href="{{ hack.url }}" class="thumbnail"
-         width="{{square_size}}" height="{{square_size}}">
-        <div class="caption-wrapper">
-          <p class="caption">
-            {{ hack.title }}
-          </p>
-        </div>
-        <img width="{{square_size}}" height="{{square_size}}" class="img-responsive"
-             src="{{ hack.img | cache_external_assets | resize('250x250', fill=1) }}"
-             />
-      </a>
-    </div>
-
-    {% endfor %}
-  </div>
-{% endblock %}
-
 {% block secondary_column %}
   <h2>Hackzers les plus {{ mot_cool() }} <small>(pour l'instant !)</small></h2>
   <ul>
