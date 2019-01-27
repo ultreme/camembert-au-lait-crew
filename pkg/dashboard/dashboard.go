@@ -74,7 +74,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Calculatrice.exe",
 		"hackz/calculatrice.exe",
-		"/img/hackz/calculatrice.exe/logo.jpg",
+		"/img/hackz/calculatrice/logo.jpg",
 		"Pour faire des mathématiques ou d'autres sciences",
 		Entry_Hack,
 		false,
@@ -98,7 +98,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Ultreme Tetris",
 		"hackz/ultreme-tetris",
-		"/img/hackz/ultreme-tetris/logo.jpg",
+		"/img/hackz/tetris/logo.jpg",
 		"Pour les balèzes",
 		Entry_Hack,
 		false,
@@ -180,6 +180,10 @@ func (d *Dashboard) merchEntries(limit int) (Entries, error) {
 
 	entries.shuffle()
 	return entries, nil
+}
+
+func (d *Dashboard) Hackz() (*Entries, error) {
+	return d.hackEntries(100)
 }
 
 func (d *Dashboard) Random() (*Entries, error) {

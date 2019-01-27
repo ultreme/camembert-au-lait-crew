@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"path"
+	"strings"
 
 	"github.com/gobuffalo/packd"
 	"github.com/gobuffalo/packr"
@@ -27,6 +28,10 @@ func (h *handlers) loadTemplates() error {
 	layoutContent := ""
 	pageContents := map[string]string{}
 	err := box.Walk(func(filepath string, file packd.File) error {
+		if strings.HasPrefix(path.Base(filepath), ".#") {
+			// ignore temporary files
+			return nil
+		}
 		switch path.Dir(filepath) {
 		case ".":
 			pageContents[filepath] = file.String()

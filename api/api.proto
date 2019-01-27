@@ -35,6 +35,7 @@ service Server {
 
   rpc Ping(Void) returns (Pong) { option (google.api.http) = { get: "/api/ping" }; };
   rpc Dashboard(Void) returns (calcbiz.dashboard.Entries) { option (google.api.http) = {get: "/api/dashboard"}; }
+  rpc Hackz(Void) returns (calcbiz.dashboard.Entries) { option (google.api.http) = {get: "/api/hackz"}; }
   rpc Crew(Void) returns (calcbiz.crew.Crew) { option (google.api.http) = {get: "/api/crew"}; }
   rpc Numberinfo(NumberinfoInput) returns (NumberinfoOutput) { option (google.api.http) = {get: "/api/numberinfo/{number}"}; }
   rpc Recettator(RecettatorInput) returns (RecettatorOutput) { option (google.api.http) = {get: "/api/recettator"}; }

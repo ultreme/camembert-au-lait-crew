@@ -116,6 +116,9 @@ type serverOptions struct {
 }
 
 func serverOptionsFromCliContext(c *cli.Context) serverOptions {
+	if c.Int("soundcloud-user-id") == 0 || c.String("soundcloud-client-id") == "" {
+		zap.L().Warn("SoundCloud is not configured")
+	}
 	return serverOptions{
 		GRPCBind: c.String("grpc-bind"),
 		HTTPBind: c.String("http-bind"),

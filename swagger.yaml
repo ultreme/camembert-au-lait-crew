@@ -63,6 +63,22 @@
         ]
       }
     },
+    "/api/hackz": {
+      "get": {
+        "operationId": "Hackz",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/dashboardEntries"
+            }
+          }
+        },
+        "tags": [
+          "Server"
+        ]
+      }
+    },
     "/api/kryptos/decrypt": {
       "post": {
         "operationId": "KryptosDecrypt",

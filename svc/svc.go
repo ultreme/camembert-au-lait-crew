@@ -69,6 +69,10 @@ func (svc *svc) Dashboard(_ context.Context, input *api.Void) (*dashboard.Entrie
 	return svc.dashboard.Random()
 }
 
+func (svc *svc) Hackz(_ context.Context, input *api.Void) (*dashboard.Entries, error) {
+	return svc.dashboard.Hackz()
+}
+
 func (svc *svc) Crew(_ context.Context, input *api.Void) (*crew.Crew, error) {
 	return &crew.CALC, nil
 }

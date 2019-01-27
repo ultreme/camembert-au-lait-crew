@@ -100,6 +100,11 @@ func (h *handlers) copaingsHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *handlers) hackzHandler(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
-	data := renderData{"hello": "world"}
+	hackz, err := h.opts.Svc.Hackz(nil, &api.Void{})
+	if err != nil {
+		h.renderError(w, r, err)
+		return
+	}
+	data := renderData{"hackz": hackz}
 	h.render(w, r, "hackz.tmpl", data)
 }
