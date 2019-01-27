@@ -63,6 +63,13 @@ func (h *handlers) renderError(w http.ResponseWriter, r *http.Request, err error
 }
 
 func (h *handlers) render(w http.ResponseWriter, r *http.Request, name string, data renderData) {
+	if h.opts.Debug {
+		if err := h.loadTemplates(); err != nil {
+			h.renderError(w, r, err)
+			return
+		}
+	}
+
 	tmpl, ok := templates[name]
 	if !ok {
 		h.renderError(w, r, fmt.Errorf("the template %s does not exist.", name))
