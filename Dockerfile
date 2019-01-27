@@ -12,7 +12,7 @@ RUN             make release
 FROM            alpine:3.8
 RUN             apk --no-cache --update add ca-certificates && update-ca-certificates
 COPY            --from=builder /go/bin/calcbiz /bin/calcbiz
-COPY            ./static .
+#COPY            ./static .
 ENTRYPOINT      ["/bin/calcbiz"]
 CMD             ["server"]
 EXPOSE          9000 9001
