@@ -113,6 +113,13 @@ func fromSoundcloudTracks(input []*gosoundcloud.Track) *Tracks {
 	return tracks
 }
 
+func artworkURL(input string) string {
+	if input == "" {
+		return "/img/img-not-found-400.png"
+	}
+	return strings.Replace(input, "-large", "-t500x500", -1)
+}
+
 func fromSoundcloudPlaylist(input *gosoundcloud.Playlist) *Playlist {
 	return &Playlist{
 		ID:            input.Id,
@@ -121,7 +128,7 @@ func fromSoundcloudPlaylist(input *gosoundcloud.Playlist) *Playlist {
 		Sharing:       input.Sharing,
 		EmbeddableBy:  input.EmbeddableBy,
 		PurchaseUrl:   input.PurchaseUrl,
-		ArtworkUrl:    input.ArtworkUrl,
+		ArtworkUrl:    artworkURL(input.ArtworkUrl),
 		Description:   input.Description,
 		Duration:      input.Duration,
 		Genre:         input.Genre,
@@ -154,7 +161,7 @@ func fromSoundcloudTrack(input *gosoundcloud.Track) *Track {
 		Sharing:             input.Sharing,
 		EmbeddableBy:        input.EmbeddableBy,
 		PurchaseUrl:         input.PurchaseUrl,
-		ArtworkUrl:          input.ArtworkUrl,
+		ArtworkUrl:          artworkURL(input.ArtworkUrl),
 		Description:         input.Description,
 		Duration:            input.Duration,
 		Genre:               input.Genre,
