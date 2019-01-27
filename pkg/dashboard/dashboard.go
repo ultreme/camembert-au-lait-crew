@@ -50,7 +50,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Moi j'aime",
 		"hackz/moijaime",
-		"",
+		"/img/hackz/moijaime/logo.jpg",
 		"Générateur de phrase de moi j'aime",
 		Entry_Hack,
 		false,
@@ -58,8 +58,64 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"3615cryptage",
 		"hackz/3615cryptage",
-		"",
+		"/img/hackz/3615cryptage/logo.jpg",
 		"Messages codés de James Bond",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"Des Phazms",
+		"hackz/phazms",
+		"/img/hackz/phazms/logo.jpg",
+		"Pokedex de phazms",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"Calculatrice.exe",
+		"hackz/calculatrice.exe",
+		"/img/hackz/calculatrice.exe/logo.jpg",
+		"Pour faire des mathématiques ou d'autres sciences",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"Recettator",
+		"hackz/recettator",
+		"/img/hackz/recettator/logo.jpg",
+		"Des recettes équilibrés et festives",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"Paint",
+		"hackz/paing",
+		"/img/hackz/paint/logo.jpg",
+		"Paint.exe en mode MMORPG",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"Ultreme Tetris",
+		"hackz/ultreme-tetris",
+		"/img/hackz/ultreme-tetris/logo.jpg",
+		"Pour les balèzes",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"m1ch3l",
+		"hackz/m1ch3l",
+		"/img/hackz/m1ch3l/logo.jpg",
+		"Le meilleur d'entre nous",
+		Entry_Hack,
+		false,
+	))
+	entries.append(NewManualEntry(
+		"2048",
+		"hackz/2048",
+		"/img/hackz/2048/logo.jpg",
+		"de 7 à 77 ans",
 		Entry_Hack,
 		false,
 	))
@@ -138,10 +194,11 @@ func (d *Dashboard) Random() (*Entries, error) {
 	//
 	hacks, err := d.hackEntries(3)
 	if err != nil {
-		return nil, err
+		zap.L().Error("failed to fetch hacks", zap.Error(err))
+	} else {
+		entries.append(hacks.Entries...)
+		zap.L().Debug("fetched hack entries", zap.Int("len", len(hacks.Entries)))
 	}
-	entries.append(hacks.Entries...)
-	zap.L().Debug("fetched hack entries", zap.Int("len", len(hacks.Entries)))
 
 	//
 	// tracks (soundcloud)
@@ -149,10 +206,11 @@ func (d *Dashboard) Random() (*Entries, error) {
 	// FIXME: add timeout
 	tracks, err := d.trackEntries(11)
 	if err != nil {
-		return nil, err
+		zap.L().Error("failed to fetch tracks", zap.Error(err))
+	} else {
+		zap.L().Debug("fetched tracks entries", zap.Int("len", len(tracks.Entries)))
+		entries.append(tracks.Entries...)
 	}
-	zap.L().Debug("fetched tracks entries", zap.Int("len", len(tracks.Entries)))
-	entries.append(tracks.Entries...)
 
 	//
 	// merch
@@ -160,10 +218,11 @@ func (d *Dashboard) Random() (*Entries, error) {
 	// FIXME: add timeout
 	merchs, err := d.merchEntries(2)
 	if err != nil {
-		return nil, err
+		zap.L().Error("failed to fetch merch", zap.Error(err))
+	} else {
+		zap.L().Debug("fetched merch entries", zap.Int("len", len(merchs.Entries)))
+		entries.append(merchs.Entries...)
 	}
-	zap.L().Debug("fetched merch entries", zap.Int("len", len(merchs.Entries)))
-	entries.append(merchs.Entries...)
 
 	// shuffle the compilation
 	entries.shuffle()
