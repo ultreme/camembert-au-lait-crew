@@ -1,16 +1,18 @@
 package views
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"html/template"
 	"image"
 	"io"
 	"math/rand"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/disintegration/imaging"
 	"github.com/moul/sprig"
@@ -47,9 +49,10 @@ func getFuncmap(opts *Options) *ctxFuncmap {
 }
 
 type ctxFuncmap struct {
-	fm   template.FuncMap
-	opts *Options
-	req  *http.Request
+	fm          template.FuncMap
+	opts        *Options
+	req         *http.Request
+	resizeMutex sync.Mutex
 }
 
 func (f *ctxFuncmap) linkify(input string) string {
@@ -60,7 +63,7 @@ func (f *ctxFuncmap) linkify(input string) string {
 func (f *ctxFuncmap) devel() bool { return f.opts.Debug }
 
 func (f *ctxFuncmap) sharingImageURL() string {
-	return "http://www.camembertaulaitcrew.biz/static/img/logo-300.png" // FIXME: make it dynamic
+	return "http://www.camembertaulaitcrew.biz/img/logo-300.png" // FIXME: make it dynamic
 }
 
 func (f *ctxFuncmap) activePage() string {
@@ -102,21 +105,23 @@ func (f *ctxFuncmap) cacheExternalAsset(input string) (string, error) {
 	h := make([]byte, 8)
 	sha3.ShakeSum256(h, []byte(input))
 	// fixme parse url
-	newpath := fmt.Sprintf("./static/img/cache/%x%s", h, filepath.Ext(input))
+	newpath := fmt.Sprintf("/img/cache/%x%s", h, filepath.Ext(input))
 
-	out, err := os.Create(newpath)
-	if err != nil {
-		return input, err
-	}
-	defer out.Close()
 	resp, err := http.Get(input)
 	if err != nil {
 		return input, err
 	}
 	defer resp.Body.Close()
 
-	_, err = io.Copy(out, resp.Body)
+	var b bytes.Buffer
+	newimagebuf := bufio.NewWriter(&b)
+	_, err = io.Copy(newimagebuf, resp.Body)
 	if err != nil {
+
+		return input, err
+	}
+
+	if err := f.opts.StaticBox.AddBytes(newpath, b.Bytes()); err != nil {
 		return input, err
 	}
 
@@ -124,6 +129,9 @@ func (f *ctxFuncmap) cacheExternalAsset(input string) (string, error) {
 }
 
 func (f *ctxFuncmap) resize(opts ...string) string {
+	f.resizeMutex.Lock()
+	defer f.resizeMutex.Unlock()
+
 	path := opts[len(opts)-1]
 	opts = opts[:len(opts)-1]
 	urlAppend := ""
@@ -141,10 +149,13 @@ func (f *ctxFuncmap) resize(opts ...string) string {
 	h := make([]byte, 8)
 	sha3.ShakeSum256(h, buf)
 	//FIXME: process hash based on file content instead of filepath (keep opts)
-	newpath := fmt.Sprintf("./static/img/cache/%x%s", h, filepath.Ext(path))
+	newpath := fmt.Sprintf("/img/cache/%x%s", h, filepath.Ext(path))
 
-	if _, err := os.Stat(newpath); !os.IsNotExist(err) {
-		return strings.Replace(newpath, "./static/", "/", -1) + urlAppend
+	if f.opts.StaticBox.Has(newpath) {
+		if f.opts.Debug {
+			urlAppend += "&cache=hit"
+		}
+		return newpath + urlAppend
 	}
 
 	logger := zap.L().With(
@@ -155,9 +166,15 @@ func (f *ctxFuncmap) resize(opts ...string) string {
 		zap.String("hash", fmt.Sprintf("%x", h)),
 	)
 
-	src, err := imaging.Open(path)
+	imageFile, err := f.opts.StaticBox.Open(path)
 	if err != nil {
-		logger.Warn("failed to open image", zap.Error(err))
+		logger.Warn("failed to open image from box", zap.Error(err))
+		return path
+	}
+
+	src, err := imaging.Decode(imageFile)
+	if err != nil {
+		logger.Warn("failed to decode image", zap.Error(err))
 		return path
 	}
 
@@ -193,11 +210,28 @@ func (f *ctxFuncmap) resize(opts ...string) string {
 		return path
 	}
 
-	if err := imaging.Save(newimg, newpath); err != nil {
-		logger.Warn("failed to save resized image", zap.Error(err))
+	format, err := imaging.FormatFromFilename(newpath)
+	if err != nil {
+		logger.Warn("failed to guess file format from filename", zap.Error(err))
 		return path
 	}
-	return strings.Replace(newpath, "./static/", "/", -1) + urlAppend
+
+	var b bytes.Buffer
+	newimagebuf := bufio.NewWriter(&b)
+	if err := imaging.Encode(newimagebuf, newimg, format); err != nil {
+		logger.Warn("failed to encode image", zap.Error(err))
+		return path
+	}
+
+	if err := f.opts.StaticBox.AddBytes(newpath, b.Bytes()); err != nil {
+		logger.Warn("failed to write new file to box", zap.Error(err))
+		return path
+	}
+
+	if f.opts.Debug {
+		urlAppend += "&cache=miss"
+	}
+	return newpath + urlAppend
 }
 
 func (f *ctxFuncmap) yomymanStyle() string {

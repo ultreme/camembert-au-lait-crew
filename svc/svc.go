@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"time"
 
 	tpyo "github.com/tpyolang/tpyo-cli"
 	"go.uber.org/zap"
@@ -27,10 +28,14 @@ type svc struct {
 	opts       Options
 	soundcloud *soundcloud.Soundcloud
 	dashboard  *dashboard.Dashboard
+	startTime  time.Time
 }
 
 func New(opts Options) (api.ServerServer, error) {
-	svc := &svc{opts: opts}
+	svc := &svc{
+		opts:      opts,
+		startTime: time.Now(),
+	}
 	svc.soundcloud = soundcloud.New(
 		opts.SoundcloudClientID,
 		uint64(opts.SoundcloudUserID),
@@ -209,4 +214,14 @@ func (svc *svc) SoundcloudTrack(_ context.Context, input *api.SoundcloudTrackInp
 		return svc.soundcloud.GetRandomTrack()
 	}
 	return svc.soundcloud.GetTrack(input.TrackId)
+}
+
+func (svc *svc) Metrics(_ context.Context, input *api.Void) (*api.MetricsOutput, error) {
+	out := &api.MetricsOutput{
+		StaticBoxSize:     0, // FIXME: todo
+		ServerStartTime:   svc.startTime.String(),
+		ServerCurrentTime: time.Now().String(),
+		ServerUptime:      time.Since(svc.startTime).String(),
+	}
+	return out, nil
 }

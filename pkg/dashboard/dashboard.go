@@ -50,7 +50,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Moi j'aime",
 		"hackz/moijaime",
-		"./static/img/hackz/moijaime/logo.jpg",
+		"/img/hackz/moijaime/logo.jpg",
 		"Générateur de phrase de moi j'aime",
 		Entry_Hack,
 		false,
@@ -58,7 +58,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"3615cryptage",
 		"hackz/3615cryptage",
-		"./static/img/hackz/3615cryptage/logo.jpg",
+		"/img/hackz/3615cryptage/logo.jpg",
 		"Messages codés de James Bond",
 		Entry_Hack,
 		false,
@@ -66,7 +66,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Des Phazms",
 		"hackz/phazms",
-		"./static/img/hackz/phazms/logo.jpg",
+		"/img/hackz/phazms/logo.jpg",
 		"Pokedex de phazms",
 		Entry_Hack,
 		false,
@@ -74,7 +74,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Calculatrice.exe",
 		"hackz/calculatrice.exe",
-		"./static/img/hackz/calculatrice/logo.jpg",
+		"/img/hackz/calculatrice/logo.jpg",
 		"Pour faire des mathématiques ou d'autres sciences",
 		Entry_Hack,
 		false,
@@ -82,7 +82,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Recettator",
 		"hackz/recettator",
-		"./static/img/hackz/recettator/logo.jpg",
+		"/img/hackz/recettator/logo.jpg",
 		"Des recettes équilibrés et festives",
 		Entry_Hack,
 		false,
@@ -90,7 +90,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Paint",
 		"hackz/paing",
-		"./static/img/hackz/paint/logo.jpg",
+		"/img/hackz/paint/logo.jpg",
 		"Paint.exe en mode MMORPG",
 		Entry_Hack,
 		false,
@@ -98,7 +98,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"Ultreme Tetris",
 		"hackz/ultreme-tetris",
-		"./static/img/hackz/tetris/logo.jpg",
+		"/img/hackz/tetris/logo.jpg",
 		"Pour les balèzes",
 		Entry_Hack,
 		false,
@@ -106,7 +106,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"m1ch3l",
 		"hackz/m1ch3l",
-		"./static/img/hackz/m1ch3l/logo.jpg",
+		"/img/hackz/m1ch3l/logo.jpg",
 		"Le meilleur d'entre nous",
 		Entry_Hack,
 		false,
@@ -114,7 +114,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	entries.append(NewManualEntry(
 		"2048",
 		"hackz/2048",
-		"./static/img/hackz/2048/logo.jpg",
+		"/img/hackz/2048/logo.jpg",
 		"de 7 à 77 ans",
 		Entry_Hack,
 		false,

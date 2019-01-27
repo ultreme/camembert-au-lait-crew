@@ -15,7 +15,7 @@
   <!--<pre>{{.playlists|toPrettyJson}}</pre>-->
   <h2>Albums</h2>
   {{ range $entry := (.playlists.BySection "albums") }}
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 rotate-random2">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random2">
       <!--<pre>{{$entry|toPrettyJson}}</pre>-->
       <a href="{{ $entry.URL}}" class="thumbnail"
          width="{{$square_size}}" height="{{$square_size}}"
@@ -57,7 +57,7 @@
 <div class="row">
   <h2>Compilations</h2>
   {{ range $entry := (.playlists.BySection "appears-on") }}
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random2">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 rotate-random2">
       <!--<pre>{{$entry|toPrettyJson}}</pre>-->
       <a href="{{ $entry.URL}}" class="thumbnail"
          width="{{$square_size}}" height="{{$square_size}}"
@@ -78,7 +78,7 @@
 <div class="row">
   <h2>Brouillons</h2>
   {{ range $entry := (.playlists.BySection "other") }}
-    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random2">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 rotate-random2">
       <!--<pre>{{$entry|toPrettyJson}}</pre>-->
       <a href="{{ $entry.URL}}" class="thumbnail"
          width="{{$square_size}}" height="{{$square_size}}"

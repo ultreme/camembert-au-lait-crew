@@ -145,6 +145,9 @@ func server(c *cli.Context) error {
 	errs := make(chan error)
 	go func() { errs <- errors.Wrap(startGRPCServer(ctx, &opts), "gRPC server error") }()
 	go func() { errs <- errors.Wrap(startHTTPServer(ctx, &opts), "HTTP server error") }()
+
+	// FIXME: warmup cache
+
 	return <-errs
 }
 
@@ -163,16 +166,19 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	}
 
 	// configure HTTP server
+	staticBox := packr.NewBox("./static")
+	templatesBox := packr.NewBox("./templates")
 	router := mux.NewRouter()
 	if err := views.Setup(&views.Options{
-		Router: router,
-		Debug:  opts.Debug,
-		Svc:    opts.svc,
+		Router:       router,
+		Debug:        opts.Debug,
+		Svc:          opts.svc,
+		StaticBox:    staticBox,
+		TemplatesBox: templatesBox,
 	}); err != nil {
 		return errors.Wrap(err, "failed to setup views")
 	}
-	box := packr.NewBox("./static")
-	router.PathPrefix("/").Handler(http.FileServer(box))
+	router.PathPrefix("/").Handler(http.FileServer(staticBox))
 
 	var routerHandler http.Handler = router
 	if !opts.Debug {

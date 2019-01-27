@@ -1,23 +1,40 @@
 package views
 
 import (
+	"html/template"
 	"net/http"
 	"strconv"
 	"sync"
 
+	"github.com/gobuffalo/packr"
 	"github.com/gorilla/mux"
+	"github.com/oxtoacart/bpool"
+
 	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/pkg/crew"
 )
 
 type Options struct {
-	Router *mux.Router
-	Debug  bool
-	Svc    api.ServerServer
+	Router       *mux.Router
+	Debug        bool
+	Svc          api.ServerServer
+	StaticBox    packr.Box
+	TemplatesBox packr.Box
+}
+
+type handlers struct {
+	opts           *Options
+	funcmap        *ctxFuncmap
+	templatesMutex sync.Mutex
+	templates      map[string]*template.Template
+	bufpool        *bpool.BufferPool
 }
 
 func Setup(opts *Options) error {
-	handlers := handlers{opts: opts}
+	handlers := handlers{
+		opts:    opts,
+		bufpool: bpool.NewBufferPool(64),
+	}
 	if err := handlers.loadTemplates(); err != nil {
 		return err
 	}
@@ -66,12 +83,6 @@ func Setup(opts *Options) error {
 
 	// /crew
 	return nil
-}
-
-type handlers struct {
-	opts    *Options
-	funcmap *ctxFuncmap
-	mutex   sync.Mutex
 }
 
 type renderData map[string]interface{}

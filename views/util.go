@@ -8,26 +8,16 @@ import (
 	"strings"
 
 	"github.com/gobuffalo/packd"
-	"github.com/gobuffalo/packr"
-	"github.com/oxtoacart/bpool"
 	"go.uber.org/zap"
 )
 
-var (
-	box       packr.Box
-	templates map[string]*template.Template
-	bufpool   *bpool.BufferPool
-)
-
 func (h *handlers) loadTemplates() error {
-	box = packr.NewBox("../templates")
-	bufpool = bpool.NewBufferPool(64)
-	templates = make(map[string]*template.Template)
+	h.templates = make(map[string]*template.Template)
 
 	// load template files
 	layoutContent := ""
 	pageContents := map[string]string{}
-	err := box.Walk(func(filepath string, file packd.File) error {
+	err := h.opts.TemplatesBox.Walk(func(filepath string, file packd.File) error {
 		if strings.HasPrefix(path.Base(filepath), ".#") {
 			// ignore temporary files
 			return nil
@@ -50,8 +40,8 @@ func (h *handlers) loadTemplates() error {
 	mainTemplate = template.Must(mainTemplate.Parse(`{{define "main"}}{{template "base" .}}{{end}}`))
 	mainTemplate = template.Must(mainTemplate.Parse(layoutContent))
 	for filepath, content := range pageContents {
-		templates[filepath] = template.Must(mainTemplate.Clone())
-		templates[filepath] = template.Must(templates[filepath].Parse(content))
+		h.templates[filepath] = template.Must(mainTemplate.Clone())
+		h.templates[filepath] = template.Must(h.templates[filepath].Parse(content))
 	}
 	zap.L().Debug("templates loaded")
 	return nil
@@ -75,14 +65,14 @@ func (h *handlers) render(w http.ResponseWriter, r *http.Request, name string, d
 		}
 	}
 
-	tmpl, ok := templates[name]
+	tmpl, ok := h.templates[name]
 	if !ok {
 		h.renderError(w, r, fmt.Errorf("the template %s does not exist.", name))
 		return
 	}
 
-	buf := bufpool.Get()
-	defer bufpool.Put(buf)
+	buf := h.bufpool.Get()
+	defer h.bufpool.Put(buf)
 
 	if data == nil {
 		data = make(renderData)
@@ -94,8 +84,8 @@ func (h *handlers) render(w http.ResponseWriter, r *http.Request, name string, d
 	}
 
 	// set current request in ctxFuncmap objects
-	h.mutex.Lock()
-	defer h.mutex.Unlock()
+	h.templatesMutex.Lock()
+	defer h.templatesMutex.Unlock()
 	h.funcmap.req = r
 
 	if err := tmpl.Execute(buf, data); err != nil {

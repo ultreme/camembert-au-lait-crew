@@ -131,6 +131,22 @@
         ]
       }
     },
+    "/api/metrics": {
+      "get": {
+        "operationId": "Metrics",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/serverMetricsOutput"
+            }
+          }
+        },
+        "tags": [
+          "Server"
+        ]
+      }
+    },
     "/api/moijaime": {
       "get": {
         "operationId": "Moijaime",
@@ -567,6 +583,24 @@
       "type": "object",
       "properties": {
         "to": {
+          "type": "string"
+        }
+      }
+    },
+    "serverMetricsOutput": {
+      "type": "object",
+      "properties": {
+        "static_box_size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "server_start_time": {
+          "type": "string"
+        },
+        "server_current_time": {
+          "type": "string"
+        },
+        "server_uptime": {
           "type": "string"
         }
       }
