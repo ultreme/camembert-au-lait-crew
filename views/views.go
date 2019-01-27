@@ -89,7 +89,14 @@ func (h *handlers) homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *handlers) muzikHandler(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
-	data := renderData{"hello": "world"}
+	playlists, err := h.opts.Svc.SoundcloudPlaylists(r.Context(), &api.Void{})
+	if err != nil {
+		h.renderError(w, r, err)
+		return
+	}
+	data := renderData{
+		"playlists": playlists,
+	}
 	h.render(w, r, "muzik.tmpl", data)
 }
 

@@ -1,5 +1,99 @@
 {{define "title"}}Muzik{{end}}
 
+{{/*
+{% block title %}Des albums{% endblock %}
+{% block subtitle %}pas au hasard{% endblock %}
+*/}}
+
 {{define "content"}}
-Muzikkk
+{{ $columns := 2 }}
+{{ $grid_size := div 12 $columns }}
+{{ $square_size := 250 }}
+
+
+<div class="row">
+  <!--<pre>{{.playlists|toPrettyJson}}</pre>-->
+  <h2>Albums</h2>
+  {{ range $entry := (.playlists.BySection "albums") }}
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 rotate-random2">
+      <!--<pre>{{$entry|toPrettyJson}}</pre>-->
+      <a href="{{ $entry.URL}}" class="thumbnail"
+         width="{{$square_size}}" height="{{$square_size}}"
+         {{ if $entry.IsExternal }} target="_blank"{{ end }}>
+        <div class="caption-wrapper">
+          <p class="caption">
+            {{ $entry.Title }}
+          </p>
+        </div>
+        <img src="{{ $entry.ImageURL | resize "fill=500x500" }}"
+             class="img-responsive"
+             width="500" height="500" />
+      </a>
+    </div>
+  {{ end }}
+</div>
+
+<div class="row">
+  <h2>Singles & EPs</h2>
+  {{ range $entry := (.playlists.BySection "singles-eps") }}
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random2">
+      <!--<pre>{{$entry|toPrettyJson}}</pre>-->
+      <a href="{{ $entry.URL}}" class="thumbnail"
+         width="{{$square_size}}" height="{{$square_size}}"
+         {{ if $entry.IsExternal }} target="_blank"{{ end }}>
+        <div class="caption-wrapper">
+          <p class="caption">
+            {{ $entry.Title }}
+          </p>
+        </div>
+        <img src="{{ $entry.ImageURL | resize "fill=250x250" }}"
+             class="img-responsive"
+             width="250" height="250" />
+      </a>
+    </div>
+  {{ end }}
+</div>
+
+<div class="row">
+  <h2>Compilations</h2>
+  {{ range $entry := (.playlists.BySection "appears-on") }}
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random2">
+      <!--<pre>{{$entry|toPrettyJson}}</pre>-->
+      <a href="{{ $entry.URL}}" class="thumbnail"
+         width="{{$square_size}}" height="{{$square_size}}"
+         {{ if $entry.IsExternal }} target="_blank"{{ end }}>
+        <div class="caption-wrapper">
+          <p class="caption">
+            {{ $entry.Title }}
+          </p>
+        </div>
+        <img src="{{ $entry.ImageURL | resize "fill=250x250" }}"
+             class="img-responsive"
+             width="250" height="250" />
+      </a>
+    </div>
+  {{ end }}
+</div>
+
+<div class="row">
+  <h2>Brouillons</h2>
+  {{ range $entry := (.playlists.BySection "other") }}
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random2">
+      <!--<pre>{{$entry|toPrettyJson}}</pre>-->
+      <a href="{{ $entry.URL}}" class="thumbnail"
+         width="{{$square_size}}" height="{{$square_size}}"
+         {{ if $entry.IsExternal }} target="_blank"{{ end }}>
+        <div class="caption-wrapper">
+          <p class="caption">
+            {{ $entry.Title }}
+          </p>
+        </div>
+        <img src="{{ $entry.ImageURL | resize "fill=250x250" }}"
+             class="img-responsive"
+             width="250" height="250" />
+      </a>
+    </div>
+  {{ end }}
+</div>
+
 {{end}}
