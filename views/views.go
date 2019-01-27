@@ -18,8 +18,8 @@ type Options struct {
 	Router       *mux.Router
 	Debug        bool
 	Svc          api.ServerServer
-	StaticBox    packr.Box
-	TemplatesBox packr.Box
+	StaticBox    *packr.Box
+	TemplatesBox *packr.Box
 }
 
 type handlers struct {

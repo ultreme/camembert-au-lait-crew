@@ -6,6 +6,8 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/gobuffalo/packd"
+	"github.com/gobuffalo/packr"
 	tpyo "github.com/tpyolang/tpyo-cli"
 	"go.uber.org/zap"
 
@@ -22,6 +24,7 @@ import (
 type Options struct {
 	SoundcloudUserID   int
 	SoundcloudClientID string
+	StaticBox          *packr.Box
 }
 
 type svc struct {
@@ -217,10 +220,15 @@ func (svc *svc) SoundcloudTrack(_ context.Context, input *api.SoundcloudTrackInp
 }
 
 func (svc *svc) Metrics(_ context.Context, input *api.Void) (*api.MetricsOutput, error) {
+	staticBoxSize := 0
+	svc.opts.StaticBox.Walk(func(filepath string, file packd.File) error {
+		staticBoxSize++
+		return nil
+	})
 	out := &api.MetricsOutput{
-		StaticBoxSize:     0, // FIXME: todo
-		ServerStartTime:   svc.startTime.String(),
-		ServerCurrentTime: time.Now().String(),
+		StaticBoxSize:     int32(staticBoxSize),
+		ServerStartTime:   svc.startTime.Format(time.RFC3339),
+		ServerCurrentTime: time.Now().Format(time.RFC3339),
 		ServerUptime:      time.Since(svc.startTime).String(),
 	}
 	return out, nil

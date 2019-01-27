@@ -71,6 +71,9 @@ func (f *ctxFuncmap) activePage() string {
 }
 
 func (f *ctxFuncmap) activeMenu() string {
+	if f == nil || f.req == nil || f.req.URL == nil {
+		return "home"
+	}
 	switch path := f.req.URL.Path; {
 	case path == "/":
 		return "home"

@@ -113,17 +113,24 @@ type serverOptions struct {
 	ServiceOptions svc.Options
 	Debug          bool
 	svc            api.ServerServer
+	staticBox      *packr.Box
+	templatesBox   *packr.Box
 }
 
 func serverOptionsFromCliContext(c *cli.Context) serverOptions {
 	if c.Int("soundcloud-user-id") == 0 || c.String("soundcloud-client-id") == "" {
 		zap.L().Warn("SoundCloud is not configured")
 	}
+	staticBox := packr.NewBox("./static")
+	templatesBox := packr.NewBox("./templates")
 	return serverOptions{
-		GRPCBind: c.String("grpc-bind"),
-		HTTPBind: c.String("http-bind"),
-		Debug:    c.Bool("debug"),
+		GRPCBind:     c.String("grpc-bind"),
+		HTTPBind:     c.String("http-bind"),
+		Debug:        c.Bool("debug"),
+		staticBox:    &staticBox,
+		templatesBox: &templatesBox,
 		ServiceOptions: svc.Options{
+			StaticBox:          &staticBox,
 			SoundcloudUserID:   c.Int("soundcloud-user-id"),
 			SoundcloudClientID: c.String("soundcloud-client-id"),
 		},
@@ -166,19 +173,17 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	}
 
 	// configure HTTP server
-	staticBox := packr.NewBox("./static")
-	templatesBox := packr.NewBox("./templates")
 	router := mux.NewRouter()
 	if err := views.Setup(&views.Options{
 		Router:       router,
 		Debug:        opts.Debug,
 		Svc:          opts.svc,
-		StaticBox:    staticBox,
-		TemplatesBox: templatesBox,
+		StaticBox:    opts.staticBox,
+		TemplatesBox: opts.templatesBox,
 	}); err != nil {
 		return errors.Wrap(err, "failed to setup views")
 	}
-	router.PathPrefix("/").Handler(http.FileServer(staticBox))
+	router.PathPrefix("/").Handler(http.FileServer(opts.staticBox))
 
 	var routerHandler http.Handler = router
 	if !opts.Debug {
