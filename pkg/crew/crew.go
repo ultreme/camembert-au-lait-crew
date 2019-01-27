@@ -36,7 +36,7 @@ var CALC = Crew{
 			Key:         "sbrk",
 			Name:        "sbrk.org",
 			Description: "gentil",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/sbrk.jpg",
+			ImageURL:    "/img/copaings/sbrk.jpg",
 			Links: []*Link{
 				{
 					Name: "Sbrk",
@@ -52,7 +52,7 @@ var CALC = Crew{
 			Key:         "m1ch3l",
 			Name:        "m1ch3l",
 			Description: "m1ch3l est cool, m1ch3l aime les gommes.",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/m1ch3l.jpg",
+			ImageURL:    "/img/copaings/m1ch3l.jpg",
 			Links: []*Link{
 				{
 					Name: "Le site de m1ch3l",
@@ -68,7 +68,7 @@ var CALC = Crew{
 			Key:         "salutcestcool",
 			Name:        "salut c'est cool",
 			Description: "<3<3<3<3",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/scc.jpg",
+			ImageURL:    "/img/copaings/scc.jpg",
 			Links: []*Link{
 				{
 					Name: "Le site de les saluts",
@@ -84,7 +84,7 @@ var CALC = Crew{
 			Key:         "garscool",
 			Name:        "Gars Cool",
 			Description: "je suis cool",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/garscool.jpg",
+			ImageURL:    "/img/copaings/garscool.jpg",
 			Links: []*Link{
 				{
 					Name: "Facebook",
@@ -104,7 +104,7 @@ var CALC = Crew{
 			Key:         "cestmoi",
 			Name:        "C'est moi",
 			Description: "hihi",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/cestmoi.jpg",
+			ImageURL:    "/img/copaings/cestmoi.jpg",
 			Links: []*Link{
 				{
 					Name: "Facebook de C'est moi",
@@ -116,7 +116,7 @@ var CALC = Crew{
 			Key:         "pardonmyfrench",
 			Name:        "Pardon My French",
 			Description: "je voudrais une croissant",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/pardonmyfrench.jpg",
+			ImageURL:    "/img/copaings/pardonmyfrench.jpg",
 			Links: []*Link{
 				{
 					Name: "Site officiel",
@@ -128,7 +128,7 @@ var CALC = Crew{
 			Key:         "furrtek",
 			Name:        "Furrtek",
 			Description: "Avant on se faisait electrocuter, maintenant on peut se faire electroniquer",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/furrtek.png",
+			ImageURL:    "/img/copaings/furrtek.png",
 			Links: []*Link{
 				{
 					Name: "Site officiel",
@@ -144,7 +144,7 @@ var CALC = Crew{
 			Key:         "tahigo",
 			Name:        "Tahigo",
 			Description: "Rock festif",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/tahigo.jpg",
+			ImageURL:    "/img/copaings/tahigo.jpg",
 			Links: []*Link{
 				{
 					Name: "Facebook",
@@ -160,7 +160,7 @@ var CALC = Crew{
 			Key:         "spreadshirt",
 			Name:        "Spreadshirt",
 			Description: "Des produits CALC",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/spreadshirt.jpg", // FIXME: make random
+			ImageURL:    "/img/copaings/spreadshirt.jpg", // FIXME: make random
 			Links: []*Link{
 				{
 					Name: "Des T-shirts",
@@ -172,7 +172,7 @@ var CALC = Crew{
 			Key:         "estcequecestbientotlapero",
 			Name:        "Est-ce que c'est bientôt l'apéro ?",
 			Description: "Outil ludique",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/apero.jpg",
+			ImageURL:    "/img/copaings/apero.jpg",
 			Links: []*Link{
 				{
 					Name: "Outil",
@@ -184,7 +184,7 @@ var CALC = Crew{
 			Key:         "leclubdegym",
 			Name:        "Le club de Gym",
 			Description: "Collectif d'artistes et de muscles",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/club.jpg",
+			ImageURL:    "/img/copaings/club.jpg",
 			Links: []*Link{
 				{
 					Name: "Facebook",
@@ -196,7 +196,7 @@ var CALC = Crew{
 			Key:         "leonard",
 			Name:        "Léonard Gordon Alain Souchon de la Gomme du Camembert",
 			Description: "Waf.",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/leonard.jpg",
+			ImageURL:    "/img/copaings/leonard.jpg",
 			Links: []*Link{
 				{
 					Name: "Facebook",
@@ -212,7 +212,7 @@ var CALC = Crew{
 			Key:         "jesuispasunmonstre",
 			Name:        "Je suis pas un monstre !",
 			Description: "par Sassou Youpi",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/sassou-behance.jpg",
+			ImageURL:    "/img/copaings/sassou-behance.jpg",
 			Links: []*Link{
 				{
 					Name: "Behance",
@@ -224,7 +224,7 @@ var CALC = Crew{
 			Key:         "vadim",
 			Name:        "Vadim",
 			Description: "Pipi",
-			ImageURL:    "https://camembertaulaitcrew.github.io/assets/copaings/apokorounta.png",
+			ImageURL:    "/img/copaings/apokorounta.png",
 			Links: []*Link{
 				{
 					Name: "Apokorunta",
