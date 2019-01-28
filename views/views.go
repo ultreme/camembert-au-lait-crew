@@ -38,31 +38,41 @@ func Setup(opts *Options) error {
 	if err := handlers.loadTemplates(); err != nil {
 		return err
 	}
+
+	// FIXME: configure router to accept trailing slashes, but redirect
+
+	// home
 	opts.Router.HandleFunc("/", handlers.homeHandler)
+
+	// muzik
 	opts.Router.HandleFunc("/muzik", handlers.muzikHandler)
-	opts.Router.HandleFunc("/hackz", handlers.hackzHandler)
-	opts.Router.HandleFunc("/copaings", handlers.copaingsHandler)
 	opts.Router.HandleFunc("/track/{track_id:[0-9]+}", handlers.trackHandler)
 	opts.Router.HandleFunc("/album/{album_id:[0-9]+}", handlers.albumHandler)
+
+	// hackz
+	opts.Router.HandleFunc("/hackz", handlers.hackzHandler)
+	opts.Router.HandleFunc("/hackz/recettator", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/convertisseur", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/miroir", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/demineur", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/calculatrice.exe", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/terminul", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/steak-hache-shake", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/3615cryptage", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/paint", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/2048", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/ultreme-tetris", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/moijaime", handlers.hackzTravaux)
+	opts.Router.HandleFunc("/hackz/phazms", handlers.hackzTravaux) // GET POST ?
+	opts.Router.HandleFunc("/hackz/m1ch3l", handlers.hackzTravaux) // GET POST ?
+
+	// copaings
+	opts.Router.HandleFunc("/copaings", handlers.copaingsHandler)
 
 	//
 	// old routes (to be imported)
 	//
 
-	// /m1ch3l GET/POST
-	// /hackz/convertisseur
-	// /hackz/miroir
-	// /hackz/demineur
-	// /hackz/calculatrice.exe
-	// /hackz/terminul
-	// /hackz/steak-hache-shake
-	// /hackz/3615cryptage
-	// /hackz/paint
-	// /hackz/2048
-	// /hackz/ultreme-tetris
-	// /hackz/recettator
-	// /hackz/moijaime
-	// /hackz/phazms GET/POST
 	// /scorz/inc/<string:user>/<string:what>/<int:points>
 	// /sitemap.xml
 
@@ -154,6 +164,11 @@ func (h *handlers) copaingsHandler(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
 	data := renderData{"friends": crew.CALC.Friends}
 	h.render(w, r, "copaings.tmpl", data)
+}
+
+func (h *handlers) hackzTravaux(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.travaux.tmpl", nil)
 }
 
 func (h *handlers) hackzHandler(w http.ResponseWriter, r *http.Request) {

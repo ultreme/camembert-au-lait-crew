@@ -89,7 +89,7 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 	))
 	entries.append(NewManualEntry(
 		"Paint",
-		"hackz/paing",
+		"hackz/paint",
 		"/img/hackz/paint/logo.jpg",
 		"Paint.exe en mode MMORPG",
 		Entry_Hack,
