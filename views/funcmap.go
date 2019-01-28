@@ -39,6 +39,7 @@ func getFuncmap(opts *Options) *ctxFuncmap {
 	fm["logo_alternate"] = random.AlternateLogo
 	fm["mot_du_jour"] = random.WOTD
 	fm["mot_cool"] = random.MotCool
+	fm["mot_cool_pluriel"] = random.MotCoolPluriel
 	fm["megahertz"] = f.megahertz
 	fm["mot_debile_qui_se_mange"] = random.MotDebileQuiSeMange
 	fm["neige"] = func() bool { return false }

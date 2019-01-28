@@ -2,8 +2,8 @@
 {{define "h1"}}Du son {{ mot_cool }}{{end}}
 {{define "h1small"}}{{.track.Title}}{{end}}
 
-{{define "content"}}
 
+{{define "content"}}
   <!--<pre>{{.track|toPrettyJson}}</pre>-->
 
   <iframe
@@ -19,27 +19,22 @@
   {{end}}
 {{end}}
 
-{{/*
-{% block main_column %}
-{% endblock %}
 
-{% block secondary_column %}
-      <a href="{{ track.ext_url }}" target="_blank">
-        <img src="{{ track.img | cache_external_assets }}" alt="{{ track.title }}"
-             class="img-responsive img-rounded rotate-random" />
-      </a>
+{{define "secondary_column"}}
+    <a href="{{ .track.PermalinkUrl }}" target="_blank">
+      <img src="{{ .track.ImageURL | cache_external_asset }}" alt="{{ .track.Title }}"
+           class="img-responsive img-rounded rotate-random" />
+    </a>
 
-      <div class="track_date">
-        {{ track.created_at }}
-      </div>
+    <div class="track_date">
+      {{ .track.CreatedAt }}
+    </div>
 
-      {# FIXME: handle tags etc in html headers for SEO #}
+    <!-- FIXME: handle tags etc in html headers for SEO -->
 
-      <div class="track_tags">
-        {% for tag in track.tags %}
-        <span class="label label-primary">#{{ tag }}</span>
-        {% endfor %}
-      </div>
-
-{% endblock %}
-*/}}
+    <div class="track_tags">
+      {{ range $tag := .track.Tags }}
+        <span class="label label-primary">#{{ $tag }}</span>
+      {{ end }}
+    </div>
+{{end}}

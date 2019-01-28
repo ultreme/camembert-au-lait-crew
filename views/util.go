@@ -82,6 +82,9 @@ func (h *handlers) render(w http.ResponseWriter, r *http.Request, name string, d
 		"name": name,
 		"r":    r,
 	}
+	if _, found := data["layout_mode"]; !found {
+		data["layout_mode"] = "single_column"
+	}
 
 	// set current request in ctxFuncmap objects
 	h.templatesMutex.Lock()

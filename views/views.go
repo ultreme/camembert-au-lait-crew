@@ -125,7 +125,10 @@ func (h *handlers) trackHandler(w http.ResponseWriter, r *http.Request) {
 		h.renderError(w, r, err)
 		return
 	}
-	data := renderData{"track": track}
+	data := renderData{
+		"track":       track,
+		"layout_mode": "two_columns",
+	}
 	h.render(w, r, "track.tmpl", data)
 }
 
@@ -160,6 +163,9 @@ func (h *handlers) hackzHandler(w http.ResponseWriter, r *http.Request) {
 		h.renderError(w, r, err)
 		return
 	}
-	data := renderData{"hackz": hackz}
+	data := renderData{
+		"hackz":       hackz,
+		"layout_mode": "two_columns",
+	}
 	h.render(w, r, "hackz.tmpl", data)
 }

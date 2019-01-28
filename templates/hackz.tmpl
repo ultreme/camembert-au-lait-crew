@@ -1,9 +1,6 @@
 {{define "title"}}Hackz{{end}}
-
-{{/*
-{% block title %}Des hackz{% endblock %}
-{% block subtitle %}&agrave; l'unit&eacute;{% endblock %}
-*/}}
+{{define "h1"}}Des hackz{{end}}
+{{define "h1small"}}à l'unité{{end}}
 
 {{define "content"}}
 {{ $columns := 3 }}
@@ -14,7 +11,7 @@
   <div class="row">
     {{ range $entry := .hackz.Entries }}
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 rotate-random">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 rotate-random">
       <a href="{{ $entry.URL}}" class="thumbnail"
          width="{{$square_size}}" height="{{$square_size}}"
          {{ if $entry.IsExternal }} target="_blank"{{ end }}>
@@ -30,14 +27,19 @@
     </div>
 
     {{ end }}
-
   </div>
-  <p class="well">Et plein d'autres..</p>
+
+  <!--<p class="well">Et plein d'autres..</p>-->
+{{end}}
+
+
+{{define "secondary_column"}}
+  <h3>Hackzers les plus {{ mot_cool_pluriel }} <small>(pour l'instant !)</small></h3>
+  Les scores sont cassés et reviendront bientôt
 {{end}}
 
 {{/*
 {% block secondary_column %}
-  <h2>Hackzers les plus {{ mot_cool() }} <small>(pour l'instant !)</small></h2>
   <ul>
     {% for scor in hackzers %}
     <li>#{{ loop.index }} {{ scor.login }} avec {{ scor.score }} {{ mot_debile_qui_se_mange() }}</li>

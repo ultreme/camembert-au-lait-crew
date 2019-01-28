@@ -1,9 +1,6 @@
 {{define "fulltitle"}}Camembert au lait crew{{end}}
-
-{{/*
-{{ block title }}{{ images | length }} trucs{{ endblock }}
-{{ block subtitle }}au hasard{{ endblock }}
-*/}}
+{{define "h1"}}{{len .dashboard.Entries}} trucs {{mot_cool_pluriel}}{{end}}
+{{define "h1small"}}au hasard{{end}}
 
 
 {{define "content"}}

@@ -1,6 +1,9 @@
 package soundcloud
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func (p *Playlist) IsMain() bool {
 	switch p.PlaylistType {
@@ -47,3 +50,7 @@ func (t *Track) URL() string {
 func (t *Track) IsExternal() bool { return false }
 
 func (t *Track) ImageURL() string { return t.ArtworkUrl }
+
+func (t *Track) Tags() []string {
+	return strings.Split(t.TagList, " ") // FIXME: use shell lexer
+}

@@ -71,8 +71,16 @@ func MotDebileQuiSeMange() string {
 
 func MotCool() string {
 	mots := []string{
-		"cool", "sympa", "gentil", "genial", "excellent", "superbe", "super",
-		"vraiment tres bien", "bien", "qui en a dans le pantalon", "top",
+		"cool", "sympa", "gentil", "génial", "excellent", "superbe", "super",
+		"vraiment très bien", "bien", "qui en a dans le pantalon", "top",
+	}
+	return mots[rand.Intn(len(mots))]
+}
+
+func MotCoolPluriel() string {
+	mots := []string{
+		"cools", "sympas", "gentils", "géniaux", "excellents", "superbes", "supers",
+		"vraiment très biens", "biens", "qui en ont dans le pantalon", "tops",
 	}
 	return mots[rand.Intn(len(mots))]
 }
