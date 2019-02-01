@@ -14,8 +14,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/Masterminds/sprig"
 	"github.com/disintegration/imaging"
-	"github.com/moul/sprig"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/sha3"
 

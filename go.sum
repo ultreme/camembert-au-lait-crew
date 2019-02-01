@@ -274,8 +274,6 @@ github.com/moul/advanced-ssh-config v2.8.0+incompatible h1:TwBlAP+vrtYVW+cv+NJqG
 github.com/moul/advanced-ssh-config v2.8.0+incompatible/go.mod h1:R4jFrcdiyzi23qjl7fBUyk7zV3xoFv5S8ulBBsU2ufw=
 github.com/moul/numberinfo v0.0.0-20160903151149-753f372df509 h1:I9dq1rfaqOuM/cdoYtHeAK/nJxU2iRJAx9MPwHjoJic=
 github.com/moul/numberinfo v0.0.0-20160903151149-753f372df509/go.mod h1:9J61gswx3x7Sv1flRnwrSJv0jIksuHecefKXOnjMBpI=
-github.com/moul/sprig v0.0.0-20170404194836-dba49a8d3a46 h1:unq5acwmnJ+T7/c8TFry3PsBIvKag9OLpg+pGPZP9BA=
-github.com/moul/sprig v0.0.0-20170404194836-dba49a8d3a46/go.mod h1:L1YcYiORJV//vKELNvA8LX4T+WSIa2z6zz9kgd6mUMg=
 github.com/nicksnyder/go-i18n v1.10.0/go.mod h1:HrK7VCrbOvQoUAQ7Vpy7i87N7JZZZ7R2xBGjv0j365Q=
 github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/ginkgo v1.7.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
