@@ -51,20 +51,20 @@ func Setup(opts *Options) error {
 
 	// hackz
 	opts.Router.HandleFunc("/hackz", handlers.hackzHandler)
-	opts.Router.HandleFunc("/hackz/recettator", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/convertisseur", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/miroir", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/demineur", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/calculatrice.exe", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/terminul", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/steak-hache-shake", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/3615cryptage", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/paint", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/2048", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/ultreme-tetris", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/moijaime", handlers.hackzTravaux)
-	opts.Router.HandleFunc("/hackz/phazms", handlers.hackzTravaux) // GET POST ?
-	opts.Router.HandleFunc("/hackz/m1ch3l", handlers.hackzTravaux) // GET POST ?
+	opts.Router.HandleFunc("/hackz/recettator", handlers.hackzRecettator)
+	opts.Router.HandleFunc("/hackz/convertisseur", handlers.hackzConvertisseur)
+	opts.Router.HandleFunc("/hackz/miroir", handlers.hackzMiroir)
+	opts.Router.HandleFunc("/hackz/demineur", handlers.hackzDemineur)
+	opts.Router.HandleFunc("/hackz/calculatrice.exe", handlers.hackzCalculatrice)
+	opts.Router.HandleFunc("/hackz/terminul", handlers.hackzTerminul)
+	opts.Router.HandleFunc("/hackz/steak-hache-shake", handlers.hackzSteakHacheShake)
+	opts.Router.HandleFunc("/hackz/3615cryptage", handlers.hackz3615cryptage)
+	opts.Router.HandleFunc("/hackz/paint", handlers.hackzPaint)
+	opts.Router.HandleFunc("/hackz/2048", handlers.hackz2048)
+	opts.Router.Path("/hackz/ultreme-tetris").HandlerFunc(handlers.hackzTetris).Name("hackz.tetris")
+	opts.Router.HandleFunc("/hackz/moijaime", handlers.hackzMoiJaime)
+	opts.Router.HandleFunc("/hackz/phazms", handlers.hackzPhazms) // GET POST ?
+	opts.Router.HandleFunc("/hackz/m1ch3l", handlers.hackzM1ch3l) // GET POST ?
 
 	// copaings
 	opts.Router.HandleFunc("/copaings", handlers.copaingsHandler)
@@ -169,6 +169,88 @@ func (h *handlers) copaingsHandler(w http.ResponseWriter, r *http.Request) {
 func (h *handlers) hackzTravaux(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
 	h.render(w, r, "hackz.travaux.tmpl", nil)
+}
+
+func (h *handlers) hackzCalculatrice(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.calculatrice.tmpl", nil)
+}
+
+func (h *handlers) hackz2048(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	data := renderData{
+		"layout_mode": "two_columns",
+	}
+	h.render(w, r, "hackz.2048.tmpl", data)
+}
+
+func (h *handlers) hackzSteakHacheShake(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.steakhacheshake.tmpl", nil)
+}
+
+func (h *handlers) hackzConvertisseur(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.convertisseur.tmpl", nil)
+}
+
+func (h *handlers) hackzMiroir(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.miroir.tmpl", nil)
+}
+
+func (h *handlers) hackzTerminul(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.terminul.tmpl", nil)
+}
+
+func (h *handlers) hackzDemineur(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.demineur.tmpl", nil)
+}
+
+func (h *handlers) hackzTetris(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	niveau := r.FormValue("niveau")
+	if niveau == "" {
+		niveau = "5"
+	}
+	data := renderData{
+		"layout_mode": "two_columns",
+		"niveau":      niveau,
+	}
+
+	h.render(w, r, "hackz.tetris.tmpl", data)
+}
+
+func (h *handlers) hackzMoiJaime(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.moijaime.tmpl", nil)
+}
+
+func (h *handlers) hackzPaint(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.paint.tmpl", nil)
+}
+
+func (h *handlers) hackzRecettator(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.recettator.tmpl", nil)
+}
+
+func (h *handlers) hackzPhazms(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.phazms.tmpl", nil)
+}
+
+func (h *handlers) hackzM1ch3l(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.m1ch3l.tmpl", nil)
+}
+
+func (h *handlers) hackz3615cryptage(w http.ResponseWriter, r *http.Request) {
+	h.setDefaultHeaders(w)
+	h.render(w, r, "hackz.3615cryptage.tmpl", nil)
 }
 
 func (h *handlers) hackzHandler(w http.ResponseWriter, r *http.Request) {

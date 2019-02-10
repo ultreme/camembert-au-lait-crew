@@ -31,8 +31,8 @@
             audioSupported = true;
 
             //Raptor Vars
-            var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/static/img/gomme.png" />'
-            var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="/static/audio/une_gomme.mp3" /><source src="/static/audio/une_gomme.mp3" /></audio>';
+            var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/img/gomme.png" />'
+            var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="/audio/une_gomme.mp3" /><source src="/audio/une_gomme.mp3" /></audio>';
             var locked = false;
 
             //Append Raptor and Style

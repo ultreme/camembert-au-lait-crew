@@ -1,0 +1,60 @@
+{{define "title"}}Ultreme Tetris{{end}}
+{{define "h1"}}Ultreme Tetris{{end}}
+{{define "h1small"}}<b>{{ .niveau }}&egrave;me</b> niveau de difficult&eacute;{{end}}
+
+{{define "content"}}
+{{/* {% include '../../../hackz/tetris_v2/app.html' %} */}}
+<div id="tetris">
+  <canvas id="canvas">
+    D&eacute;sol&eacute;, ce tetris n'est pas g&eacute;r&eacute; par votre navigateur.
+  </canvas>
+</div>
+{{end}}
+
+{{define "secondary_column"}}
+<div class="row">
+  <div class="col-xs-4 col-sm-4 col-md-12 col-lg-12">
+    <p><canvas id="upcoming"></canvas></p>
+  </div>
+  <div class="col-xs-4 col-sm-5 col-md-12 col-lg-12">
+    <p id="start" class="pulse2"><a href="javascript:play();">Appuyez sur espace pour commencer.</a></p>
+    <p>score <span id="score">00000</span></p>
+    <p>lignes <span id="rows">0</span></p>
+    <hr class="hidden-xs hidden-sm" />
+  </div>
+  <div class="col-xs-4 col-sm-3 col-md-12 col-lg-12">
+    <div><label>Niveaux &ccedil;a va</label></div>
+    <div class="btn-group">
+      <a class="btn btn-primary {{ if eq .niveau "1" }}disabled{{ end }}" href="?niveau=1" />1</a>
+      <a class="btn btn-primary {{ if eq .niveau "2" }}disabled{{ end }}" href="?niveau=2" />2</a>
+      <a class="btn btn-primary {{ if eq .niveau "42" }}disabled{{ end }}" href="?niveau=42" />4.2</a>
+      <a class="btn btn-primary {{ if eq .niveau "5" }}disabled{{ end }}" href="?niveau=5" />5</a>
+    </div>
+    <div><label>Niveaux Danger</label></div>
+    <div class="btn-group">
+      <a class="btn btn-danger {{ if eq .niveau "6" }}disabled{{ end }}" href="?niveau=6" />6</a>
+      <a class="btn btn-danger {{ if eq .niveau "8" }}disabled{{ end }}" href="?niveau=8" />8</a>
+    </div>
+    <hr class="hidden-xs hidden-sm" />
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <h2>Hackzers les plus {{ mot_cool }} <small>pour l'instant</small></h2>
+    LES SCORES SONT CASSÉS POUR LE MOMENT
+    <ul>
+      {{/*
+      {{ for scor in hackzers }}
+        <li>#{{ loop.index }} {{ scor.login }} avec {{ scor.score }} {{ mot_debile_qui_se_mange() }} le {{ scor.created_at}}</li>
+        {{ endfor }}
+        */}}
+    </ul>
+  </div>
+</div>
+{{end}}
+
+{{define "extra_js"}}
+<link href="/hackz/tetris_v2/style.css" rel="stylesheet" />
+<script src="/hackz/tetris_v2/script.js"></script>
+{{end}}

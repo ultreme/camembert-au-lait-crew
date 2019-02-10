@@ -1,0 +1,83 @@
+{{define "title"}}Coolz 2048{{end}}
+{{define "h1"}}2048 {{mot_cool}}{{end}}
+{{define "h1small"}}Ce n'est qu'une translation{{end}}
+
+{{define "content"}}
+<div class="row deuxmillesquarantehuit">
+  <div class="container">
+    <div class="heading">
+      <div class="scores-container">
+        <div class="score-container">0</div>
+        <div class="best-container">0</div>
+      </div>
+      <a class="restart-button">Recommencer</a>
+    </div>
+
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+          <a class="keep-playing-button">Continuer</a>
+          <a class="retry-button">Encore</a>
+        </div>
+      </div>
+
+      <div class="grid-container">
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+        <div class="grid-row">
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+          <div class="grid-cell"></div>
+        </div>
+      </div>
+
+      <div class="tile-container">
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<link href="/hackz/2048/style/main.css" rel="stylesheet" type="text/css">
+<script src="/hackz/2048/js/bind_polyfill.js"></script>
+<script src="/hackz/2048/js/classlist_polyfill.js"></script>
+<script src="/hackz/2048/js/animframe_polyfill.js"></script>
+<script src="/hackz/2048/js/keyboard_input_manager.js"></script>
+<script src="/hackz/2048/js/html_actuator.js"></script>
+<script src="/hackz/2048/js/grid.js"></script>
+<script src="/hackz/2048/js/tile.js"></script>
+<script src="/hackz/2048/js/local_storage_manager.js"></script>
+<script src="/hackz/2048/js/game_manager.js"></script>
+<script src="/hackz/2048/js/application.js"></script>
+{{end}}
+
+{{define "secondary_column"}}
+<h2>Hackzers les plus {{ mot_cool }} <small>pour l'instant</small></h2>
+LES SCORES SONT CASSÉS!
+<ul>
+  {{/*
+    {% for scor in hackzers %}
+    <li>#{{ loop.index }} {{ scor.login }} avec {{ scor.score }} {{ mot_debile_qui_se_mange() }} le {{ scor.created_at}}</li>
+    {% endfor %}
+    */}}
+</ul>
+{{end}}

@@ -23,8 +23,8 @@ var cornify_add = function(top, left) {
     // randomly select an image, either a unicorn or a rainbow
     var cornImage = imageHost + "images/" + 
       ((Math.round(Math.random())) ? 
-        "unicorn_" + Math.floor((Math.random()*unicorn_count)+1) + ".gif" :
-        "rainbow_" + Math.floor((Math.random()*rainbow_count)+1) + ".gif")
+        "unicorn/" + Math.floor((Math.random()*unicorn_count)+1) + ".gif" :
+        "rainbow/" + Math.floor((Math.random()*rainbow_count)+1) + ".gif")
     img.setAttribute('src', cornImage);
     // used later as a query selector to find and clear cornified images
     img.setAttribute('class', 'cornify');

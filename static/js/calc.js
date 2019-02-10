@@ -131,7 +131,7 @@ var hexToRgb = function(hex) {
 
 easter_egg_callbacks.push(function() {
     if (!window.cornify) {
-        $.getScript("/static/components/cornify/cornify.js",
+        $.getScript("/components/cornify/cornify.js",
                     function(data, textStatus, jqxhr) {
                         window.cornify.pizzazz();
                         window.setTimeout(function() {
@@ -143,7 +143,7 @@ easter_egg_callbacks.push(function() {
 
 easter_egg_callbacks.push(function() {
     if (!$.fn.raptorize) {
-        $.getScript("/static/js/jquery.raptorize.1.0.js",
+        $.getScript("/js/jquery.raptorize.1.0.js",
                     function(data, textStatus, jqxhr) {
                         var div = $('<div id="raptorize-button" />');
                         $('body').append(div);

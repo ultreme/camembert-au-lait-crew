@@ -32,6 +32,7 @@ require (
 	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
 	golang.org/x/image v0.0.0-20190118043309-183bebdce1b2 // indirect
 	golang.org/x/net v0.0.0-20190110044637-be1c187aa6c6
+	google.golang.org/appengine v1.2.0 // indirect
 	google.golang.org/genproto v0.0.0-20190108161440-ae2f86662275
 	google.golang.org/grpc v1.17.0
 	ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033
