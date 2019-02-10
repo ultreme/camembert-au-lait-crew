@@ -7,7 +7,7 @@ services:
     #image: ultreme/calcbiz:latest
     build: .
     environment:
-      - VIRTUAL_HOST=calc-api.m.42.am
+      - VIRTUAL_HOST=calc-api.m.42.am,camembertaulaitcrew.biz,www.camembertaulaitcrew.biz
       - VIRTUAL_PORT=9000
       - SOUNDCLOUD_CLIENT_ID
     networks:
