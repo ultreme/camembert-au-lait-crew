@@ -1,7 +1,10 @@
 package views
 
 import (
+	"fmt"
 	"html/template"
+	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"sync"
@@ -12,6 +15,7 @@ import (
 
 	"ultre.me/calcbiz/api"
 	"ultre.me/calcbiz/pkg/crew"
+	"ultre.me/recettator"
 )
 
 type Options struct {
@@ -235,7 +239,45 @@ func (h *handlers) hackzPaint(w http.ResponseWriter, r *http.Request) {
 
 func (h *handlers) hackzRecettator(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
-	h.render(w, r, "hackz.recettator.tmpl", nil)
+
+	seed := r.FormValue("recette")
+	if seed == "" {
+		http.Redirect(w, r, fmt.Sprintf("/hackz/recettator?recette=%d", rand.Intn(10000+1)), http.StatusFound)
+		return
+	}
+
+	seedInt, err := strconv.Atoi(seed)
+	if err != nil {
+		log.Printf("invalid seed: %v (err=$v)", seed, err)
+		seedInt = 42
+	}
+
+	rctt := recettator.New(int64(seedInt))
+	rctt.SetSettings(recettator.Settings{
+		//MainIngredients:      uint64(rand.Intn(4) + 1),
+		//SecondaryIngredients: uint64(rand.Intn(4) + 1),
+		//Steps:                uint64(rand.Intn(5) + 2),
+		// People: 100
+	})
+
+	otherRecettes := []string{}
+	for i := 0; i < 10; i++ {
+		newSeed := (rand.Intn(588-59) + 59) * 17 // limits to 529 results between 1000 and 10000 (for SEO)
+		otherRecettes = append(otherRecettes, fmt.Sprintf("%d", newSeed))
+	}
+
+	data := renderData{
+		"layout_mode":   "two_columns",
+		"seed":          seed,
+		"seedInt":       seedInt,
+		"recettator":    rctt,
+		"Title":         rctt.Title(),
+		"People":        rctt.People(),
+		"Steps":         rctt.Steps(),
+		"Pool":          rctt.Pool(),
+		"otherRecettes": otherRecettes,
+	}
+	h.render(w, r, "hackz.recettator.tmpl", data)
 }
 
 func (h *handlers) hackzPhazms(w http.ResponseWriter, r *http.Request) {

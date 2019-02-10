@@ -458,3 +458,5 @@ ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033 h1:t1sY4eMB9q2+ZmzxjxHagtz1i
 ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033/go.mod h1:NueMpFJdxVrRfBPrlVYEfjJhNj6ozlBz1RXYRhsWUak=
 ultre.me/recettator v0.4.0 h1:h6Xq3bfiLu8jaQSLarOU5ArD4Q7W33pNGhSl3tQqCiY=
 ultre.me/recettator v0.4.0/go.mod h1:snUoYZS9gzrGRq6tlKDRwBExrzGLjcWS05QVLhSuztA=
+ultre.me/recettator v0.4.1-0.20190210231503-241df3a046a3 h1:o3cEyILq21aY8wT0qDY0N6fv2hduN9ICEGdQiMUCy6o=
+ultre.me/recettator v0.4.1-0.20190210231503-241df3a046a3/go.mod h1:N52M6NqHXK4BWbvDL4ue2cuN3yvn1VYP5adytNtjTWQ=

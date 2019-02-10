@@ -1,7 +1,46 @@
-{{define "title"}}Hack cassé{{end}}
-{{define "h1"}}Hack {{mot_cool}}, mais cassé{{end}}
-{{define "h1small"}}travaux {{mot_cool_pluriel}} en cours{{end}}
+{{define "title"}}Recettator{{end}}
+{{define "h1"}}Recettator{{end}}
+{{define "h1small"}}bon appetit hein <a href="?recette={{.seed}}">#{{.seed}}</a>{{end}}
 
 {{define "content"}}
-  Je reviendrai.
+  <div class="paper-container">
+    <div class="paper">
+      <ul>
+        <h3>{{ .Title | title}}</h3>
+        <div>Pour {{ .People }} {{ if eq .People 1 }}personne{{ else }}personnes{{ end }}</div>
+
+        <h4>Ingr&eacute;dients</h4>
+        <ul>
+          {{ range .Pool.MainIngredients.Picked }}
+          <li>{{ .NameAndQuantity }}</li>
+          {{ end }}
+          {{ range .Pool.SecondaryIngredients.Picked }}
+          <li>{{ .NameAndQuantity }}</li>
+          {{ end }}
+        </ul>
+
+        <h4>Etapes</h4>
+        <ul>
+          {{ range .Steps }}
+          <li>{{.}}</li>
+          {{ end }}
+          <li>Et bon appétit!</li>
+        </ul>
+    </div>
+  </div>
+{{end}}
+
+{{define "secondary_column"}}
+  <img src="/img/hackz/recettator/logo.jpg" alt="Recettator"
+       class="img-responsive img-rounded rotate-random" />
+  <hr />
+  <a href="/hackz/recettator" class="btn btn-primary blink_me">Nouvelle recette</a>
+
+  <ul>
+  {{ range .otherRecettes }}
+    <li>
+      <a href="/hackz/recettator?recette={{.}}">Recette #{{.}}</a>
+    </li>
+  {{ end }}
+  </ul>
 {{end}}

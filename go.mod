@@ -2,19 +2,24 @@ module ultre.me/calcbiz
 
 require (
 	github.com/Masterminds/sprig v2.16.0+incompatible
+	github.com/aokoli/goutils v1.0.1 // indirect
 	github.com/disintegration/imaging v1.5.0
 	github.com/gobuffalo/packd v0.0.0-20181212173646-eca3b8fd6687
 	github.com/gobuffalo/packr v1.21.9
 	github.com/gogo/gateway v1.0.0
 	github.com/gogo/protobuf v1.2.0
 	github.com/golang/protobuf v1.2.0
+	github.com/google/uuid v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/handlers v1.4.0
 	github.com/gorilla/mux v1.6.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.1-0.20190104160321-4832df01553a
 	github.com/grpc-ecosystem/grpc-gateway v1.6.4
+	github.com/huandu/xstrings v1.2.0 // indirect
+	github.com/imdario/mergo v0.3.6 // indirect
 	github.com/jtolds/gls v4.2.1+incompatible // indirect
+	github.com/moul/advanced-ssh-config v2.8.0+incompatible // indirect
 	github.com/moul/numberinfo v0.0.0-20160903151149-753f372df509
 	github.com/oxtoacart/bpool v0.0.0-20150712133111-4e1c5567d7c2
 	github.com/pkg/errors v0.8.1
@@ -36,5 +41,5 @@ require (
 	google.golang.org/genproto v0.0.0-20190108161440-ae2f86662275
 	google.golang.org/grpc v1.17.0
 	ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033
-	ultre.me/recettator v0.4.0
+	ultre.me/recettator v0.4.1-0.20190210231503-241df3a046a3
 )

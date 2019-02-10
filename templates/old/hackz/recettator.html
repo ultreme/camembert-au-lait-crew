@@ -4,25 +4,25 @@
 {% set layout = 'two_columns' %}
 
 {% block title %}Recettator{% endblock %}
-{% block subtitle %}bon appetit hein <a href="{{seed_url}}">#{{recettator.seed}}</a>{% endblock %}
+{% block subtitle %}bon appetit hein <a href="{{.seed_url}}">#{{.recettator.seed}}</a>{% endblock %}
 
 {% block main_column %}
   <div class="paper-container">
     <div class="paper">
-      <h3>{{ recettator.title }}</h3>
+      <h3>{{ .recettator.title }}</h3>
 
-      <div>{{ recettator.people }}</div>
+      <div>{{ .recettator.people }}</div>
 
       <h4>Ingr&eacute;dients</h4>
       <ul>
-        {% for ingredient in recettator.ingredients %}
+        {% for ingredient in .recettator.ingredients %}
           <li>{{ingredient}}</li>
         {% endfor %}
       </ul>
 
       <h4>Etapes</h4>
       <ul>
-        {% for step in recettator.steps %}
+        {% for step in .recettator.steps %}
           <li>{{step}}</li>
         {% endfor %}
       </ul>
