@@ -54,7 +54,13 @@ func (h *handlers) setDefaultHeaders(w http.ResponseWriter) {
 
 func (h *handlers) renderError(w http.ResponseWriter, r *http.Request, err error) {
 	zap.L().Warn("rendering error", zap.Error(err))
-	http.Error(w, fmt.Sprintf("Error: %v\n", err), http.StatusInternalServerError)
+	// FIXME: log in analytics
+	if h.opts.Debug {
+		http.Error(w, fmt.Sprintf("Error: %+v\n", err), http.StatusInternalServerError)
+	} else {
+		// FIXME: use error template
+		http.Error(w, "Internal server error\n", http.StatusInternalServerError)
+	}
 }
 
 func (h *handlers) render(w http.ResponseWriter, r *http.Request, name string, data renderData) {
