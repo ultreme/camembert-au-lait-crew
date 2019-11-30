@@ -13,6 +13,8 @@ services:
     networks:
       - default
       - service-proxy
+    volumes:
+      - ./data:/data
 
 networks:
   service-proxy:

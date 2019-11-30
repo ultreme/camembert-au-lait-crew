@@ -18,6 +18,8 @@ import (
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // db driver
 	"github.com/pkg/errors"
 	minify "github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
@@ -141,7 +143,13 @@ func server(c *cli.Context) error {
 
 	opts := serverOptionsFromCliContext(c)
 
-	svc, err := calcapi.New(opts.APIOptions)
+	db, err := gorm.Open("sqlite3", "./data/db.sqlite")
+	if err != nil {
+		return errors.Wrap(err, "init gorm")
+	}
+	defer db.Close()
+
+	svc, err := calcapi.New(db, opts.APIOptions)
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize service")
 	}
