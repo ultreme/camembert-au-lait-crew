@@ -112,7 +112,8 @@ func (h *handlers) homeHandler(w http.ResponseWriter, r *http.Request) {
 		h.renderError(w, r, err)
 		return
 	}
-	data := renderData{"dashboard": dashboard}
+	data := renderData{"dashboard": dashboard.Entries}
+	//fmt.Println(godev.PrettyJSON(data))
 	h.render(w, r, "home.tmpl", data)
 }
 
@@ -124,7 +125,7 @@ func (h *handlers) muzikHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := renderData{
-		"playlists": playlists,
+		"playlists": playlists.Playlists,
 	}
 	h.render(w, r, "muzik.tmpl", data)
 }
@@ -144,7 +145,7 @@ func (h *handlers) trackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := renderData{
-		"track":       track,
+		"track":       track.Track,
 		"layout_mode": "two_columns",
 	}
 	h.render(w, r, "track.tmpl", data)
@@ -164,7 +165,7 @@ func (h *handlers) albumHandler(w http.ResponseWriter, r *http.Request) {
 		h.renderError(w, r, err)
 		return
 	}
-	data := renderData{"album": album}
+	data := renderData{"album": album.Playlist}
 	h.render(w, r, "album.tmpl", data)
 }
 
@@ -307,7 +308,7 @@ func (h *handlers) hackzHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := renderData{
-		"hackz":       hackz,
+		"hackz":       hackz.Entries,
 		"layout_mode": "two_columns",
 	}
 	h.render(w, r, "hackz.tmpl", data)

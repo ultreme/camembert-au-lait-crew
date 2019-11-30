@@ -1,4 +1,4 @@
-FROM            golang:1.11.4-alpine as builder
+FROM            golang:1.13-alpine as builder
 WORKDIR         /go/src/ultre.me/calcbiz
 RUN             apk --no-cache --update add nodejs-npm make gcc g++ musl-dev openssl-dev git
 RUN             go get -u github.com/gobuffalo/packr/packr
@@ -9,7 +9,7 @@ COPY            . /go/src/ultre.me/calcbiz/
 RUN             make packr
 RUN             make install
 
-FROM            alpine:3.8
+FROM            alpine:3.10
 RUN             apk --no-cache --update add ca-certificates && update-ca-certificates
 COPY            --from=builder /go/bin/calcbiz /bin/calcbiz
 #COPY            ./static .
