@@ -12,8 +12,7 @@ import (
 	"github.com/gobuffalo/packr"
 	"github.com/gorilla/mux"
 	"github.com/oxtoacart/bpool"
-
-	"ultre.me/calcbiz/api"
+	"ultre.me/calcbiz/pkg/api"
 	"ultre.me/calcbiz/pkg/crew"
 	"ultre.me/recettator"
 )

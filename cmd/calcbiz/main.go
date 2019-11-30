@@ -1,4 +1,4 @@
-package main // import "ultre.me/calcbiz"
+package main // import "ultre.me/calcbiz/cmd/calcbiz"
 
 import (
 	"context"
@@ -26,10 +26,9 @@ import (
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-
-	"ultre.me/calcbiz/api"
-	"ultre.me/calcbiz/svc"
-	"ultre.me/calcbiz/views"
+	"ultre.me/calcbiz/pkg/api"
+	"ultre.me/calcbiz/pkg/svc"
+	"ultre.me/calcbiz/pkg/views"
 )
 
 // FIXME: handle context cancel (when client aborts a request)

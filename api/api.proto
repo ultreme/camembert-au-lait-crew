@@ -6,11 +6,11 @@ import "google/api/annotations.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 //import "google/protobuf/timestamp.proto";
 //import "google/protobuf/duration.proto";
-import "pkg/crew/crew.proto";
-import "pkg/dashboard/dashboard.proto";
-import "pkg/soundcloud/soundcloud.proto";
+import "./crew.proto";
+import "./dashboard.proto";
+import "./soundcloud.proto";
 
-option go_package = "ultre.me/calcbiz/api";
+option go_package = "ultre.me/calcbiz/pkg/api";
 option (gogoproto.sizer_all) = true;
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.unmarshaler_all) = true;

@@ -270,8 +270,6 @@ github.com/mitchellh/go-homedir v1.0.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrk
 github.com/mitchellh/mapstructure v1.0.0/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
 github.com/monoculum/formam v0.0.0-20180901015400-4e68be1d79ba/go.mod h1:RKgILGEJq24YyJ2ban8EO0RUVSJlF1pGsEvoLEACr/Q=
-github.com/moul/advanced-ssh-config v2.8.0+incompatible h1:TwBlAP+vrtYVW+cv+NJqGYgAAq/TSKTbKwBNW++89hM=
-github.com/moul/advanced-ssh-config v2.8.0+incompatible/go.mod h1:R4jFrcdiyzi23qjl7fBUyk7zV3xoFv5S8ulBBsU2ufw=
 github.com/moul/numberinfo v0.0.0-20160903151149-753f372df509 h1:I9dq1rfaqOuM/cdoYtHeAK/nJxU2iRJAx9MPwHjoJic=
 github.com/moul/numberinfo v0.0.0-20160903151149-753f372df509/go.mod h1:9J61gswx3x7Sv1flRnwrSJv0jIksuHecefKXOnjMBpI=
 github.com/nicksnyder/go-i18n v1.10.0/go.mod h1:HrK7VCrbOvQoUAQ7Vpy7i87N7JZZZ7R2xBGjv0j365Q=
@@ -456,7 +454,5 @@ gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
 honnef.co/go/tools v0.0.0-20180728063816-88497007e858/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
 ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033 h1:t1sY4eMB9q2+ZmzxjxHagtz1iZPRGnVNyKrpMXX3XaU=
 ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033/go.mod h1:NueMpFJdxVrRfBPrlVYEfjJhNj6ozlBz1RXYRhsWUak=
-ultre.me/recettator v0.4.0 h1:h6Xq3bfiLu8jaQSLarOU5ArD4Q7W33pNGhSl3tQqCiY=
-ultre.me/recettator v0.4.0/go.mod h1:snUoYZS9gzrGRq6tlKDRwBExrzGLjcWS05QVLhSuztA=
 ultre.me/recettator v0.4.1-0.20190210231503-241df3a046a3 h1:o3cEyILq21aY8wT0qDY0N6fv2hduN9ICEGdQiMUCy6o=
 ultre.me/recettator v0.4.1-0.20190210231503-241df3a046a3/go.mod h1:N52M6NqHXK4BWbvDL4ue2cuN3yvn1VYP5adytNtjTWQ=
