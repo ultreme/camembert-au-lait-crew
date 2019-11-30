@@ -218,12 +218,14 @@ func (d *Dashboard) Random() (*Entries, error) {
 	// merch
 	//
 	// FIXME: add timeout
-	merchs, err := d.merchEntries(2)
-	if err != nil {
-		zap.L().Error("failed to fetch merch", zap.Error(err))
-	} else {
-		zap.L().Debug("fetched merch entries", zap.Int("len", len(merchs.Entries)))
-		entries.append(merchs.Entries...)
+	if (false) {
+		merchs, err := d.merchEntries(2)
+		if err != nil {
+			zap.L().Error("failed to fetch merch", zap.Error(err))
+		} else {
+			zap.L().Debug("fetched merch entries", zap.Int("len", len(merchs.Entries)))
+			entries.append(merchs.Entries...)
+		}
 	}
 
 	// shuffle the compilation
