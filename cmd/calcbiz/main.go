@@ -26,8 +26,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"ultre.me/calcbiz/pkg/api"
-	"ultre.me/calcbiz/pkg/svc"
+	"ultre.me/calcbiz/pkg/calcapi"
 	"ultre.me/calcbiz/pkg/views"
 )
 
@@ -107,28 +106,28 @@ type serverOptions struct {
 	// SQLpath        string
 	// JWTKey         string
 	// WithReflection bool
-	GRPCBind       string
-	HTTPBind       string
-	ServiceOptions svc.Options
-	Debug          bool
-	svc            api.ServerServer
-	staticBox      *packr.Box
-	templatesBox   *packr.Box
+	GRPCBind     string
+	HTTPBind     string
+	APIOptions   calcapi.Options
+	Debug        bool
+	svc          calcapi.ServiceServer
+	staticBox    *packr.Box
+	templatesBox *packr.Box
 }
 
 func serverOptionsFromCliContext(c *cli.Context) serverOptions {
 	if c.Int("soundcloud-user-id") == 0 || c.String("soundcloud-client-id") == "" {
 		zap.L().Warn("SoundCloud is not configured")
 	}
-	staticBox := packr.NewBox("./static")
-	templatesBox := packr.NewBox("./templates")
+	staticBox := packr.NewBox("../../static")
+	templatesBox := packr.NewBox("../../templates")
 	return serverOptions{
 		GRPCBind:     c.String("grpc-bind"),
 		HTTPBind:     c.String("http-bind"),
 		Debug:        c.Bool("debug"),
 		staticBox:    &staticBox,
 		templatesBox: &templatesBox,
-		ServiceOptions: svc.Options{
+		APIOptions: calcapi.Options{
 			StaticBox:          &staticBox,
 			SoundcloudUserID:   c.Int("soundcloud-user-id"),
 			SoundcloudClientID: c.String("soundcloud-client-id"),
@@ -142,7 +141,7 @@ func server(c *cli.Context) error {
 
 	opts := serverOptionsFromCliContext(c)
 
-	svc, err := svc.New(opts.ServiceOptions)
+	svc, err := calcapi.New(opts.APIOptions)
 	if err != nil {
 		return errors.Wrap(err, "failed to initialize service")
 	}
@@ -167,7 +166,7 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 		runtime.WithProtoErrorHandler(runtime.DefaultHTTPProtoErrorHandler),
 	)
 	grpcOpts := []grpc.DialOption{grpc.WithInsecure()}
-	if err := api.RegisterServerHandlerFromEndpoint(ctx, gwmux, opts.GRPCBind, grpcOpts); err != nil {
+	if err := calcapi.RegisterServiceHandlerFromEndpoint(ctx, gwmux, opts.GRPCBind, grpcOpts); err != nil {
 		return err
 	}
 
@@ -245,7 +244,7 @@ func startGRPCServer(ctx context.Context, opts *serverOptions) error {
 		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(serverUnaryOpts...)),
 	)
 
-	api.RegisterServerServer(grpcServer, opts.svc)
+	calcapi.RegisterServiceServer(grpcServer, opts.svc)
 	//if opts.WithReflection {
 	reflection.Register(grpcServer)
 	//}

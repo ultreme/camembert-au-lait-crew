@@ -102,7 +102,9 @@ func (h *handlers) render(w http.ResponseWriter, r *http.Request, name string, d
 		return
 	}
 
-	buf.WriteTo(w)
+	if _, err := buf.WriteTo(w); err != nil {
+		zap.L().Warn("buf.WriteTo", zap.Error(err))
+	}
 }
 
 func (h *handlers) push(w http.ResponseWriter, resource string) {

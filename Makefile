@@ -23,6 +23,10 @@ run: install
 ## generate
 ##
 
+.PHONY: packr
+packr:
+	packr
+
 PROTOS_SRC := $(wildcard ./api/*.proto)
 GEN_SRC := $(PROTOS_SRC) Makefile
 .PHONY: generate
@@ -34,8 +38,8 @@ gen.sum: $(GEN_SRC)
 	  GO111MODULE=on go mod vendor; \
 	  docker run \
 	    --user=`id -u` \
-	    --volume="$(PWD)/.:/go/src/ultre.me" \
-	    --workdir="/go/src/ultre.me" \
+	    --volume="$(PWD):/go/src/ultre.me/calcbiz" \
+	    --workdir="/go/src/ultre.me/calcbiz" \
 	    --entrypoint="sh" \
 	    --rm \
 	     pathwar/protoc:4 \

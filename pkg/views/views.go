@@ -1,6 +1,7 @@
 package views
 
 import (
+	"context"
 	"fmt"
 	"html/template"
 	"log"
@@ -12,7 +13,7 @@ import (
 	"github.com/gobuffalo/packr"
 	"github.com/gorilla/mux"
 	"github.com/oxtoacart/bpool"
-	"ultre.me/calcbiz/pkg/api"
+	"ultre.me/calcbiz/pkg/calcapi"
 	"ultre.me/calcbiz/pkg/crew"
 	"ultre.me/recettator"
 )
@@ -20,7 +21,7 @@ import (
 type Options struct {
 	Router       *mux.Router
 	Debug        bool
-	Svc          api.ServerServer
+	Svc          calcapi.ServiceServer
 	StaticBox    *packr.Box
 	TemplatesBox *packr.Box
 }
@@ -72,6 +73,10 @@ func Setup(opts *Options) error {
 	// copaings
 	opts.Router.HandleFunc("/copaings", handlers.copaingsHandler)
 
+	// special
+
+	opts.Router.HandleFunc("/hackz/travaux", handlers.hackzTravaux)
+
 	//
 	// old routes (to be imported)
 	//
@@ -102,7 +107,7 @@ type renderData map[string]interface{}
 
 func (h *handlers) homeHandler(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
-	dashboard, err := h.opts.Svc.Dashboard(nil, &api.Void{})
+	dashboard, err := h.opts.Svc.Dashboard(context.TODO(), &calcapi.Dashboard_Input{})
 	if err != nil {
 		h.renderError(w, r, err)
 		return
@@ -113,7 +118,7 @@ func (h *handlers) homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *handlers) muzikHandler(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
-	playlists, err := h.opts.Svc.SoundcloudPlaylists(r.Context(), &api.Void{})
+	playlists, err := h.opts.Svc.SoundcloudPlaylists(r.Context(), &calcapi.SoundcloudPlaylists_Input{})
 	if err != nil {
 		h.renderError(w, r, err)
 		return
@@ -131,7 +136,7 @@ func (h *handlers) trackHandler(w http.ResponseWriter, r *http.Request) {
 		h.renderError(w, r, err)
 		return
 	}
-	track, err := h.opts.Svc.SoundcloudTrack(r.Context(), &api.SoundcloudTrackInput{
+	track, err := h.opts.Svc.SoundcloudTrack(r.Context(), &calcapi.SoundcloudTrack_Input{
 		TrackId: trackId,
 	})
 	if err != nil {
@@ -152,7 +157,7 @@ func (h *handlers) albumHandler(w http.ResponseWriter, r *http.Request) {
 		h.renderError(w, r, err)
 		return
 	}
-	album, err := h.opts.Svc.SoundcloudPlaylist(r.Context(), &api.SoundcloudPlaylistInput{
+	album, err := h.opts.Svc.SoundcloudPlaylist(r.Context(), &calcapi.SoundcloudPlaylist_Input{
 		PlaylistId: albumId,
 	})
 	if err != nil {
@@ -247,7 +252,7 @@ func (h *handlers) hackzRecettator(w http.ResponseWriter, r *http.Request) {
 
 	seedInt, err := strconv.Atoi(seed)
 	if err != nil {
-		log.Printf("invalid seed: %v (err=$v)", seed, err)
+		log.Printf("invalid seed: %v (err=%v)", seed, err)
 		seedInt = 42
 	}
 
@@ -296,7 +301,7 @@ func (h *handlers) hackz3615cryptage(w http.ResponseWriter, r *http.Request) {
 
 func (h *handlers) hackzHandler(w http.ResponseWriter, r *http.Request) {
 	h.setDefaultHeaders(w)
-	hackz, err := h.opts.Svc.Hackz(nil, &api.Void{})
+	hackz, err := h.opts.Svc.Hackz(context.TODO(), &calcapi.Hackz_Input{})
 	if err != nil {
 		h.renderError(w, r, err)
 		return
