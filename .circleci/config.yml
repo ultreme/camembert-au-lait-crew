@@ -25,7 +25,7 @@ jobs:
 workflows:
   main:
     jobs:
-      - moul/go-build:
+      - moul/golang-build:
           gopkg: ultre.me/calcbiz
       - moul/docker-build
       - go-generate
