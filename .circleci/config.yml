@@ -15,8 +15,7 @@ jobs:
     steps:
       - checkout
       - run: find . -name gen.sum -delete
-      - run: cd go && go mod vendor && make generate_local && make tidy
-      - run: cd docs && make generate_local
+      - run: go mod vendor && make generate_local && make tidy
       - run: |
           git status | cat
           git diff -w | cat
