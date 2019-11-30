@@ -253,10 +253,10 @@ func (h *handlers) hackzRecettator(w http.ResponseWriter, r *http.Request) {
 
 	rctt := recettator.New(int64(seedInt))
 	rctt.SetSettings(recettator.Settings{
-		//MainIngredients:      uint64(rand.Intn(4) + 1),
-		//SecondaryIngredients: uint64(rand.Intn(4) + 1),
-		//Steps:                uint64(rand.Intn(5) + 2),
-		// People: 100
+	//MainIngredients:      uint64(rand.Intn(4) + 1),
+	//SecondaryIngredients: uint64(rand.Intn(4) + 1),
+	//Steps:                uint64(rand.Intn(5) + 2),
+	// People: 100
 	})
 
 	otherRecettes := []string{}

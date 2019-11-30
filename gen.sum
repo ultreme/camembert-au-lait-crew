@@ -1,5 +1,5 @@
-19b53883bbfc6336e60163449ce672b55d9c1d58  ./api/api.proto
 431b63cd908588e398bbb94d1e642e585441099c  ./api/dashboard.proto
+45bc51876775bd8c95686500efe7436a11c27ab9  ./api/api.proto
 7b843d0cf59f6bd4f61b416646fe66c899868fe3  Makefile
 a0415fc5002d339337b03fe97801376ff3be3bbd  ./api/crew.proto
 ffa8325482af5c58dd816e9404f0226db0a1d7de  ./api/soundcloud.proto

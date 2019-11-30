@@ -4,11 +4,9 @@ package calcbiz.server;
 
 import "google/api/annotations.proto";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-//import "google/protobuf/timestamp.proto";
-//import "google/protobuf/duration.proto";
-import "./crew.proto";
-import "./dashboard.proto";
-import "./soundcloud.proto";
+import "crew.proto";
+import "dashboard.proto";
+import "soundcloud.proto";
 
 option go_package = "ultre.me/calcbiz/pkg/api";
 option (gogoproto.sizer_all) = true;
@@ -16,41 +14,26 @@ option (gogoproto.marshaler_all) = true;
 option (gogoproto.unmarshaler_all) = true;
 
 service Server {
-  rpc KryptosEncrypt(KryptosInput) returns (KryptosOutput) {
-    option (google.api.http) = {
-      post: "/api/kryptos/encrypt"
-      body: "*"
-    };
-  };
-  rpc KryptosDecrypt(KryptosInput) returns (KryptosOutput) {
-    option (google.api.http) = {
-      post: "/api/kryptos/decrypt"
-      body: "*"
-    };
-  };
-  rpc TpyoEnocde(TpyoEnocdeIpunt) returns (TpyoEnocdeOuptut) {
-    option (google.api.http) = {
-      post: "/api/tpyo"
-      body: "*"
-    }; }
-
-  rpc Ping(Void) returns (Pong) { option (google.api.http) = { get: "/api/ping" }; };
-  rpc Dashboard(Void) returns (calcbiz.dashboard.Entries) { option (google.api.http) = {get: "/api/dashboard"}; }
-  rpc Hackz(Void) returns (calcbiz.dashboard.Entries) { option (google.api.http) = {get: "/api/hackz"}; }
-  rpc Crew(Void) returns (calcbiz.crew.Crew) { option (google.api.http) = {get: "/api/crew"}; }
-  rpc Numberinfo(NumberinfoInput) returns (NumberinfoOutput) { option (google.api.http) = {get: "/api/numberinfo/{number}"}; }
-  rpc Recettator(RecettatorInput) returns (RecettatorOutput) { option (google.api.http) = {get: "/api/recettator"}; }
-  rpc Moijaime(Void) returns (MoijaimeOutput) { option (google.api.http) = {get: "/api/moijaime"}; }
-  rpc SpreadshirtRandom(Void) returns (SpreadshirtRandomOutput) { option (google.api.http) = {get: "/api/spreadshirt/random"}; }
-  rpc SpreadshirtAll(Void) returns (SpreadshirtAllOutput) { option (google.api.http) = {get: "/api/spreadshirt/all"}; }
-  rpc Wotd(Void) returns (WotdOutput) { option (google.api.http) = {get: "/api/wotd"}; }
-  rpc AlternateLogo(Void) returns (AlternateLogoOutput) { option (google.api.http) = {get: "/api/alternate-logo"}; }
-  rpc SoundcloudMe(Void) returns (calcbiz.soundcloud.User) { option (google.api.http) = {get: "/api/soundcloud/me"}; }
-  rpc SoundcloudPlaylists(Void) returns (calcbiz.soundcloud.Playlists) { option (google.api.http) = {get: "/api/soundcloud/playlists"}; }
-  rpc SoundcloudPlaylist(SoundcloudPlaylistInput) returns (calcbiz.soundcloud.Playlist) { option (google.api.http) = {get: "/api/soundcloud/playlists/{playlist_id}"}; }
-  rpc SoundcloudTracks(Void) returns (calcbiz.soundcloud.Tracks) { option (google.api.http) = {get: "/api/soundcloud/tracks"}; }
-  rpc SoundcloudTrack(SoundcloudTrackInput) returns (calcbiz.soundcloud.Track) { option (google.api.http) = {get: "/api/soundcloud/tracks/{track_id}"}; }
-  rpc Metrics(Void) returns (MetricsOutput) {option (google.api.http) = {get: "/api/metrics"};}
+  rpc KryptosEncrypt(Kryptos.Input) returns (Kryptos.Output) { option (google.api.http) = { post: "/api/kryptos/encrypt"; body: "*" }; };
+  rpc KryptosDecrypt(Kryptos.Input) returns (Kryptos.Output) { option (google.api.http) = { post: "/api/kryptos/decrypt"; body: "*" }; };
+  rpc TpyoEnocde(TpyoEnocde.Ipunt) returns (TpyoEnocde.Ouptut) { option (google.api.http) = { post: "/api/tpyo"; body: "*" }; };
+  rpc Ping(Ping.Input) returns (Ping.Output) { option (google.api.http) = { get: "/api/ping" }; };
+  rpc Dashboard(Dashboard.Input) returns (Dashboard.Output) { option (google.api.http) = {get: "/api/dashboard"}; }
+  rpc Hackz(Hackz.Input) returns (Hackz.Output) { option (google.api.http) = {get: "/api/hackz"}; }
+  rpc Crew(Crew.Input) returns (Crew.Output) { option (google.api.http) = {get: "/api/crew"}; }
+  rpc Numberinfo(Numberinfo.Input) returns (Numberinfo.Output) { option (google.api.http) = {get: "/api/numberinfo/{number}"}; }
+  rpc Recettator(Recettator.Input) returns (Recettator.Output) { option (google.api.http) = {get: "/api/recettator"}; }
+  rpc Moijaime(Moijaime.Input) returns (Moijaime.Output) { option (google.api.http) = {get: "/api/moijaime"}; }
+  rpc SpreadshirtRandom(SpreadshirtRandom.Input) returns (SpreadshirtRandom.Output) { option (google.api.http) = {get: "/api/spreadshirt/random"}; }
+  rpc SpreadshirtAll(SpreadshirtAll.Input) returns (SpreadshirtAll.Output) { option (google.api.http) = {get: "/api/spreadshirt/all"}; }
+  rpc Wotd(Wotd.Input) returns (Wotd.Output) { option (google.api.http) = {get: "/api/wotd"}; }
+  rpc AlternateLogo(AlternateLogo.Input) returns (AlternateLogo.Output) { option (google.api.http) = {get: "/api/alternate-logo"}; }
+  rpc SoundcloudMe(SoundcloudMe.Input) returns (SoundcloudMe.Output) { option (google.api.http) = {get: "/api/soundcloud/me"}; }
+  rpc SoundcloudPlaylists(SoundcloudPlaylists.Input) returns (SoundcloudPlaylists.Output) { option (google.api.http) = {get: "/api/soundcloud/playlists"}; }
+  rpc SoundcloudPlaylist(SoundcloudPlaylist.Input) returns (SoundcloudPlaylist.Output) { option (google.api.http) = {get: "/api/soundcloud/playlists/{playlist_id}"}; }
+  rpc SoundcloudTracks(SoundcloudTracks.Input) returns (SoundcloudTracks.Output) { option (google.api.http) = {get: "/api/soundcloud/tracks"}; }
+  rpc SoundcloudTrack(SoundcloudTrack.Input) returns (SoundcloudTrack.Output) { option (google.api.http) = {get: "/api/soundcloud/tracks/{track_id}"}; }
+  rpc Metrics(Metrics.Input) returns (Metrics.Output) {option (google.api.http) = {get: "/api/metrics"};}
 
   // SoundcloudAlbums
   // Airtable...
@@ -61,81 +44,166 @@ service Server {
   // Genius...
 }
 
-// metrics
-
-message MetricsOutput {
-  int32 static_box_size = 1;
-  string server_start_time = 2;
-  string server_current_time = 3;
-  string server_uptime = 4;
-  // int32 requests = 4;
+message Dashboard {
+  message Input {}
+  message Output {
+    calcbiz.dashboard.Entries entries = 1;
+  }
 }
 
-// general messages
-
-message Void {}
-message Pong { string pong = 1; }
-
-// kryptos messages
-
-message KryptosInput { string from = 1; }
-message KryptosOutput { string to = 1; }
-
-// tpyo megasess
-message TpyoEnocdeIpunt { string form = 1; }
-message TpyoEnocdeOuptut { string to = 1; }
-
-// numberinfo messages
-message NumberinfoInput { float number = 1; }
-message NumberinfoOutput { map<string, string> facts = 1; }
-
-// moijaime messages
-
-message MoijaimeOutput { repeated string kiffs = 1; }
-
-// random messages
-
-message WotdOutput { string word = 1; }
-message AlternateLogoOutput { string path = 1; }
-
-// spreadshirt messages
-
-message SpreadshirtRandomOutput { /* TODO */ }
-message SpreadshirtAllOutput { /* TODO */ }
-
-// soundcloud messages
-
-message SoundcloudPlaylistInput {
-  uint64 playlist_id = 1;
-}
-message SoundcloudTrackInput {
-  uint64 track_id = 1;
+message Hackz {
+  message Input {}
+  message Output {
+    calcbiz.dashboard.Entries entries = 1;
+  }
 }
 
-// recettator messages
+message Crew {
+  message Input {}
+  message Output {
+    calcbiz.crew.Crew crew = 1;
+  }
+}
 
-message RecettatorInput {
-  int64 seed = 1;
-  uint64 main_ingredients = 2;
-  uint64 secondary_ingredients = 3;
-  uint64 steps = 4;
+message SoundcloudMe {
+  message Input {}
+  message Output {
+    calcbiz.soundcloud.User me = 1;
+  }
 }
-message RecettatorIngredient {
-  string name = 1;
-  string quantity = 2;
-  string method = 3;
-  string gender = 4;
-  bool multiple = 5;
-  string kind = 6;
-  string name_and_quantity = 7;
+
+message SoundcloudPlaylists {
+  message Input {}
+  message Output {
+    calcbiz.soundcloud.Playlists playlists = 1;
+  }
 }
-message RecettatorOutput {
-  string title = 1;
-  uint64 people = 2;
-  string markdown = 3;
-  repeated string steps = 4;
-  repeated RecettatorIngredient main_ingredients = 5;
-  repeated RecettatorIngredient secondary_ingredients = 6;
-  int64 seed = 7;
-  //string json = 4;
+
+message SoundcloudPlaylist {
+  message Input {
+    uint64 playlist_id = 1;
+  }
+  message Output {
+    calcbiz.soundcloud.Playlist playlist = 1;
+  }
+}
+
+message SoundcloudTracks {
+  message Input {}
+  message Output {
+    calcbiz.soundcloud.Tracks tracks = 1;
+  }
+}
+
+message SoundcloudTrack {
+  message Input {
+    uint64 track_id = 1;
+  }
+  message Output {
+    calcbiz.soundcloud.Track track = 1;
+  }
+}
+
+message Metrics {
+  message Input {}
+  message Output {
+    int32 static_box_size = 1;
+    string server_start_time = 2;
+    string server_current_time = 3;
+    string server_uptime = 4;
+    // int32 requests = 4;
+  }
+}
+
+message Ping {
+  message Input {}
+  message Output {
+    string pong = 1;
+  }
+}
+
+message Kryptos {
+  message Input {
+    string from = 1;
+  }
+  message Output {
+    string to = 1;
+  }
+}
+
+message TpyoEnocde {
+  message Ipunt {
+    string form = 1;
+  }
+  message Ouptut {
+    string to = 1;
+  }
+}
+
+message Numberinfo {
+  message Input {
+    float number = 1;
+  }
+  message Output {
+    map<string, string> facts = 1;
+  }
+}
+
+message Moijaime {
+  message Input {}
+  message Output {
+    repeated string kiffs = 1;
+  }
+}
+
+message Wotd {
+  message Input {}
+  message Output {
+    string word = 1;
+  }
+}
+
+message AlternateLogo {
+  message Input {}
+  message Output {
+    string path = 1;
+  }
+}
+
+message SpreadshirtRandom {
+  message Input {}
+  message Output { /* TODO */ }
+}
+
+message SpreadshirtAll {
+  message Input {}
+  message Output { /* TODO */ }
+}
+
+message Recettator {
+  message Input {
+    int64 seed = 1;
+    uint64 main_ingredients = 2;
+    uint64 secondary_ingredients = 3;
+    uint64 steps = 4;
+  }
+  message Output {
+    string title = 1;
+    uint64 people = 2;
+    string markdown = 3;
+    repeated string steps = 4;
+    repeated Ingredient main_ingredients = 5;
+    repeated Ingredient secondary_ingredients = 6;
+    int64 seed = 7;
+    //string json = 4;
+  }
+  message Ingredient {
+    string name = 1;
+    string quantity = 2;
+    string method = 3;
+    string gender = 4;
+    bool multiple = 5;
+    string kind = 6;
+    string name_and_quantity = 7;
+  }
 }
