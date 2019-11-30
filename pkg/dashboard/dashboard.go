@@ -218,7 +218,7 @@ func (d *Dashboard) Random() (*Entries, error) {
 	// merch
 	//
 	// FIXME: add timeout
-	if (false) {
+	if false {
 		merchs, err := d.merchEntries(2)
 		if err != nil {
 			zap.L().Error("failed to fetch merch", zap.Error(err))

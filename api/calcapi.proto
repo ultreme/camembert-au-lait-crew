@@ -33,7 +33,13 @@ service Service {
   rpc SoundcloudPlaylist(SoundcloudPlaylist.Input) returns (SoundcloudPlaylist.Output) { option (google.api.http) = {get: "/api/soundcloud/playlists/{playlist_id}"}; }
   rpc SoundcloudTracks(SoundcloudTracks.Input) returns (SoundcloudTracks.Output) { option (google.api.http) = {get: "/api/soundcloud/tracks"}; }
   rpc SoundcloudTrack(SoundcloudTrack.Input) returns (SoundcloudTrack.Output) { option (google.api.http) = {get: "/api/soundcloud/tracks/{track_id}"}; }
-  rpc Metrics(Metrics.Input) returns (Metrics.Output) {option (google.api.http) = {get: "/api/metrics"};}
+  rpc Metrics(Metrics.Input) returns (Metrics.Output) { option (google.api.http) = {get: "/api/metrics"};}
+  rpc CounterInc(CounterInc.Input) returns (CounterInc.Output) { option (google.api.http) = {get: "/api/counter-inc/{key}"}; };
+  rpc NumberSetIfBigger(NumberSetIfBigger.Input) returns (NumberSetIfBigger.Output) { option (google.api.http) = {get: "/api/number-set-if-bigger/{key}/{value}"}; };
+  rpc KeyValueStringSet(KeyValueStringSet.Input) returns (KeyValueStringSet.Output) { option (google.api.http) = { post: "/api/key-value-string-set/{key}"; body: "*" }; };
+  rpc KeyValueStringGet(KeyValueStringGet.Input) returns (KeyValueStringGet.Output) { option (google.api.http) = { get: "/api/key-value-string-get/{key}"}; };
+  rpc KeyValueFloatSet(KeyValueFloatSet.Input) returns (KeyValueFloatSet.Output) { option (google.api.http) = { post: "/api/key-value-float-set/{key}"; body: "*" }; };
+  rpc KeyValueFloatGet(KeyValueFloatGet.Input) returns (KeyValueFloatGet.Output) { option (google.api.http) = { get: "/api/key-value-float-get/{key}"}; };
 
   // SoundcloudAlbums
   // Airtable...
@@ -44,68 +50,78 @@ service Service {
   // Genius...
 }
 
+message CounterInc {
+  message Input  { string key = 1; double gap = 2; }
+  message Output { double value = 2; }
+}
+
+message NumberSetIfBigger {
+  message Input  { string key = 1; double value = 2; }
+  message Output { double value = 2; }
+}
+
+message KeyValueStringSet {
+  message Input  { string key = 1; string value = 2; }
+  message Output {}
+}
+
+message KeyValueStringGet {
+  message Input  { string key = 1; }
+  message Output { string value = 2; }
+}
+
+message KeyValueFloatSet {
+  message Input  { string key = 1; double value = 2; }
+  message Output {}
+}
+
+message KeyValueFloatGet {
+  message Input  { string key = 1; }
+  message Output { double value = 2; }
+}
+
 message Dashboard {
-  message Input {}
-  message Output {
-    calcbiz.dashboard.Entries entries = 1;
-  }
+  message Input  {}
+  message Output { calcbiz.dashboard.Entries entries = 1; }
 }
 
 message Hackz {
-  message Input {}
-  message Output {
-    calcbiz.dashboard.Entries entries = 1;
-  }
+  message Input  {}
+  message Output { calcbiz.dashboard.Entries entries = 1; }
 }
 
 message Crew {
-  message Input {}
-  message Output {
-    calcbiz.crew.Crew crew = 1;
-  }
+  message Input  {}
+  message Output { calcbiz.crew.Crew crew = 1; }
 }
 
 message SoundcloudMe {
-  message Input {}
-  message Output {
-    calcbiz.soundcloud.User me = 1;
-  }
+  message Input  {}
+  message Output { calcbiz.soundcloud.User me = 1; }
 }
 
 message SoundcloudPlaylists {
-  message Input {}
-  message Output {
-    calcbiz.soundcloud.Playlists playlists = 1;
-  }
+  message Input  {}
+  message Output { calcbiz.soundcloud.Playlists playlists = 1; }
 }
 
 message SoundcloudPlaylist {
-  message Input {
-    uint64 playlist_id = 1;
-  }
-  message Output {
-    calcbiz.soundcloud.Playlist playlist = 1;
-  }
+  message Input  { uint64 playlist_id = 1; }
+  message Output { calcbiz.soundcloud.Playlist playlist = 1; }
 }
 
 message SoundcloudTracks {
-  message Input {}
-  message Output {
-    calcbiz.soundcloud.Tracks tracks = 1;
-  }
+  message Input  {}
+  message Output { calcbiz.soundcloud.Tracks tracks = 1; }
 }
 
 message SoundcloudTrack {
-  message Input {
-    uint64 track_id = 1;
-  }
-  message Output {
-    calcbiz.soundcloud.Track track = 1;
-  }
+  message Input  { uint64 track_id = 1; }
+  message Output { calcbiz.soundcloud.Track track = 1; }
 }
 
 message Metrics {
-  message Input {}
+  message Input  {}
   message Output {
     int32 static_box_size = 1;
     string server_start_time = 2;
@@ -116,72 +132,52 @@ message Metrics {
 }
 
 message Ping {
-  message Input {}
-  message Output {
-    string pong = 1;
-  }
+  message Input  {}
+  message Output { string pong = 1; }
 }
 
 message Kryptos {
-  message Input {
-    string from = 1;
-  }
-  message Output {
-    string to = 1;
-  }
+  message Input  { string from = 1; }
+  message Output { string to = 1; }
 }
 
 message TpyoEnocde {
-  message Ipunt {
-    string form = 1;
-  }
-  message Ouptut {
-    string to = 1;
-  }
+  message Ipunt  { string form = 1; }
+  message Ouptut { string to = 1; }
 }
 
 message Numberinfo {
-  message Input {
-    float number = 1;
-  }
-  message Output {
-    map<string, string> facts = 1;
-  }
+  message Input  { float number = 1; }
+  message Output { map<string, string> facts = 1; }
 }
 
 message Moijaime {
-  message Input {}
-  message Output {
-    repeated string kiffs = 1;
-  }
+  message Input  {}
+  message Output { repeated string kiffs = 1; }
 }
 
 message Wotd {
-  message Input {}
-  message Output {
-    string word = 1;
-  }
+  message Input  {}
+  message Output { string word = 1; }
 }
 
 message AlternateLogo {
-  message Input {}
-  message Output {
-    string path = 1;
-  }
+  message Input  {}
+  message Output { string path = 1; }
 }
 
 message SpreadshirtRandom {
-  message Input {}
+  message Input  {}
   message Output { /* TODO */ }
 }
 
 message SpreadshirtAll {
-  message Input {}
+  message Input  {}
   message Output { /* TODO */ }
 }
 
 message Recettator {
-  message Input {
+  message Input  {
     int64 seed = 1;
     uint64 main_ingredients = 2;
     uint64 secondary_ingredients = 3;
