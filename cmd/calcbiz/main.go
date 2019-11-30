@@ -9,9 +9,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/gobuffalo/packr"
 	"github.com/gogo/gateway"
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -21,8 +22,10 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // db driver
 	"github.com/pkg/errors"
+	"github.com/rs/cors"
 	minify "github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
+	chilogger "github.com/treastech/logger"
 	"github.com/urfave/cli"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -204,17 +207,28 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 		routerHandler = m.Middleware(router)
 	}
 
-	// configure top-level mux
-	mux := http.NewServeMux()
-	mux.Handle("/api/", gwmux)
-	mux.Handle("/", routerHandler)
-	// FIXME: handle 404
+	///
+	r := chi.NewRouter()
+	cors := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	})
+	r.Use(cors.Handler)
+	r.Use(chilogger.Logger(zap.L().Named("http")))
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(10 * time.Second))
+	r.Use(middleware.RealIP)
+	r.Use(middleware.RequestID)
 
-	handler := handlers.LoggingHandler(os.Stderr, mux)
-	handler = handlers.RecoveryHandler(handlers.PrintRecoveryStack(true))(handler)
+	r.Mount("/api/", gwmux)
+	r.Mount("/", routerHandler)
 
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
-	return http.ListenAndServe(opts.HTTPBind, handler)
+	return http.ListenAndServe(opts.HTTPBind, r)
 }
 
 func startGRPCServer(ctx context.Context, opts *serverOptions) error {

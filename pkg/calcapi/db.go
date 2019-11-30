@@ -1,6 +1,10 @@
 package calcapi
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"go.uber.org/zap"
+	"moul.io/zapgorm"
+)
 
 type DevKeyValueString struct {
 	Key   string `gorm:"primary_key"`
@@ -13,6 +17,7 @@ type DevKeyValueFloat struct {
 }
 
 func setupDB(db *gorm.DB) error {
+	db.SetLogger(zapgorm.New(zap.L().Named("gorm")))
 	db.LogMode(true)
 
 	err := db.AutoMigrate(&DevKeyValueString{}, &DevKeyValueFloat{}).Error
