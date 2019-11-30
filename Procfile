@@ -1,1 +1,0 @@
-web: calc-www server --bind-address=:$PORT

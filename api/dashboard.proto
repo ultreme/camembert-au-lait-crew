@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package calcbiz.dashboard;
+
+import "google/api/annotations.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+//import "google/protobuf/timestamp.proto";
+
+option go_package = "ultre.me/calcbiz/pkg/dashboard";
+option (gogoproto.sizer_all) = true;
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+
+message Entries {
+  repeated Entry entries = 1;
+}
+
+message Entry {
+  enum Kind {
+    Undefined = 0;
+    Hack = 1;
+    Track = 2;
+    Merch = 3;
+    //Album = 4;
+    //Video = 5;
+    //Image = 6;
+    //Playlist = 7;
+    //Copain = 8;
+  }
+  string title = 1;
+  string url = 2 [(gogoproto.customname) = "URL"];
+  string description = 3;
+  string image_url = 4 [(gogoproto.customname) = "ImageURL"];
+  bool is_external = 5;
+  Kind kind = 6;
+}

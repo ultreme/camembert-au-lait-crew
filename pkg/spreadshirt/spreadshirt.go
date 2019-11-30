@@ -128,7 +128,7 @@ func GetRandomProduct(width, height uint64) Product {
 	return product
 }
 
-func getProductDetail(compoID, width, height uint64) (*Product, error) {
+/*func getProductDetail(compoID, width, height uint64) (*Product, error) {
 	for _, product := range products {
 		if product.CompoID == compoID {
 			product.prepare(width, height)
@@ -136,4 +136,4 @@ func getProductDetail(compoID, width, height uint64) (*Product, error) {
 		}
 	}
 	return nil, fmt.Errorf("No such compo %d", compoID)
-}
+}*/

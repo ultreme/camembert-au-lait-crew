@@ -6,8 +6,8 @@ ENV             GO111MODULE=on
 COPY            go.* /go/src/ultre.me/calcbiz/
 RUN             go mod download
 COPY            . /go/src/ultre.me/calcbiz/
-RUN             make _ci_prepare
-RUN             make release
+RUN             make packr
+RUN             make install
 
 FROM            alpine:3.8
 RUN             apk --no-cache --update add ca-certificates && update-ca-certificates

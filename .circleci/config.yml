@@ -1,20 +1,30 @@
-version: 2
+version: 2.1
+
+orbs:
+  moul: moul/build@1.13.0        # https://github.com/moul/build
+  retry: moul/retry@0.6.0        # https://github.com/moul/retry
+  codecov: codecov/codecov@1.0.5
+  docker: circleci/docker@0.5.13
+  gotools: gotest/tools@0.0.10
 
 jobs:
-  docker.build:
+  go-generate:
+    working_directory: /go/src/ultre.me/calcbiz
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: pathwar/protoc:4
     steps:
-      - run: apk --no-cache add make
       - checkout
-      - setup_remote_docker
-      - run: docker info
-      - run: make docker.build
-      - run: docker run -it --rm ultreme/calcbiz -h || true
-      # FIXME: save cache
+      - run: find . -name gen.sum -delete
+      - run: go mod vendor && make generate_local && make tidy
+      - run: |
+          git status | cat
+          git diff -w | cat
+          git diff-index -w --quiet HEAD --
 
 workflows:
-  version: 2
-  commit:
+  main:
     jobs:
-      - docker.build
+      - moul/golang-build:
+          gopkg: ultre.me/calcbiz
+      - moul/docker-build
+      - go-generate

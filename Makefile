@@ -1,123 +1,74 @@
-##
-## functions
-##
+GOPKG ?= ultre.me/calcbiz
+DOCKER_IMAGE ?= ultreme/calcbiz
+GOBINS ?= ./cmd/calcbiz
+RUN_OPTS ?=
 
-rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+PRE_INSTALL_STEPS += generate
+PRE_UNITTEST_STEPS += generate
+PRE_TEST_STEPS += generate
+PRE_BUILD_STEPS += generate
+PRE_LINT_STEPS += generate
+PRE_TIDY_STEPS += generate
+PRE_BUMPDDEPS_STEPS += generate
 
-##
-## vars
-##
+all: test install
 
-GOPATH ?= $(HOME)/go
-BIN = $(GOPATH)/bin/calcbiz
-SOURCES = $(call rwildcard, ./, *.go)
-OUR_SOURCES = $(filter-out $(call rwildcard,./vendor,*.go),$(SOURCES))
-PROTOS = $(call rwildcard, ./, *.proto)
-OUR_PROTOS = $(filter-out $(call rwildcard,./vendor,*.proto),$(PROTOS))
-GENERATED_FILES = \
-        $(patsubst %.proto,%.pb.go,$(PROTOS)) \
-        $(call rwildcard .//, *.gen.go) \
-        $(call rwildcard .//, *.pb.gw.go) \
-	swagger.yaml
-
-PROTOC_OPTS = -I/protobuf:vendor:.
-RUN_OPTS ?= --debug
-
-##
-## rules
-##
-
-.PHONY: help
-help:
-	@echo "Make commands:"
-	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: \
-	  '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | \
-	  sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | grep -v / | \
-	  sed 's/^/  $(HELP_MSG_PREFIX)make /'
+include rules.mk
 
 .PHONY: run
-run: $(BIN)
-	$(BIN) server $(RUN_OPTS)
+run: install
+	calcbiz server $(RUN_OPTS)
 
-.PHONY: install
-install: $(BIN)
-$(BIN): .generated $(OUR_SOURCES)
-	packr clean
-	go install -v .
+##
+## generate
+##
 
-.PHONY: release
-release:
+.PHONY: packr
+packr:
 	packr
-	go install -v .
+
+PROTOS_SRC := $(wildcard ./api/*.proto)
+GEN_SRC := $(PROTOS_SRC) Makefile
+.PHONY: generate
+generate: gen.sum
+gen.sum: $(GEN_SRC)
+	shasum $(GEN_SRC) | sort > gen.sum.tmp
+	diff -q gen.sum gen.sum.tmp || ( \
+	  set -e; \
+	  GO111MODULE=on go mod vendor; \
+	  docker run \
+	    --user=`id -u` \
+	    --volume="$(PWD):/go/src/ultre.me/calcbiz" \
+	    --workdir="/go/src/ultre.me/calcbiz" \
+	    --entrypoint="sh" \
+	    --rm \
+	     pathwar/protoc:4 \
+	    -xec 'make generate_local'; \
+	    make tidy \
+	)
+
+.PHONY: generate_local
+generate_local:
+	@set -e; for proto in $(PROTOS_SRC); do ( set -xe; \
+	  protoc -I ./vendor/github.com/grpc-ecosystem/grpc-gateway:./api:./vendor:/protobuf --grpc-gateway_out=logtostderr=true:"$(GOPATH)/src" --gogofaster_out="plugins=grpc:$(GOPATH)/src" "$$proto" \
+	); done
+	goimports -w ./pkg ./cmd ./internal
+	shasum $(GEN_SRC) | sort > gen.sum.tmp
+	mv gen.sum.tmp gen.sum
 
 .PHONY: clean
 clean:
-	rm -f $(GENERATED_FILES) .generated
-	packr clean
-
-.PHONY: _ci_prepare
-_ci_prepare:
-	touch $(OUR_PROTOS) $(GENERATED_FILES)
-	sleep 1
-	touch .generated
-
-.PHONY: generate
-generate: .generated
-.generated: $(OUR_PROTOS)
-	rm -f $(GENERATED_FILES)
-	go mod vendor
-	docker run \
-	  --user="$(shell id -u)" \
-	  --volume="$(PWD):/go/src/ultre.me/calcbiz" \
-	  --workdir="/go/src/ultre.me/calcbiz" \
-	  --entrypoint="sh" \
-	  --rm \
-	  pathwar/protoc:v1 \
-	  -xec "make _generate"
-	touch $@
-
-.PHONY: _generate
-_generate: $(GENERATED_FILES)
-
-.PHONY: test
-test: .generated
-	go test -v ./...
-
-%.pb.go: %.proto
-	protoc \
-	  $(PROTOC_OPTS) \
-	  --grpc-gateway_out=logtostderr=true:"$(GOPATH)/src" \
-	  --gogofaster_out=plugins=grpc:"$(GOPATH)/src" \
-	  "$(dir $<)"/*.proto
-
-swagger.yaml: $(OUR_PROTOS)
-	protoc \
-	  $(PROTOC_OPTS) \
-	  --swagger_out=allow_merge=true:. \
-	  ./api/api.proto
-	mv apidocs.swagger.json swagger.yaml
-
-.PHONY: lint
-lint:
-	golangci-lint run --verbose ./...
+	rm -f gen.sum $(wildcard */*/*.pb.go */*/*.pb.gw.go)
 
 ##
 ## production
 ##
 
-.PHONY: docker.up
-docker.up:
+.PHONY: prod.up
+prod.up:
 	docker-compose build --pull
 	docker-compose up -d --force-recreate --remove-orphans
 
-.PHONY: docker.build
-docker.build:
-	docker build -t ultreme/calcbiz .
-
-.PHONY: docker.release
-docker.release: docker.build
-	docker push ultreme/calcbiz
-
 .PHONY: deploy
 deploy:
-	ssh zrwf.m.42.am -xec 'cd ~/go/src/ultre.me/calcbiz; git pull; make docker.up'
+	ssh zrwf.m.42.am -xec 'cd ~/go/src/ultre.me/calcbiz; git pull; make prod.up'

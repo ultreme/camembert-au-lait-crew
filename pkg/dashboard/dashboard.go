@@ -10,9 +10,7 @@ import (
 )
 
 func (e *Entries) append(entries ...*Entry) {
-	for _, entry := range entries {
-		e.Entries = append(e.Entries, entry)
-	}
+	e.Entries = append(e.Entries, entries...)
 }
 
 func NewManualEntry(title, URL, imageURL, description string, kind Entry_Kind, isExternal bool) *Entry {
