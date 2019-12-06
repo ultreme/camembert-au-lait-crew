@@ -40,6 +40,8 @@ service Service {
   rpc KeyValueStringGet(KeyValueStringGet.Input) returns (KeyValueStringGet.Output) { option (google.api.http) = { get: "/api/key-value-string-get/{key}"}; };
   rpc KeyValueFloatSet(KeyValueFloatSet.Input) returns (KeyValueFloatSet.Output) { option (google.api.http) = { post: "/api/key-value-float-set/{key}"; body: "*" }; };
   rpc KeyValueFloatGet(KeyValueFloatGet.Input) returns (KeyValueFloatGet.Output) { option (google.api.http) = { get: "/api/key-value-float-get/{key}"}; };
+  rpc EchoStream(stream EchoStream.Input) returns (stream EchoStream.Output) { option (google.api.http) = {post: "/api/echo-stream", body: "*"}; };
+  rpc TestReadStream(TestReadStream.Input) returns (stream TestReadStream.Output) { option (google.api.http) = {get: "/api/test-read-stream"}; };
 
   // SoundcloudAlbums
   // Airtable...
@@ -48,6 +50,16 @@ service Service {
   // Apple...
   // Musicbrainz...
   // Genius...
+}
+
+message EchoStream {
+  message Input  { string msg = 1; }
+  message Output { string msg = 1; }
+}
+
+message TestReadStream {
+  message Input  {}
+  message Output { string msg = 1; }
 }
 
 message CounterInc {
