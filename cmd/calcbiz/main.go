@@ -149,6 +149,7 @@ func server(c *cli.Context) error {
 
 func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	gwmux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(matchAllHeaders),
 		runtime.WithMarshalerOption(runtime.MIMEWildcard, &gateway.JSONPb{
 			EmitDefaults: false,
 			Indent:       "  ",
@@ -221,6 +222,10 @@ func paramsToHeaders(incoming *http.Request, outgoing *http.Request) *http.Reque
 		outgoing.Header.Set(k, v[0])
 	}
 	return outgoing
+}
+
+func matchAllHeaders(key string) (string, bool) {
+	return key, true
 }
 
 func startGRPCServer(ctx context.Context, opts *serverOptions) error {
