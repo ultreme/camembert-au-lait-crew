@@ -25,6 +25,7 @@ import (
 	"github.com/rs/cors"
 	minify "github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/html"
+	"github.com/tmc/grpc-websocket-proxy/wsproxy"
 	chilogger "github.com/treastech/logger"
 	"github.com/urfave/cli"
 	"go.uber.org/zap"
@@ -70,33 +71,12 @@ func main() {
 			Action: server,
 			Flags: []cli.Flag{
 				// server options
-				cli.StringFlag{
-					Name:  "http-bind",
-					Usage: "TCP port address for HTTP server",
-					Value: ":9000",
-				},
-				cli.StringFlag{
-					Name:  "grpc-bind",
-					Usage: "TCP port address for gRPC server",
-					Value: ":9001",
-				},
-				cli.BoolFlag{
-					Name:  "debug",
-					Usage: "Enable debug mode",
-				},
+				cli.StringFlag{Name: "http-bind", Usage: "TCP port address for HTTP server", Value: ":9000"},
+				cli.StringFlag{Name: "grpc-bind", Usage: "TCP port address for gRPC server", Value: ":9001"},
+				cli.BoolFlag{Name: "debug", Usage: "Enable debug mode"},
 				// service options
-				cli.StringFlag{
-					Name:   "soundcloud-client-id",
-					Value:  "<configure-me>",
-					Usage:  "SoundCloud CLIENT_ID",
-					EnvVar: "SOUNDCLOUD_CLIENT_ID",
-				},
-				cli.IntFlag{
-					Name:   "soundcloud-user-id",
-					Value:  96137699,
-					Usage:  "SoundCloud USER_ID",
-					EnvVar: "SOUNDCLOUD_USER_ID",
-				},
+				cli.StringFlag{Name: "soundcloud-client-id", Value: "<configure-me>", Usage: "SoundCloud CLIENT_ID", EnvVar: "SOUNDCLOUD_CLIENT_ID"},
+				cli.IntFlag{Name: "soundcloud-user-id", Value: 96137699, Usage: "SoundCloud USER_ID", EnvVar: "SOUNDCLOUD_USER_ID"},
 			},
 		},
 	}
@@ -228,7 +208,8 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	r.Mount("/", routerHandler)
 
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
-	return http.ListenAndServe(opts.HTTPBind, r)
+	m := wsproxy.WebsocketProxy(r) // FIXME: with logger
+	return http.ListenAndServe(opts.HTTPBind, m)
 }
 
 func startGRPCServer(ctx context.Context, opts *serverOptions) error {

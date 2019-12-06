@@ -952,6 +952,75 @@ func local_request_Service_KeyValueFloatGet_0(ctx context.Context, marshaler run
 
 }
 
+func request_Service_EchoStream_0(ctx context.Context, marshaler runtime.Marshaler, client ServiceClient, req *http.Request, pathParams map[string]string) (Service_EchoStreamClient, runtime.ServerMetadata, error) {
+	var metadata runtime.ServerMetadata
+	stream, err := client.EchoStream(ctx)
+	if err != nil {
+		grpclog.Infof("Failed to start streaming: %v", err)
+		return nil, metadata, err
+	}
+	dec := marshaler.NewDecoder(req.Body)
+	handleSend := func() error {
+		var protoReq EchoStream_Input
+		err := dec.Decode(&protoReq)
+		if err == io.EOF {
+			return err
+		}
+		if err != nil {
+			grpclog.Infof("Failed to decode request: %v", err)
+			return err
+		}
+		if err := stream.Send(&protoReq); err != nil {
+			grpclog.Infof("Failed to send request: %v", err)
+			return err
+		}
+		return nil
+	}
+	if err := handleSend(); err != nil {
+		if cerr := stream.CloseSend(); cerr != nil {
+			grpclog.Infof("Failed to terminate client stream: %v", cerr)
+		}
+		if err == io.EOF {
+			return stream, metadata, nil
+		}
+		return nil, metadata, err
+	}
+	go func() {
+		for {
+			if err := handleSend(); err != nil {
+				break
+			}
+		}
+		if err := stream.CloseSend(); err != nil {
+			grpclog.Infof("Failed to terminate client stream: %v", err)
+		}
+	}()
+	header, err := stream.Header()
+	if err != nil {
+		grpclog.Infof("Failed to get header from client: %v", err)
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, nil
+}
+
+func request_Service_TestReadStream_0(ctx context.Context, marshaler runtime.Marshaler, client ServiceClient, req *http.Request, pathParams map[string]string) (Service_TestReadStreamClient, runtime.ServerMetadata, error) {
+	var protoReq TestReadStream_Input
+	var metadata runtime.ServerMetadata
+
+	stream, err := client.TestReadStream(ctx, &protoReq)
+	if err != nil {
+		return nil, metadata, err
+	}
+	header, err := stream.Header()
+	if err != nil {
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, nil
+
+}
+
 // RegisterServiceHandlerServer registers the http handlers for service Service to "mux".
 // UnaryRPC     :call ServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -1475,6 +1544,20 @@ func RegisterServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, se
 
 		forward_Service_KeyValueFloatGet_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
+	})
+
+	mux.Handle("POST", pattern_Service_EchoStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
+	})
+
+	mux.Handle("GET", pattern_Service_TestReadStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
 	})
 
 	return nil
@@ -2038,6 +2121,46 @@ func RegisterServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, cl
 
 	})
 
+	mux.Handle("POST", pattern_Service_EchoStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Service_EchoStream_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Service_EchoStream_0(ctx, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_Service_TestReadStream_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Service_TestReadStream_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Service_TestReadStream_0(ctx, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -2093,6 +2216,10 @@ var (
 	pattern_Service_KeyValueFloatSet_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "key-value-float-set", "key"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Service_KeyValueFloatGet_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "key-value-float-get", "key"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_Service_EchoStream_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "echo-stream"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_Service_TestReadStream_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "test-read-stream"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
@@ -2147,4 +2274,8 @@ var (
 	forward_Service_KeyValueFloatSet_0 = runtime.ForwardResponseMessage
 
 	forward_Service_KeyValueFloatGet_0 = runtime.ForwardResponseMessage
+
+	forward_Service_EchoStream_0 = runtime.ForwardResponseStream
+
+	forward_Service_TestReadStream_0 = runtime.ForwardResponseStream
 )
