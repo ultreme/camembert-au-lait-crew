@@ -208,8 +208,19 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	r.Mount("/", routerHandler)
 
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
-	m := wsproxy.WebsocketProxy(r) // FIXME: with logger
+	m := wsproxy.WebsocketProxy(
+		r,
+		wsproxy.WithMethodParamOverride("method"),
+		wsproxy.WithRequestMutator(paramsToHeaders),
+	)
 	return http.ListenAndServe(opts.HTTPBind, m)
+}
+
+func paramsToHeaders(incoming *http.Request, outgoing *http.Request) *http.Request {
+	for k, v := range incoming.URL.Query() {
+		outgoing.Header.Set(k, v[0])
+	}
+	return outgoing
 }
 
 func startGRPCServer(ctx context.Context, opts *serverOptions) error {
