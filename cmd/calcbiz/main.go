@@ -95,7 +95,7 @@ type serverOptions struct {
 	HTTPBind     string
 	APIOptions   calcapi.Options
 	Debug        bool
-	svc          calcapi.ServiceServer
+	svc          calcapi.Service
 	staticBox    *packr.Box
 	templatesBox *packr.Box
 }
@@ -116,6 +116,7 @@ func serverOptionsFromCliContext(c *cli.Context) serverOptions {
 			StaticBox:          &staticBox,
 			SoundcloudUserID:   c.Int("soundcloud-user-id"),
 			SoundcloudClientID: c.String("soundcloud-client-id"),
+			Logger:             zap.L().Named("api"),
 		},
 	}
 }
@@ -206,6 +207,20 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 
 	r.Mount("/api/", gwmux)
 	r.Mount("/", routerHandler)
+
+	// socket.io
+	sio, err := opts.svc.SocketIOServer()
+	if err != nil {
+		return errors.Wrap(err, "initialize socket.io server")
+	}
+	go func() {
+		err := sio.Serve()
+		if err != nil {
+			zap.L().Fatal("start socket.io server", zap.Error(err))
+		}
+	}()
+	defer sio.Close()
+	r.Mount("/socket.io/", sio)
 
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
 	m := wsproxy.WebsocketProxy(r) // FIXME: with logger
