@@ -213,7 +213,12 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	if err != nil {
 		return errors.Wrap(err, "initialize socket.io server")
 	}
-	go sio.Serve()
+	go func() {
+		err := sio.Serve()
+		if err != nil {
+			zap.L().Fatal("start socket.io server", zap.Error(err))
+		}
+	}()
 	defer sio.Close()
 	r.Mount("/socket.io/", sio)
 
