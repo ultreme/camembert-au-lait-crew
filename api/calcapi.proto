@@ -232,6 +232,7 @@ message SIO {
     message Event {
       string room = 1;
       Peer peer = 2;
+      repeated Peer peers = 3;
     }
   }
 
@@ -259,6 +260,7 @@ message SIO {
     message Event {
       string room = 1;
       Peer peer = 2;
+      repeated Peer peers = 3;
     }
   }
 

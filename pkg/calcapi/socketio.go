@@ -38,9 +38,9 @@ func (svc *svc) sioOnDisconnect(s socketio.Conn, reason string) {
 
 	context := s.Context().(*SIO_Context)
 	for _, room := range s.Rooms() {
-		broadcast := SIO_Disconnect_Event{Room: room, Peer: context.Peer}
+		broadcast := SIO_Disconnect_Event{Room: room, Peer: context.Peer, Peers: svc.peersForRoom(room)}
 		out, _ := json.Marshal(broadcast)
-		go svc.sio.server.BroadcastToRoom(room, "event:disconnet", string(out))
+		go svc.sio.server.BroadcastToRoom(room, "event:disconnect", string(out))
 	}
 }
 
@@ -67,7 +67,7 @@ func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Outp
 	svc.sio.logger.Debug(
 		"join",
 		zap.String("room", in.Room),
-		zap.Any("preview-peer", context.Peer),
+		zap.Any("previous-peer", context.Peer),
 		zap.Any("peer", in.Peer),
 		zap.String("id", s.ID()),
 	)
@@ -78,12 +78,12 @@ func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Outp
 	context.Peer = in.Peer
 	s.SetContext(context)
 
-	broadcast := SIO_Join_Event{Room: in.Room, Peer: in.Peer}
+	broadcast := SIO_Join_Event{Room: in.Room, Peer: in.Peer, Peers: svc.peersForRoom(in.Room)}
 	out, _ := json.Marshal(broadcast)
 	go svc.sio.server.BroadcastToRoom(in.Room, "event:join", string(out))
 
 	ret := SIO_Join_Output{
-		Peers: []*SIO_Peer{{Name: "foo"}, {Name: "bar"}},
+		Peers: broadcast.Peers,
 	}
 
 	// emit old logs
@@ -102,6 +102,11 @@ func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Outp
 		}
 	}
 	return &ret, nil
+}
+
+func (svc *svc) peersForRoom(room string) []*SIO_Peer {
+	// FIXME: todo
+	return []*SIO_Peer{{Name: "foo"}, {Name: "bar"}}
 }
 
 func (svc *svc) onEventBroadcast(s socketio.Conn, in *SIO_Broadcast_Input) (*SIO_Broadcast_Output, error) {
