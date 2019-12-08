@@ -40,7 +40,7 @@ func (svc *svc) sioOnDisconnect(s socketio.Conn, reason string) {
 	for _, room := range s.Rooms() {
 		broadcast := SIO_Disconnect_Event{Room: room, Peer: context.Peer}
 		out, _ := json.Marshal(broadcast)
-		svc.sio.server.BroadcastToRoom(room, "event:disconnet", string(out))
+		go svc.sio.server.BroadcastToRoom(room, "event:disconnet", string(out))
 	}
 }
 
@@ -80,7 +80,7 @@ func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Outp
 
 	broadcast := SIO_Join_Event{Room: in.Room, Peer: in.Peer}
 	out, _ := json.Marshal(broadcast)
-	svc.sio.server.BroadcastToRoom(in.Room, "event:join", string(out))
+	go svc.sio.server.BroadcastToRoom(in.Room, "event:join", string(out))
 
 	ret := SIO_Join_Output{
 		Peers: []*SIO_Peer{{Name: "foo"}, {Name: "bar"}},
@@ -116,7 +116,7 @@ func (svc *svc) onEventBroadcast(s socketio.Conn, in *SIO_Broadcast_Input) (*SIO
 
 	broadcast := SIO_Broadcast_Event{Room: in.Room, Msg: in.Msg, Peer: context.Peer, IsLive: true}
 	out, _ := json.Marshal(broadcast)
-	svc.sio.server.BroadcastToRoom(in.Room, "event:broadcast", string(out))
+	go svc.sio.server.BroadcastToRoom(in.Room, "event:broadcast", string(out))
 
 	ret := SIO_Broadcast_Output{}
 
