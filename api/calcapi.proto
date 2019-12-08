@@ -224,6 +224,7 @@ message SIO {
     message Input {
       string room = 1;
       Peer peer = 2;
+      int32 max_log_entries = 3;
     }
     message Output {
       repeated Peer peers = 1;

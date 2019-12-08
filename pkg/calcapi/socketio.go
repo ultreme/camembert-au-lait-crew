@@ -2,7 +2,9 @@ package calcapi
 
 import (
 	"encoding/json"
+	"time"
 
+	engineio "github.com/googollee/go-engine.io"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -85,12 +87,18 @@ func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Outp
 	}
 
 	// emit old logs
-	svc.sio.mutex.Lock()
-	defer svc.sio.mutex.Unlock()
-	if logs, ok := svc.sio.logs[in.Room]; ok {
-		for _, log := range logs {
-			out, _ := json.Marshal(log)
-			s.Emit("event:broadcast", string(out))
+	if in.MaxLogEntries > 0 {
+		svc.sio.mutex.Lock()
+		defer svc.sio.mutex.Unlock()
+		if logs, ok := svc.sio.logs[in.Room]; ok {
+			start := 0
+			if len(logs) > int(in.MaxLogEntries) {
+				start = len(logs) - int(in.MaxLogEntries)
+			}
+			for _, log := range logs[start:] {
+				out, _ := json.Marshal(log)
+				s.Emit("event:broadcast", string(out))
+			}
 		}
 	}
 	return &ret, nil
@@ -128,7 +136,10 @@ func (svc *svc) onEventBroadcast(s socketio.Conn, in *SIO_Broadcast_Input) (*SIO
 }
 
 func (svc *svc) SocketIOServer() (*socketio.Server, error) {
-	server, err := socketio.NewServer(nil)
+	server, err := socketio.NewServer(&engineio.Options{
+		PingInterval: 5 * time.Second,
+		PingTimeout:  10 * time.Second,
+	})
 	if err != nil {
 		return nil, errors.Wrap(err, "socketio.NewServer")
 	}

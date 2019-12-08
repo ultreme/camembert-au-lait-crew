@@ -244,8 +244,9 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 	defer sio.Close()
 
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
-	m := wsproxy.WebsocketProxy(r) // FIXME: with logger
-	return http.ListenAndServe(opts.HTTPBind, m)
+	var h http.Handler = r
+	h = wsproxy.WebsocketProxy(h) // FIXME: with logger
+	return http.ListenAndServe(opts.HTTPBind, h)
 }
 
 func startGRPCServer(ctx context.Context, opts *serverOptions) error {
