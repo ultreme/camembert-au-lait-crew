@@ -24,6 +24,11 @@ type svc struct {
 	dashboard  *dashboard.Dashboard
 	startTime  time.Time
 	db         *gorm.DB
+	sio        struct {
+		server         *socketio.Server
+		logger         *zap.Logger
+		connectedPeers int
+	}
 }
 
 type Service interface {
