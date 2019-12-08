@@ -237,13 +237,20 @@ message SIO {
   message Broadcast {
     message Input {
       string room = 1;
-      string msg = 2;
+      Msg msg = 2;
     }
     message Output {}
     message Event {
       string room = 1;
-      string msg = 2;
+      Msg msg = 2;
       Peer peer = 3;
+      bool is_live = 4;
+    }
+  }
+
+  message Rooms {
+    message Output {
+      repeated string rooms = 1;
     }
   }
 
@@ -254,6 +261,11 @@ message SIO {
     }
   }
 
+  message Msg {
+    string text = 1;
+    int64 number = 2;
+  }
+
   message Error {
     bool is_error = 1;
     string err_msg = 2;
@@ -262,6 +274,7 @@ message SIO {
   message Peer {
     string name = 1;
     string color = 2;
+    int32 favorite_number = 3;
   }
 
   message Context {

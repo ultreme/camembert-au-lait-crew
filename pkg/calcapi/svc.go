@@ -1,6 +1,7 @@
 package calcapi
 
 import (
+	"sync"
 	"time"
 
 	"github.com/gobuffalo/packr"
@@ -28,6 +29,8 @@ type svc struct {
 		server         *socketio.Server
 		logger         *zap.Logger
 		connectedPeers int
+		logs           map[string][]SIO_Broadcast_Event
+		mutex          sync.Mutex
 	}
 }
 
