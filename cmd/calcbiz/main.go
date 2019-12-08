@@ -53,7 +53,7 @@ func main() {
 	app.Before = func(c *cli.Context) error {
 		config := zap.NewDevelopmentConfig()
 		config.Level.SetLevel(zap.DebugLevel)
-		config.DisableStacktrace = false
+		config.DisableStacktrace = true
 		config.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 		l, err := config.Build()
 		if err != nil {
@@ -188,31 +188,53 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 		routerHandler = m.Middleware(router)
 	}
 
-	///
-	r := chi.NewRouter()
+	// socketio server
+	sio, err := opts.svc.SocketIOServer()
+	if err != nil {
+		return errors.Wrap(err, "initialize socket.io server")
+	}
+
+	// cors
 	cors := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		//AllowedOrigins:   []string{"*"},
+		AllowOriginFunc:  func(origin string) bool { return true },
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300,
 	})
-	r.Use(cors.Handler)
-	r.Use(chilogger.Logger(zap.L().Named("http")))
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(10 * time.Second))
-	r.Use(middleware.RealIP)
-	r.Use(middleware.RequestID)
 
-	r.Mount("/api/", gwmux)
-	r.Mount("/", routerHandler)
+	/// chi router
+	r := chi.NewRouter()
+	r.Route("/socket.io", func(r chi.Router) {
+		r.Use(cors.Handler)
+		r.Use(middleware.Recoverer)
+		//r.Use(chilogger.Logger(zap.L().Named("http")))
+		//r.Use(middleware.Timeout(10 * time.Second))
+		//r.Use(middleware.RealIP)
+		//r.Use(middleware.RequestID)
+		r.Mount("/", sio)
+	})
+	r.Route("/api", func(r chi.Router) {
+		r.Use(cors.Handler)
+		r.Use(chilogger.Logger(zap.L().Named("http")))
+		r.Use(middleware.Recoverer)
+		r.Use(middleware.Timeout(10 * time.Second))
+		r.Use(middleware.RealIP)
+		r.Use(middleware.RequestID)
+		r.Mount("/", gwmux)
+	})
+	r.Route("/", func(r chi.Router) {
+		r.Use(chilogger.Logger(zap.L().Named("http")))
+		r.Use(middleware.Recoverer)
+		r.Use(middleware.Timeout(10 * time.Second))
+		r.Use(middleware.RealIP)
+		r.Use(middleware.RequestID)
+		r.Mount("/", routerHandler)
+	})
 
 	// socket.io
-	sio, err := opts.svc.SocketIOServer()
-	if err != nil {
-		return errors.Wrap(err, "initialize socket.io server")
-	}
 	go func() {
 		err := sio.Serve()
 		if err != nil {
@@ -220,7 +242,6 @@ func startHTTPServer(ctx context.Context, opts *serverOptions) error {
 		}
 	}()
 	defer sio.Close()
-	r.Mount("/socket.io/", sio)
 
 	zap.L().Info("starting HTTP server", zap.String("bind", opts.HTTPBind))
 	m := wsproxy.WebsocketProxy(r) // FIXME: with logger

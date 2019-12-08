@@ -215,3 +215,59 @@ message Recettator {
     string name_and_quantity = 7;
   }
 }
+
+//// socket.io
+
+message SIO {
+
+  message Join {
+    message Input {
+      string room = 1;
+      Peer peer = 2;
+    }
+    message Output {
+      repeated Peer peers = 1;
+    }
+    message Event {
+      string room = 1;
+      Peer peer = 2;
+    }
+  }
+
+  message Broadcast {
+    message Input {
+      string room = 1;
+      string msg = 2;
+    }
+    message Output {}
+    message Event {
+      string room = 1;
+      string msg = 2;
+      Peer peer = 3;
+    }
+  }
+
+  message Disconnect {
+    message Event {
+      string room = 1;
+      Peer peer = 2;
+    }
+  }
+
+  message Error {
+    bool is_error = 1;
+    string err_msg = 2;
+  }
+
+  message Peer {
+    string name = 1;
+    string color = 2;
+  }
+
+  message Context {
+    Peer peer = 1;
+    bool no_metadata = 2;
+    // int32 joined_at = 3;
+  }
+
+}
