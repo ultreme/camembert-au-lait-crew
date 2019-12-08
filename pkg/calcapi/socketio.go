@@ -2,45 +2,66 @@ package calcapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	engineio "github.com/googollee/go-engine.io"
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
+	"moul.io/godev"
 )
 
 const socketioRoomLogSize int = 50
 
 func (svc *svc) sioOnConnect(s socketio.Conn) error {
 	s.SetContext(&SIO_Context{NoMetadata: true})
-	svc.sio.connectedPeers++
 	svc.sio.logger.Info(
 		"connect",
 		zap.String("id", s.ID()),
-		zap.Int("peers", svc.sio.connectedPeers),
 	)
 	return nil
 }
 
-func (svc *svc) sioOnError(err error) {
-	svc.sio.logger.Warn("error", zap.Error(err))
+func (svc *svc) sioOnError(s socketio.Conn, err error) {
+	svc.sio.logger.Warn(
+		"error",
+		zap.String("id", s.ID()),
+		zap.Error(err),
+	)
+	s.Close()
 }
 
 func (svc *svc) sioOnDisconnect(s socketio.Conn, reason string) {
-	svc.sio.connectedPeers--
 	svc.sio.logger.Info(
 		"disconnect",
 		zap.String("id", s.ID()),
-		zap.Int("peers", svc.sio.connectedPeers),
 		zap.String("reason", reason),
+		zap.Strings("rooms", s.Rooms()),
 	)
 
+	fmt.Println("onDisconnect.Lock")
+	defer fmt.Println("onDisconnect.Unlock")
+	svc.sio.mutex.Lock()
+	defer svc.sio.mutex.Unlock()
+
+	if s == nil || s.Context() == nil {
+		svc.sio.logger.Warn("socket is nil", zap.Any("s", s))
+	}
 	context := s.Context().(*SIO_Context)
-	for _, room := range s.Rooms() {
-		broadcast := SIO_Disconnect_Event{Room: room, Peer: context.Peer, Peers: svc.peersForRoom(room)}
-		out, _ := json.Marshal(broadcast)
-		go svc.sio.server.BroadcastToRoom(room, "event:disconnect", string(out))
+	for room, roomPeers := range svc.sio.roomPeers {
+		if _, ok := roomPeers[s.ID()]; !ok {
+			continue
+		}
+		delete(svc.sio.roomPeers[room], s.ID())
+		broadcast := SIO_Disconnect_Event{
+			Room:  room,
+			Peer:  context.Peer,
+			Peers: svc.peersForRoom(room),
+			//PeerCount: int32(svc.sio.server.RoomLen(room)),
+		}
+		go svc.broadcastToRoom(room, "event:disconnect", broadcast)
+		s.Leave(room)
 	}
 }
 
@@ -63,7 +84,9 @@ func (svc *svc) onEventRooms(s socketio.Conn) *SIO_Rooms_Output {
 }
 
 func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Output, error) {
+
 	context := s.Context().(*SIO_Context)
+
 	svc.sio.logger.Debug(
 		"join",
 		zap.String("room", in.Room),
@@ -78,18 +101,20 @@ func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Outp
 	context.Peer = in.Peer
 	s.SetContext(context)
 
-	broadcast := SIO_Join_Event{Room: in.Room, Peer: in.Peer, Peers: svc.peersForRoom(in.Room)}
-	out, _ := json.Marshal(broadcast)
-	go svc.sio.server.BroadcastToRoom(in.Room, "event:join", string(out))
+	fmt.Println("onEventJoin.Lock")
+	defer fmt.Println("onEventJoin.Unlock")
+	svc.sio.mutex.Lock()
+	defer svc.sio.mutex.Unlock()
 
-	ret := SIO_Join_Output{
-		Peers: broadcast.Peers,
+	// update room peers stats
+	if _, ok := svc.sio.roomPeers[in.Room]; !ok {
+		svc.sio.roomPeers[in.Room] = make(map[string]socketio.Conn)
 	}
+
+	svc.sio.roomPeers[in.Room][s.ID()] = s
 
 	// emit old logs
 	if in.MaxLogEntries > 0 {
-		svc.sio.mutex.Lock()
-		defer svc.sio.mutex.Unlock()
 		if logs, ok := svc.sio.logs[in.Room]; ok {
 			start := 0
 			if len(logs) > int(in.MaxLogEntries) {
@@ -101,12 +126,56 @@ func (svc *svc) onEventJoin(s socketio.Conn, in *SIO_Join_Input) (*SIO_Join_Outp
 			}
 		}
 	}
+
+	fmt.Println(godev.PrettyJSON(svc.sio.roomPeers))
+
+	// broadcast join event to the room
+	broadcast := SIO_Join_Event{
+		Room:  in.Room,
+		Peer:  in.Peer,
+		Peers: svc.peersForRoom(in.Room),
+		//PeerCount: int32(svc.sio.server.RoomLen(in.Room)),
+	}
+
+	go svc.broadcastToRoom(in.Room, "event:join", broadcast)
+
+	// reply
+	ret := SIO_Join_Output{
+		Peers: broadcast.Peers,
+	}
+
 	return &ret, nil
 }
 
+func (svc *svc) broadcastToRoom(room string, event string, data interface{}) {
+
+	svc.sio.logger.Debug(
+		"broadcast to room",
+		zap.String("room", room),
+		zap.String("event", event),
+		//zap.Int("room-len", svc.sio.server.RoomLen(room)),
+		zap.Any("data", data),
+	)
+	out, _ := json.Marshal(data)
+
+	svc.sio.server.BroadcastToRoom(room, event, string(out))
+
+}
+
 func (svc *svc) peersForRoom(room string) []*SIO_Peer {
-	// FIXME: todo
-	return []*SIO_Peer{{Name: "foo"}, {Name: "bar"}}
+	peers := []*SIO_Peer{}
+
+	roomPeers, ok := svc.sio.roomPeers[room]
+	if !ok {
+		return peers
+	}
+
+	for _, peer := range roomPeers {
+		context := peer.Context().(*SIO_Context)
+		peers = append(peers, context.Peer)
+	}
+
+	return peers
 }
 
 func (svc *svc) onEventBroadcast(s socketio.Conn, in *SIO_Broadcast_Input) (*SIO_Broadcast_Output, error) {
@@ -119,13 +188,19 @@ func (svc *svc) onEventBroadcast(s socketio.Conn, in *SIO_Broadcast_Input) (*SIO
 		zap.String("id", s.ID()),
 	)
 
-	broadcast := SIO_Broadcast_Event{Room: in.Room, Msg: in.Msg, Peer: context.Peer, IsLive: true}
-	out, _ := json.Marshal(broadcast)
-	go svc.sio.server.BroadcastToRoom(in.Room, "event:broadcast", string(out))
+	broadcast := SIO_Broadcast_Event{
+		Room:   in.Room,
+		Msg:    in.Msg,
+		Peer:   context.Peer,
+		IsLive: true,
+	}
+	go svc.broadcastToRoom(in.Room, "event:broadcast", broadcast)
 
 	ret := SIO_Broadcast_Output{}
 
 	// store log
+	fmt.Println("onEventBroadcast.Lock")
+	defer fmt.Println("onEventBroadcast.Unlock")
 	svc.sio.mutex.Lock()
 	defer svc.sio.mutex.Unlock()
 	if _, ok := svc.sio.logs[in.Room]; !ok {
@@ -151,6 +226,7 @@ func (svc *svc) SocketIOServer() (*socketio.Server, error) {
 	svc.sio.logger = svc.opts.Logger.Named("sio")
 	svc.sio.server = server
 	svc.sio.logs = make(map[string][]SIO_Broadcast_Event)
+	svc.sio.roomPeers = make(map[string]map[string]socketio.Conn)
 
 	// core events
 	server.OnConnect("/", svc.sioOnConnect)

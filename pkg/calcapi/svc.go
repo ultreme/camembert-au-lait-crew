@@ -26,11 +26,11 @@ type svc struct {
 	startTime  time.Time
 	db         *gorm.DB
 	sio        struct {
-		server         *socketio.Server
-		logger         *zap.Logger
-		connectedPeers int
-		logs           map[string][]SIO_Broadcast_Event
-		mutex          sync.Mutex
+		server    *socketio.Server
+		logger    *zap.Logger
+		roomPeers map[string]map[string]socketio.Conn
+		logs      map[string][]SIO_Broadcast_Event
+		mutex     sync.Mutex
 	}
 }
 
