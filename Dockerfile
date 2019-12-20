@@ -9,7 +9,7 @@ COPY            . /go/src/ultre.me/calcbiz/
 RUN             make packr
 RUN             make install
 
-FROM            alpine:3.10
+FROM alpine:3.11
 RUN             apk --no-cache --update add ca-certificates && update-ca-certificates
 COPY            --from=builder /go/bin/calcbiz /bin/calcbiz
 #COPY            ./static .
