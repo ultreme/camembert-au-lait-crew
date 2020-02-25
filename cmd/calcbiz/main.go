@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	bearer "github.com/Bearer/bearer-go"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/gobuffalo/packr"
@@ -32,6 +33,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"moul.io/srand"
 	"ultre.me/calcbiz/pkg/calcapi"
 	"ultre.me/calcbiz/pkg/views"
 )
@@ -42,15 +44,19 @@ import (
 const VERSION = "2.1.0"
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
+	rand.Seed(srand.Fast())
 
 	app := cli.NewApp()
 	app.Name = "calcbiz"
 	app.Usage = "Camembert au lait crew's web server"
 	app.Version = VERSION
-	app.Flags = []cli.Flag{}
+	app.Flags = []cli.Flag{
+		cli.StringFlag{Name: "bearer-secretkey", Usage: "optional bearer.sh secret key", EnvVar: "BEARER_SECRETKEY"},
+	}
 
 	app.Before = func(c *cli.Context) error {
+		bearer.ReplaceGlobals(bearer.Init(c.String("bearer-secretkey")))
+
 		config := zap.NewDevelopmentConfig()
 		config.Level.SetLevel(zap.DebugLevel)
 		config.DisableStacktrace = true

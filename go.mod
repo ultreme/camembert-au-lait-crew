@@ -1,6 +1,7 @@
 module ultre.me/calcbiz
 
 require (
+	github.com/Bearer/bearer-go v1.1.0
 	github.com/Masterminds/goutils v1.1.0 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Masterminds/sprig v2.22.0+incompatible
@@ -56,6 +57,7 @@ require (
 	google.golang.org/genproto v0.0.0-20191206224255-0243a4be9c8f
 	google.golang.org/grpc v1.25.1
 	moul.io/godev v1.3.0
+	moul.io/srand v1.4.0
 	moul.io/zapgorm v0.0.0-20190706070406-8138918b527b
 	ultre.me/kryptos v0.0.0-20181023194748-240fe1a16033
 	ultre.me/recettator v0.4.1-0.20190210231503-241df3a046a3
