@@ -9,7 +9,6 @@ import (
 	"os"
 	"time"
 
-	bearer "github.com/Bearer/bearer-go"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/gobuffalo/packr"
@@ -51,12 +50,9 @@ func main() {
 	app.Usage = "Camembert au lait crew's web server"
 	app.Version = VERSION
 	app.Flags = []cli.Flag{
-		cli.StringFlag{Name: "bearer-secretkey", Usage: "optional bearer.sh secret key", EnvVar: "BEARER_SECRETKEY"},
 	}
 
 	app.Before = func(c *cli.Context) error {
-		bearer.ReplaceGlobals(bearer.Init(c.String("bearer-secretkey")))
-
 		config := zap.NewDevelopmentConfig()
 		config.Level.SetLevel(zap.DebugLevel)
 		config.DisableStacktrace = true
