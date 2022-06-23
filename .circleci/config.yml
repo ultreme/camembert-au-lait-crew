@@ -3,15 +3,15 @@ version: 2.1
 orbs:
   moul: moul/build@1.13.0        # https://github.com/moul/build
   retry: moul/retry@0.6.0        # https://github.com/moul/retry
-  codecov: codecov/codecov@1.0.5
-  docker: circleci/docker@0.5.13
+  codecov: codecov/codecov@3.2.3
+  docker: circleci/docker@2.1.2
   gotools: gotest/tools@0.0.10
 
 jobs:
   go-generate:
     working_directory: /go/src/ultre.me/calcbiz
     docker:
-      - image: pathwar/protoc:4
+      - image: pathwar/protoc:6
     steps:
       - checkout
       - run: find . -name gen.sum -delete
