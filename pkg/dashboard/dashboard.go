@@ -129,6 +129,10 @@ func (d *Dashboard) hackEntries(limit int) (*Entries, error) {
 func (d *Dashboard) trackEntries(limit int) (*Entries, error) {
 	entries := newEntries()
 
+	if d.opts.Soundcloud == nil {
+		return entries, nil
+	}
+
 	tracks, err := d.opts.Soundcloud.GetTracks()
 	if err != nil {
 		return entries, err

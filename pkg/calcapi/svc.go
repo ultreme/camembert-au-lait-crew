@@ -50,7 +50,9 @@ func New(db *gorm.DB, opts Options) (Service, error) {
 	}
 
 	svc := &svc{opts: opts, startTime: time.Now(), db: db}
-	svc.soundcloud = soundcloud.New(opts.SoundcloudClientID, uint64(opts.SoundcloudUserID))
+	if opts.SoundcloudClientID != "" {
+		svc.soundcloud = soundcloud.New(opts.SoundcloudClientID, uint64(opts.SoundcloudUserID))
+	}
 	svc.dashboard = dashboard.New(&dashboard.Options{Soundcloud: svc.soundcloud})
 	// svc.dashboard.SetSoundCloud(&soundcloud)
 	return svc, nil

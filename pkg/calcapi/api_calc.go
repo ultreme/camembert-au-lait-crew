@@ -158,6 +158,10 @@ func (svc *svc) AlternateLogo(_ context.Context, input *AlternateLogo_Input) (*A
 }
 
 func (svc *svc) SoundcloudMe(_ context.Context, input *SoundcloudMe_Input) (*SoundcloudMe_Output, error) {
+	if svc.soundcloud == nil {
+		return nil, fmt.Errorf("soundcloud API is disconnected")
+	}
+
 	me, err := svc.soundcloud.Me()
 	if err != nil {
 		return nil, err
@@ -166,6 +170,10 @@ func (svc *svc) SoundcloudMe(_ context.Context, input *SoundcloudMe_Input) (*Sou
 }
 
 func (svc *svc) SoundcloudPlaylists(_ context.Context, input *SoundcloudPlaylists_Input) (*SoundcloudPlaylists_Output, error) {
+	if svc.soundcloud == nil {
+		return nil, fmt.Errorf("soundcloud API is disconnected")
+	}
+
 	playlists, err := svc.soundcloud.GetPlaylists()
 	if err != nil {
 		return nil, err
@@ -174,6 +182,10 @@ func (svc *svc) SoundcloudPlaylists(_ context.Context, input *SoundcloudPlaylist
 }
 
 func (svc *svc) SoundcloudPlaylist(_ context.Context, input *SoundcloudPlaylist_Input) (*SoundcloudPlaylist_Output, error) {
+	if svc.soundcloud == nil {
+		return nil, fmt.Errorf("soundcloud API is disconnected")
+	}
+
 	if input.PlaylistId < 1 { // pick random
 		playlist, err := svc.soundcloud.GetRandomPlaylist()
 		if err != nil {
@@ -189,6 +201,10 @@ func (svc *svc) SoundcloudPlaylist(_ context.Context, input *SoundcloudPlaylist_
 }
 
 func (svc *svc) SoundcloudTracks(_ context.Context, input *SoundcloudTracks_Input) (*SoundcloudTracks_Output, error) {
+	if svc.soundcloud == nil {
+		return nil, fmt.Errorf("soundcloud API is disconnected")
+	}
+
 	tracks, err := svc.soundcloud.GetTracks()
 	if err != nil {
 		return nil, err
@@ -197,6 +213,10 @@ func (svc *svc) SoundcloudTracks(_ context.Context, input *SoundcloudTracks_Inpu
 }
 
 func (svc *svc) SoundcloudTrack(_ context.Context, input *SoundcloudTrack_Input) (*SoundcloudTrack_Output, error) {
+	if svc.soundcloud == nil {
+		return nil, fmt.Errorf("soundcloud API is disconnected")
+	}
+
 	if input.TrackId < 1 { // pick random
 		track, err := svc.soundcloud.GetRandomTrack()
 		if err != nil {
