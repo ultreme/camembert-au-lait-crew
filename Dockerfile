@@ -1,4 +1,4 @@
-FROM            golang:1.19-alpine as builder
+FROM            golang:1.23-alpine as builder
 WORKDIR         /go/src/ultre.me/calcbiz
 RUN             apk --no-cache --update add npm make gcc g++ musl-dev openssl-dev git
 ENV             GO111MODULE=on
@@ -9,7 +9,7 @@ COPY            . /go/src/ultre.me/calcbiz/
 RUN             make packr
 RUN             make install
 
-FROM            alpine:3.13
+FROM            alpine:3.20
 RUN             apk --no-cache --update add ca-certificates && update-ca-certificates
 COPY            --from=builder /go/bin/calcbiz /bin/calcbiz
 #COPY            ./static .
