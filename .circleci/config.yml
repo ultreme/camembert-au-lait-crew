@@ -1,11 +1,11 @@
 version: 2.1
 
 orbs:
-  moul: moul/build@1.13.0        # https://github.com/moul/build
+  moul: moul/build@1.16.0        # https://github.com/moul/build
   retry: moul/retry@0.6.0        # https://github.com/moul/retry
-  codecov: codecov/codecov@1.0.5
-  docker: circleci/docker@0.5.13
-  gotools: gotest/tools@0.0.10
+  codecov: codecov/codecov@1.2.5
+  docker: circleci/docker@0.6.1
+  gotools: gotest/tools@0.0.14
 
 jobs:
   go-generate:
